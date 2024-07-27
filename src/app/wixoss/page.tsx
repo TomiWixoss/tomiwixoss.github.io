@@ -2,19 +2,48 @@
 import React from 'react';
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
+import LRIGPopup from '../../components/LRIGCard';
+import MAINPopup from '../../components/MAINCard';
 
 const PlayGround: React.FC = () => {
     const [isPopupAction, setPopupAction] = useState(true);
+    const [startPhase, setStartPhase] = useState<number>(0);
+    const [isPopupLRIG, setIsPopupLRIG] = useState(false);
+    const [isPopupMAIN, setIsPopupMAIN] = useState(false);
+
+    const handleOpenPopupLRIG = () => {
+        setIsPopupLRIG(true);
+    };
+
+    const handleClosePopupLRIG = () => {
+        setIsPopupLRIG(false);
+    };
+
+    const handleOpenPopupMAIN = () => {
+        setIsPopupMAIN(true);
+    };
+
+    const handleClosePopupMAIN = () => {
+        setIsPopupMAIN(false);
+    };
 
     useEffect(() => {
         // Show popup when the component mounts
         setPopupAction(true);
     }, []);
 
-    const handleClosePopup = () => {
-        setPopupAction(false);
+    const handlePopup = () => {
+        setStartPhase(prev => prev + 1);
+        if (startPhase === 1) {
+
+        }
     };
 
+    useEffect(() => {
+        if (startPhase > 1) {
+            setPopupAction(false);
+        }
+    }, [startPhase]);
 
     return (
         <>
@@ -171,11 +200,13 @@ const PlayGround: React.FC = () => {
                         <div className='flex flex-col justify-center items-center'>
                             <button
                                 className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                                onClick={handleOpenPopupMAIN}
                             >
                                 Bộ Bài Chính
                             </button>
                             <button
                                 className="px-2 py-1 text-xs mt-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                                onClick={handleOpenPopupLRIG}
                             >
                                 Bộ Bài LRIG
                             </button>
@@ -198,17 +229,35 @@ const PlayGround: React.FC = () => {
             {isPopupAction && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
-                        <p className="text-xl mb-4 font-bold">Chào Mừng đến với TomiWixoss</p>
-                        <p className="text-md mb-4 font-bold">Đây là trang Web mô phỏng lại trò chơi thẻ bài Wixoss!</p>
-                        <button
-                            onClick={handleClosePopup}
-                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        >
-                            Bắt Đầu
-                        </button>
+                        {startPhase === 0 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Chào Mừng đến với TomiWixoss</p>
+                                <p className="text-md mb-4 font-bold">Đây là trang Web mô phỏng lại trò chơi thẻ bài Wixoss!</p>
+                                <button
+                                    onClick={handlePopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Bắt Đầu
+                                </button>
+                            </>
+                        }
+                        {startPhase === 1 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn đầu</p>
+                                <p className="text-md mb-4 font-bold">Hãy lựa chọn các LRIG trung tâm và LRIG hỗ trợ từ bộ bài LRIG</p>
+                                <button
+                                    onClick={handlePopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Lựa Chọn
+                                </button>
+                            </>
+                        }
                     </div>
                 </div>
             )}
+            <LRIGPopup isOpen={isPopupLRIG} onClose={handleClosePopupLRIG} />
+            <MAINPopup isOpen={isPopupMAIN} onClose={handleClosePopupMAIN} />
         </>
     );
 };
