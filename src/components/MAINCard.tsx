@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { IoMdClose } from "react-icons/io";
+import CardDetail from './CardDetail';
 
 interface Card {
     id: number;
@@ -29,6 +30,16 @@ interface MAINPopupProps {
 }
 
 const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose }) => {
+    const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+
+    const handleCardClick = (card: Card) => {
+        setSelectedCard(card);
+    };
+
+    const handleCloseDetail = () => {
+        setSelectedCard(null);
+    };
+
     return (
         <>
             {isOpen && (
@@ -51,6 +62,7 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose }) => {
                                             width={750}
                                             height={1047}
                                             className="w-full h-auto mb-2"
+                                            onClick={() => handleCardClick(card)}
                                         />
                                     </div>
                                 ))
@@ -59,6 +71,7 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose }) => {
                     </div>
                 </div>
             )}
+            {selectedCard && <CardDetail card={selectedCard} onClose={handleCloseDetail} />}
         </>
     );
 };

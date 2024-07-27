@@ -16,16 +16,56 @@ const cardList: Card[] = [
         name: 'WXDi-D01-001[EN]',
         imageUrl: '/WXDi-D01/LRIG/WXDi-D01-001[EN].jpg'
     },
-    { id: 2, name: 'WXDi-D01-002[EN]', imageUrl: '/WXDi-D01/LRIG/WXDi-D01-002[EN].jpg' },
-    { id: 3, name: 'WXDi-D01-003[EN]', imageUrl: '/WXDi-D01/LRIG/WXDi-D01-003[EN].jpg' },
-    { id: 4, name: 'WXDi-D01-004[EN]', imageUrl: '/WXDi-D01/LRIG/WXDi-D01-004[EN].jpg' },
-    { id: 5, name: 'WXDi-D01-005[EN]', imageUrl: '/WXDi-D01/LRIG/WXDi-D01-005[EN].jpg' },
-    { id: 6, name: 'WXDi-D01-006[EN]', imageUrl: '/WXDi-D01/LRIG/WXDi-D01-006[EN].jpg' },
-    { id: 7, name: 'WXDi-D01-007[EN]', imageUrl: '/WXDi-D01/LRIG/WXDi-D01-007[EN].jpg' },
-    { id: 8, name: 'WXDi-D01-008[EN]', imageUrl: '/WXDi-D01/LRIG/WXDi-D01-008[EN].jpg' },
-    { id: 9, name: 'WXDi-D01-009[EN]', imageUrl: '/WXDi-D01/LRIG/WXDi-D01-009[EN].jpg' },
-    { id: 10, name: 'WXDi-D01-010[EN]', imageUrl: '/WXDi-D01/LRIG/WXDi-D01-010[EN].jpg' },
-    { id: 11, name: 'WXDi-D01-011[EN]', imageUrl: '/WXDi-D01/LRIG/WXDi-D01-011[EN].jpg' },
+    {
+        id: 2,
+        name: 'WXDi-D01-002[EN]',
+        imageUrl: '/WXDi-D01/LRIG/WXDi-D01-002[EN].jpg'
+    },
+    {
+        id: 3,
+        name: 'WXDi-D01-003[EN]',
+        imageUrl: '/WXDi-D01/LRIG/WXDi-D01-003[EN].jpg',
+    },
+    {
+        id: 4,
+        name: 'WXDi-D01-004[EN]',
+        imageUrl: '/WXDi-D01/LRIG/WXDi-D01-004[EN].jpg',
+    },
+    {
+        id: 5,
+        name: 'WXDi-D01-005[EN]',
+        imageUrl: '/WXDi-D01/LRIG/WXDi-D01-005[EN].jpg',
+    },
+    {
+        id: 6,
+        name: 'WXDi-D01-006[EN]',
+        imageUrl: '/WXDi-D01/LRIG/WXDi-D01-006[EN].jpg',
+    },
+    {
+        id: 7,
+        name: 'WXDi-D01-007[EN]',
+        imageUrl: '/WXDi-D01/LRIG/WXDi-D01-007[EN].jpg',
+    },
+    {
+        id: 8,
+        name: 'WXDi-D01-008[EN]',
+        imageUrl: '/WXDi-D01/LRIG/WXDi-D01-008[EN].jpg',
+    },
+    {
+        id: 9,
+        name: 'WXDi-D01-009[EN]',
+        imageUrl: '/WXDi-D01/LRIG/WXDi-D01-009[EN].jpg',
+    },
+    {
+        id: 10,
+        name: 'WXDi-D01-010[EN]',
+        imageUrl: '/WXDi-D01/LRIG/WXDi-D01-010[EN].jpg',
+    },
+    {
+        id: 11,
+        name: 'WXDi-D01-011[EN]',
+        imageUrl: '/WXDi-D01/LRIG/WXDi-D01-011[EN].jpg',
+    },
 ];
 
 interface LRIGPopupProps {
