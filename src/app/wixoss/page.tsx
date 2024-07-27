@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 const PlayGround: React.FC = () => {
     return (
-        <div className="bg-black h-screen py-1 px-2">
+        <div className="bg-black py-1 px-2">
             <div className='flex justify-center items-center'>
                 <Image
                     src={'/backside/MAIN.jpg'}
