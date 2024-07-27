@@ -25,16 +25,16 @@ const PlayGround: React.FC = () => {
                         Bộ Bài LRIG
                     </button>
                 </div>
-                <div className='flex flex-col justify-center items-center'>
+                <div className='flex flex-col ml-2 justify-center items-center'>
                     <button
                         className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
                     >
-                        Thùng Rác
+                        Nguyên Liệu
                     </button>
                     <button
                         className="px-2 py-1 text-xs mt-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
                     >
-                        Nguyên Liệu
+                        Thùng Rác
                     </button>
                 </div>
             </div>
@@ -164,16 +164,16 @@ const PlayGround: React.FC = () => {
                         Bộ Bài LRIG
                     </button>
                 </div>
-                <div className='flex flex-col justify-center items-center'>
+                <div className='flex flex-col ml-2 justify-center items-center'>
                     <button
                         className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
                     >
-                        Thùng Rác
+                        Nguyên Liệu
                     </button>
                     <button
                         className="px-2 py-1 text-xs mt-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
                     >
-                        Nguyên Liệu
+                        Thùng Rác
                     </button>
                 </div>
             </div>
