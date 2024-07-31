@@ -59,7 +59,7 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, view, numberCard
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative overflow-auto max-h-[80vh]">
                         <div className="flex justify-between items-center mb-4">
-                            <p className="font-bold text-lg">Bộ Bài Chính</p>
+                            <p className="font-bold text-lg">Bộ Bài Chính ({numberCard})</p>
                             <IoMdClose
                                 onClick={onClose}
                                 className="font-bold text-2xl cursor-pointer"

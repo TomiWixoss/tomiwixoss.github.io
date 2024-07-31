@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import LRIGPopup from '../../components/LRIGCard';
 import ChooseLRIGPopup from '../../components/ChooseCardLRIG';
 import MAINPopup from '../../components/MAINCard';
+import cardList from '../../components/CardDB';
 
 const PlayGround: React.FC = () => {
     const [isPopupAction, setPopupAction] = useState(true);
@@ -13,6 +14,11 @@ const PlayGround: React.FC = () => {
     const [isPopupMAIN, setIsPopupMAIN] = useState(false);
     const [isChoosePopupLRIG, setIsChoosePopupLRIG] = useState(false);
     const [numberMAINCard, setNumberMAINCard] = useState(40);
+    const [numberLRIGCard, setNumberLRIGCard] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    const [cardLRIGSpacePlayer, setCardLRIGSpacePlayer] = useState([0, 0, 0]);
+    const [cardLRIGSpaceTarget, setCardLRIGSpaceTarget] = useState([0, 0, 0]);
+    const [cardMAINSpacePlayer, setCardMAINSpacePlayer] = useState([-1, -1, -1]);
+    const [cardMAINSpaceTarget, setCardMAINSpaceTarget] = useState([-1, -1, -1]);
 
     const handleOpenPopupLRIG = () => {
         setIsPopupLRIG(true);
@@ -91,50 +97,38 @@ const PlayGround: React.FC = () => {
                         </div>
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
-                        <Image
-                            src={'/backside/LRIG.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] h-auto'
-                        />
-                        <Image
-                            src={'/backside/LRIG.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] mx-12 h-auto'
-                        />
-                        <Image
-                            src={'/backside/LRIG.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] h-auto'
-                        />
+                        {cardLRIGSpaceTarget.map((id, index) => {
+                            const card = cardList.find(card => card.id === id);
+                            if (card && card.imageUrl) {
+                                return (
+                                    <Image
+                                        key={index}
+                                        src={card.imageUrl}
+                                        alt={'Ảnh bìa chính'}
+                                        width={750}
+                                        height={1047}
+                                        className={`w-[20%] h-auto ${index === 1 ? 'mx-12' : ''}`}
+                                    />
+                                );
+                            }
+                        })}
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
-                        <Image
-                            src={'/backside/MAIN.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] h-auto'
-                        />
-                        <Image
-                            src={'/backside/MAIN.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] mx-12 h-auto'
-                        />
-                        <Image
-                            src={'/backside/MAIN.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] h-auto'
-                        />
+                        {cardMAINSpaceTarget.map((id, index) => {
+                            const card = cardList.find(card => card.id === id);
+                            if (card && card.imageUrl) {
+                                return (
+                                    <Image
+                                        key={index}
+                                        src={card.imageUrl}
+                                        alt={'Ảnh bìa chính'}
+                                        width={750}
+                                        height={1047}
+                                        className={`w-[20%] h-auto ${index === 1 ? 'mx-12' : ''}`}
+                                    />
+                                );
+                            }
+                        })}
                     </div>
                     <div className='flex justify-center items-center'>
                         <button
@@ -150,50 +144,38 @@ const PlayGround: React.FC = () => {
                         </button>
                     </div>
                     <div className='flex justify-center items-center'>
-                        <Image
-                            src={'/backside/MAIN.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] h-auto'
-                        />
-                        <Image
-                            src={'/backside/MAIN.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] mx-12 h-auto'
-                        />
-                        <Image
-                            src={'/backside/MAIN.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] h-auto'
-                        />
+                        {cardMAINSpacePlayer.map((id, index) => {
+                            const card = cardList.find(card => card.id === id);
+                            if (card && card.imageUrl) {
+                                return (
+                                    <Image
+                                        key={index}
+                                        src={card.imageUrl}
+                                        alt={'Ảnh bìa chính'}
+                                        width={750}
+                                        height={1047}
+                                        className={`w-[20%] h-auto ${index === 1 ? 'mx-12' : ''}`}
+                                    />
+                                );
+                            }
+                        })}
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
-                        <Image
-                            src={'/backside/LRIG.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] h-auto'
-                        />
-                        <Image
-                            src={'/backside/LRIG.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] mx-12 h-auto'
-                        />
-                        <Image
-                            src={'/backside/LRIG.jpg'}
-                            alt={'Ảnh bìa chính'}
-                            width={750}
-                            height={1047}
-                            className='w-[20%] h-auto'
-                        />
+                        {cardLRIGSpacePlayer.map((id, index) => {
+                            const card = cardList.find(card => card.id === id);
+                            if (card && card.imageUrl) {
+                                return (
+                                    <Image
+                                        key={index}
+                                        src={card.imageUrl}
+                                        alt={'Ảnh bìa chính'}
+                                        width={750}
+                                        height={1047}
+                                        className={`w-[20%] h-auto ${index === 1 ? 'mx-12' : ''}`}
+                                    />
+                                );
+                            }
+                        })}
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
                         <Image
@@ -263,9 +245,9 @@ const PlayGround: React.FC = () => {
                     </div>
                 </div>
             )}
-            <LRIGPopup isOpen={isPopupLRIG} onClose={handleClosePopupLRIG} />
+            <LRIGPopup isOpen={isPopupLRIG} onClose={handleClosePopupLRIG} numberCard={numberLRIGCard} />
             <MAINPopup isOpen={isPopupMAIN} onClose={handleClosePopupMAIN} view={false} numberCard={numberMAINCard} />
-            <ChooseLRIGPopup isOpen={isChoosePopupLRIG} onClose={handleCloseChoosePopupLRIG} />
+            <ChooseLRIGPopup isOpen={isChoosePopupLRIG} onClose={handleCloseChoosePopupLRIG} numberCard={numberLRIGCard} />
         </>
     );
 };
