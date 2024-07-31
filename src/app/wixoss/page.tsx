@@ -26,6 +26,7 @@ const PlayGround: React.FC = () => {
         21, 21, 21, 21
     ]);
     const [numberLRIGCard, setNumberLRIGCard] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    const [numberLifeCard, setNumberLifeCard] = useState<number[]>([]);
     const [numberHandCard, setNumberHandCard] = useState<number[]>([]);
     const [cardLRIGSpacePlayer, setCardLRIGSpacePlayer] = useState([0, 0, 0]);
     const [cardLRIGSpaceTarget, setCardLRIGSpaceTarget] = useState([0, 0, 0]);
@@ -110,8 +111,17 @@ const PlayGround: React.FC = () => {
             case 6:
                 setIsPopupHand(true);
                 break;
+            case 7:
+                setNumberLifeCard(numberMAINCard.splice(0, 7));
+                break;
         }
     };
+
+    useEffect(() => {
+        if (startPhase === 6 && isCompleteChoosePopupHand[0] === 0) {
+            setStartPhase(7);
+        }
+    }, [startPhase, isCompleteChoosePopupHand]);
 
     useEffect(() => {
         if (isCompleteChoosePopupHand[0] === 1) {
@@ -134,13 +144,13 @@ const PlayGround: React.FC = () => {
     }, [isCompleteChoosePopupHand]);
 
     useEffect(() => {
-        if (isChoosePopupLRIG === true) {
+        if (isChoosePopupLRIG === true || startPhase === 9) {
             setPopupAction(false);
         }
         else {
             setPopupAction(true);
         }
-    }, [isChoosePopupLRIG]);
+    }, [isChoosePopupLRIG, startPhase]);
 
     return (
         <>
@@ -270,7 +280,7 @@ const PlayGround: React.FC = () => {
                             height={1047}
                             className='w-[15%] h-auto'
                         />
-                        <p className='text-2xl text-white mx-4'>x1</p>
+                        <p className='text-2xl text-white mx-4'>x{numberLifeCard.length}</p>
                         <div className='flex flex-col justify-center items-center'>
                             <button
                                 className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
@@ -384,6 +394,30 @@ const PlayGround: React.FC = () => {
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 >
                                     Rút Lại
+                                </button>
+                            </>
+                        }
+                        {startPhase === 7 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
+                                <p className="text-md mb-4 font-bold">Tiếp theo hãy lấy 7 lá bài trên cùng của bộ bài chính để làm &quot;Life Cloth&quot;</p>
+                                <button
+                                    onClick={handlePopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Lấy Bài
+                                </button>
+                            </>
+                        }
+                        {startPhase === 8 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
+                                <p className="text-md mb-4 font-bold">Giai đoạn thiết lập sân khởi đầu đã hoàn tất!</p>
+                                <button
+                                    onClick={handlePopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Đi Lượt Đầu
                                 </button>
                             </>
                         }

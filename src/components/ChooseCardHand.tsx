@@ -101,7 +101,10 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
                                     </button>
                                 ) : (
                                     <IoMdClose
-                                        onClick={onClose}
+                                        onClick={() => {
+                                            setIsComplete([0, 0]);
+                                            onClose();
+                                        }}
                                         className="font-bold text-2xl cursor-pointer"
                                     />
                                 )
