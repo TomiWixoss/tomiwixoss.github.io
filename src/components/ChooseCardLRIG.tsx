@@ -1,5 +1,5 @@
 // components/LRIGPopup.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { IoMdClose } from "react-icons/io";
 import CardDetail from './CardDetail';
@@ -9,15 +9,17 @@ import cardList from './CardDB';
 interface LRIGPopupProps {
     isOpen: boolean;
     onClose: () => void;
-    numberCard: number[];
+    numberCardLRIG: number[];
     type: number;
+    numberCardSpace: number[];
     setCardSpace: React.Dispatch<React.SetStateAction<number[]>>;
     setNumberLRIGCard: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type, setCardSpace, setNumberLRIGCard }) => {
+const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCardLRIG, type, numberCardSpace, setCardSpace, setNumberLRIGCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [cardIsChoose, setCardIsChoose] = useState<number[]>([0, 0, 0]);
+    const [checkCardCenter, setCheckCardCenter] = useState<Card[]>(cardList.filter(card => card.id === numberCardSpace[1]));
 
     const handleCardClick = (card: Card) => {
         setSelectedCard(card);
@@ -30,9 +32,14 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type
     };
 
     const handleChooseCard = (card: Card) => {
-        cardIsChoose[type - 1] = card.id;
-        setCardSpace(cardIsChoose);
-        setNumberLRIGCard(removeCardById(numberCard, card.id));
+        if (type <= 3) {
+            cardIsChoose[type - 1] = card.id;
+            setCardSpace(cardIsChoose);
+        } else if (type === 4) {
+            cardIsChoose[1] = card.id;
+            setCardSpace(cardIsChoose);
+        }
+        setNumberLRIGCard(removeCardById(numberCardLRIG, card.id));
     };
 
     const handleCloseDetail = () => {
@@ -48,7 +55,7 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type
                             {type === 0 &&
                                 <div>
                                     <p className="font-bold text-lg">
-                                        Bộ Bài LRIG ({numberCard.length})
+                                        Bộ Bài LRIG ({numberCardLRIG.length})
                                     </p>
                                     <IoMdClose
                                         onClick={onClose}
@@ -71,13 +78,19 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type
                                     Chọn LRIG hỗ trợ phải
                                 </p>
                             }
+                            {type === 4 &&
+                                <p className="font-bold text-lg">
+                                    Chọn LRIG phát triển
+                                </p>
+                            }
                         </div>
-                        <div className={`mt-4 max-h-[60vh] overflow-y-auto ${type <= 3 ? 'flex justify-center items-center' : 'grid gap-4 grid-cols-3'}`}>
+                        <div className={`mt-4 max-h-[60vh] overflow-y-auto ${type <= 4 ? 'flex justify-center items-center' : 'grid gap-4 grid-cols-3'}`}>
                             {cardList
-                                .filter(card => numberCard.includes(card.id) && // Lọc các card có id trùng với giá trị trong numberCard
+                                .filter(card => numberCardLRIG.includes(card.id) && // Lọc các card có id trùng với giá trị trong numberCardLRIG
                                     (type === 2 ? card.cardLevel === 0 && card.isLRIGCenter === true
                                         : type === 1 ? card.cardLevel === 0 && card.isLRIGSupport === true
-                                            : type === 3 ? card.cardLevel === 0 && card.isLRIGSupport === true : true
+                                            : type === 3 ? card.cardLevel === 0 && card.isLRIGSupport === true
+                                                : type === 4 ? card.cardLevel === checkCardCenter[0].cardLevel + 1 && card.isLRIGCenter === true : true
                                     )) // Thêm điều kiện phụ thuộc vào giá trị type
                                 .map(card => (
                                     <div
@@ -89,10 +102,10 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type
                                             alt={card.name}
                                             width={750}
                                             height={1047}
-                                            className={`h-auto mb-2 cursor-pointer ${type <= 3 ? 'w-[75%]' : 'w-full'}`}
+                                            className={`h-auto mb-2 cursor-pointer ${type <= 4 ? 'w-[75%]' : 'w-full'}`}
                                             onClick={() => handleCardClick(card)}
                                         />
-                                        <button className={`text-white bg-blue-500 hover:bg-blue-600 rounded-lg cursor-pointer ${type <= 3 ? 'px-4 text-md py-2' : 'px-3 text-xs py-1'}`}
+                                        <button className={`text-white bg-blue-500 hover:bg-blue-600 rounded-lg cursor-pointer ${type <= 4 ? 'px-4 text-md py-2' : 'px-3 text-xs py-1'}`}
                                             onClick={() => { handleChooseCard(card); onClose(); }}
                                         >
                                             Chọn

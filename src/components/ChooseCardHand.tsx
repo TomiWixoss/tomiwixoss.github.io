@@ -11,13 +11,15 @@ interface HandPopupProps {
     onClose: () => void;
     numberHandCard: number[];
     numberMAINCard: number[];
+    numberEnterCard: number[];
+    setNumberEnterCard: React.Dispatch<React.SetStateAction<number[]>>;
     setNumberMAINCard: React.Dispatch<React.SetStateAction<number[]>>;
     setNumberHandCard: React.Dispatch<React.SetStateAction<number[]>>;
+    type: number;
 }
 
-const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, setNumberMAINCard, setNumberHandCard }) => {
+const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, numberEnterCard, setNumberEnterCard, setNumberMAINCard, setNumberHandCard, type }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
-    const [resetCard, setResetCard] = useState<number[]>([]);
     const [numberChooseCard, setNumberChooseCard] = useState<number[]>([0, 0, 0, 0, 0]);
 
     const handleCardClick = (card: Card) => {
@@ -61,6 +63,25 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
         setNumberChooseCard(updatedChooseCard);
     };
 
+    const handleChooseEnterCard = (card: number) => {
+        const HandCard = [...numberHandCard];
+        const EnterCard = [...numberEnterCard]
+        let handCard: number[] = [];
+
+        HandCard.forEach((value, index) => {
+            if (index !== card) {
+                handCard.push(HandCard[index]);
+            }
+            else {
+                EnterCard.push(HandCard[index]);
+            }
+        });
+
+        setNumberHandCard(handCard);
+        setNumberEnterCard(EnterCard);
+        onClose();
+    };
+
     const handleNoChooseCard = (index: number) => {
         // Tạo một bản sao mới của mảng numberChooseCard
         const updatedChooseCard = [...numberChooseCard];
@@ -87,7 +108,7 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
 
     return (
         <>
-            {isOpen && (
+            {isOpen && type === 0 && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative overflow-auto max-h-[80vh]">
                         <div className="flex justify-between items-center mb-4">
@@ -135,6 +156,34 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
                                         </button>
                                     )
                                     }
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+            {isOpen && type === 1 && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative overflow-auto max-h-[80vh]">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-lg">Chọn Bài Cần Nhập</p>
+                        </div>
+                        <div className="mt-4 grid grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
+                            {filterCardsBynumberHandCard(cardList, numberHandCard).map((card, index) => (
+                                <div key={`${card.id}-${index}`} className="flex flex-col items-center cursor-pointer">
+                                    <Image
+                                        src={card.imageUrl}
+                                        alt={card.name}
+                                        width={750}
+                                        height={1047}
+                                        className={`w-full h-auto mb-2`}
+                                        onClick={() => handleCardClick(card)}
+                                    />
+                                    <button className={`text-white px-3 text-xs py-1 bg-blue-500 hover:bg-blue-600 rounded-lg cursor-pointer`}
+                                        onClick={() => { handleChooseEnterCard(index) }}
+                                    >
+                                        Chọn
+                                    </button>
                                 </div>
                             ))}
                         </div>

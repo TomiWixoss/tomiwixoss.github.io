@@ -9,12 +9,11 @@ interface MAINPopupProps {
     isOpen: boolean;
     onClose: () => void;
     view: boolean;
-    numberCard: number;
+    numberCard: number[];
 }
 
 const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, view, numberCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
-    const [numberMAIN, setNumberMAIN] = useState(Array.from({ length: numberCard }, (_, index) => index));
 
     const handleCardClick = (card: Card) => {
         setSelectedCard(card);
@@ -59,14 +58,14 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, view, numberCard
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative overflow-auto max-h-[80vh]">
                         <div className="flex justify-between items-center mb-4">
-                            <p className="font-bold text-lg">Bộ Bài Chính ({numberCard})</p>
+                            <p className="font-bold text-lg">Bộ Bài Chính ({numberCard.length})</p>
                             <IoMdClose
                                 onClick={onClose}
                                 className="font-bold text-2xl cursor-pointer"
                             />
                         </div>
                         <div className="mt-4 grid grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
-                            {numberMAIN.map(index =>
+                            {numberCard.map(index =>
                                 <div key={`${index}`} className="flex flex-col items-center cursor-pointer">
                                     <Image
                                         src={'/backside/MAIN.jpg'}

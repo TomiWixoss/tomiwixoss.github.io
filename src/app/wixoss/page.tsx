@@ -7,18 +7,22 @@ import ChooseLRIGPopup from '../../components/ChooseCardLRIG';
 import ChooseHandPopup from '../../components/ChooseCardHand';
 import MAINPopup from '../../components/MAINCard';
 import HandCardPopup from '../../components/HandCard';
+import EnterCardPopup from '../../components/EnterCard';
 import cardList from '../../components/CardDB';
 
 const PlayGround: React.FC = () => {
     const [isPopupAction, setPopupAction] = useState(true);
     const [startPhase, setStartPhase] = useState<number>(0);
+    const [MainPhase, setMainPhase] = useState<number>(0);
     const [isPopupLRIG, setIsPopupLRIG] = useState(false);
+    const [isPopupEnter, setIsPopupEnter] = useState(false);
     const [isPopupMAIN, setIsPopupMAIN] = useState(false);
     const [isChoosePopupLRIG, setIsChoosePopupLRIG] = useState(false);
     const [isPopupHand, setIsPopupHand] = useState(false);
     const [isChoosePopupHand, setIsChoosePopupHand] = useState(false);
     const [isCompleteChoosePopupHand, setIsCompleteChoosePopupHand] = useState<number[]>([]);
     const [isTypePopupLRIG, setIsTypePopupLRIG] = useState(1);
+    const [isTypePopupChooseHand, setIsTypePopupChooseHand] = useState(0);
     const [numberMAINCard, setNumberMAINCard] = useState<number[]>([
         12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
         15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17,
@@ -28,6 +32,7 @@ const PlayGround: React.FC = () => {
     const [numberLRIGCard, setNumberLRIGCard] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     const [numberLifeCard, setNumberLifeCard] = useState<number[]>([]);
     const [numberHandCard, setNumberHandCard] = useState<number[]>([]);
+    const [numberEnterCard, setNumberEnterCard] = useState<number[]>([]);
     const [cardLRIGSpacePlayer, setCardLRIGSpacePlayer] = useState([0, 0, 0]);
     const [cardLRIGSpaceTarget, setCardLRIGSpaceTarget] = useState([0, 0, 0]);
     const [cardMAINSpacePlayer, setCardMAINSpacePlayer] = useState([-1, -1, -1]);
@@ -60,6 +65,14 @@ const PlayGround: React.FC = () => {
 
     const handleClosePopupHand = () => {
         setIsPopupHand(false);
+    };
+
+    const handleClosePopupEnter = () => {
+        setIsPopupEnter(false);
+    };
+
+    const handleOpenPopupEnter = () => {
+        setIsPopupEnter(true);
     };
 
     const handleOpenPopupHand = () => {
@@ -117,6 +130,31 @@ const PlayGround: React.FC = () => {
         }
     };
 
+    const handleMainPopup = () => {
+        setMainPhase(prev => prev + 1);
+        switch (MainPhase) {
+            case 1:
+
+                break;
+            case 2:
+                const pushCard: number[] = numberMAINCard.splice(0, 1);
+                numberHandCard.push(pushCard[0]);
+                setIsPopupHand(true);
+                break;
+            case 3:
+                setIsTypePopupChooseHand(1);
+                setIsChoosePopupHand(true);
+                break;
+            case 4:
+                setIsTypePopupLRIG(4);
+                setIsChoosePopupLRIG(true);
+                break;
+            case 5:
+                setPopupAction(false);
+                break;
+        }
+    };
+
     useEffect(() => {
         if (startPhase === 6 && isCompleteChoosePopupHand[0] === 0) {
             setStartPhase(7);
@@ -144,11 +182,15 @@ const PlayGround: React.FC = () => {
     }, [isCompleteChoosePopupHand]);
 
     useEffect(() => {
-        if (isChoosePopupLRIG === true || startPhase === 9) {
+        if (isChoosePopupLRIG === true) {
             setPopupAction(false);
         }
         else {
             setPopupAction(true);
+        }
+        if (startPhase === 9) {
+            setMainPhase(1);
+            setStartPhase(10);
         }
     }, [isChoosePopupLRIG, startPhase]);
 
@@ -230,7 +272,24 @@ const PlayGround: React.FC = () => {
                         >
                             Tay Đối Thủ
                         </button>
-                        <p className='text-white my-5 text-center mx-5'>Lượt 1</p>
+                        {MainPhase === 0 &&
+                            <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Khởi Đầu</p>
+                        }
+                        {MainPhase === 1 &&
+                            <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Mở Bài</p>
+                        }
+                        {MainPhase === 2 &&
+                            <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Rút Bài</p>
+                        }
+                        {MainPhase === 3 &&
+                            <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Nhập Bài</p>
+                        }
+                        {MainPhase === 4 &&
+                            <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Phát Triển</p>
+                        }
+                        {MainPhase === 6 &&
+                            <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Chính</p>
+                        }
                         <button
                             className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
                             onClick={handleOpenPopupHand}
@@ -249,7 +308,7 @@ const PlayGround: React.FC = () => {
                                         alt={'Ảnh bìa chính'}
                                         width={750}
                                         height={1047}
-                                        className={`w-[20%] h-auto ${index === 1 ? 'mx-12' : ''}`}
+                                        className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
                                     />
                                 );
                             }
@@ -266,7 +325,7 @@ const PlayGround: React.FC = () => {
                                         alt={'Ảnh bìa chính'}
                                         width={750}
                                         height={1047}
-                                        className={`w-[20%] h-auto ${index === 1 ? 'mx-12' : ''}`}
+                                        className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
                                     />
                                 );
                             }
@@ -298,6 +357,7 @@ const PlayGround: React.FC = () => {
                         <div className='flex flex-col ml-2 justify-center items-center'>
                             <button
                                 className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                                onClick={handleOpenPopupEnter}
                             >
                                 Nguyên Liệu
                             </button>
@@ -328,7 +388,7 @@ const PlayGround: React.FC = () => {
                         {startPhase === 1 &&
                             <>
                                 <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
-                                <p className="text-md mb-4 font-bold">Hãy lựa chọn LRIG trung tâm từ bộ bài LRIG</p>
+                                <p className="text-md mb-4 font-bold">Hãy lựa chọn LRIG trung tâm từ bộ bài LRIG.</p>
                                 <button
                                     onClick={handlePopup}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -340,7 +400,7 @@ const PlayGround: React.FC = () => {
                         {startPhase === 2 &&
                             <>
                                 <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
-                                <p className="text-md mb-4 font-bold">Hãy lựa chọn LRIG hỗ trợ trái từ bộ bài LRIG</p>
+                                <p className="text-md mb-4 font-bold">Hãy lựa chọn LRIG hỗ trợ trái từ bộ bài LRIG.</p>
                                 <button
                                     onClick={handlePopup}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -352,7 +412,7 @@ const PlayGround: React.FC = () => {
                         {startPhase === 3 &&
                             <>
                                 <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
-                                <p className="text-md mb-4 font-bold">Hãy lựa chọn LRIG hỗ trợ phải từ bộ bài LRIG</p>
+                                <p className="text-md mb-4 font-bold">Hãy lựa chọn LRIG hỗ trợ phải từ bộ bài LRIG.</p>
                                 <button
                                     onClick={handlePopup}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -364,7 +424,7 @@ const PlayGround: React.FC = () => {
                         {startPhase === 4 &&
                             <>
                                 <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
-                                <p className="text-md mb-4 font-bold">Tiếp theo rút 5 lá bài từ bộ bài chính</p>
+                                <p className="text-md mb-4 font-bold">Tiếp theo rút 5 lá bài từ bộ bài chính.</p>
                                 <button
                                     onClick={handlePopup}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -400,7 +460,7 @@ const PlayGround: React.FC = () => {
                         {startPhase === 7 &&
                             <>
                                 <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
-                                <p className="text-md mb-4 font-bold">Tiếp theo hãy lấy 7 lá bài trên cùng của bộ bài chính để làm &quot;Life Cloth&quot;</p>
+                                <p className="text-md mb-4 font-bold">Tiếp theo hãy lấy 7 lá bài trên cùng của bộ bài chính để làm &quot;Life Cloth&quot;.</p>
                                 <button
                                     onClick={handlePopup}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -421,14 +481,99 @@ const PlayGround: React.FC = () => {
                                 </button>
                             </>
                         }
+                        {MainPhase === 1 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn mở</p>
+                                <p className="text-md mb-4 font-bold">Giai đoạn chuyển các lá bài từ thế ngang sang dọc, do đi lượt đầu nên chưa có lá bài nào cần chuyển.</p>
+                                <button
+                                    onClick={handleMainPopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Tiếp Tục
+                                </button>
+                            </>
+                        }
+                        {MainPhase === 2 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn rút bài</p>
+                                <p className="text-md mb-4 font-bold">Giai đoạn rút 2 lá bài từ bộ bài chính, nhưng do đây là lượt đầu nên chỉ rút được 1 lá!</p>
+                                <button
+                                    onClick={handleMainPopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Rút Bài
+                                </button>
+                            </>
+                        }
+                        {MainPhase === 3 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn nhập bài</p>
+                                <p className="text-md mb-4 font-bold">Giai đoạn này sẽ cần chọn 1 lá bài từ tay để đưa vào vùng nguyên liệu.</p>
+                                <button
+                                    onClick={handleMainPopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Nhập Bài
+                                </button>
+                            </>
+                        }
+                        {MainPhase === 4 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn phát triển</p>
+                                <p className="text-md mb-4 font-bold">Đây là giai đoạn duy nhất mà bạn được phép phát triển thẻ LRIG chính lên cấp cao hơn!</p>
+                                <button
+                                    onClick={handleMainPopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Phát Triển
+                                </button>
+                            </>
+                        }
+                        {MainPhase === 5 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn Chính</p>
+                                <p className="text-md mb-4 font-bold">Đây là giai đoạn chính nơi bạn triệu hồi các thẻ SIGNI, sử dụng bài phép, PIECE, nâng cấp LRIG hỗ trợ, sử dụng hiệu ứng bài hoặc loại bỏ từ 1 đến 3 các thẻ SIGNI trên sân vào thùng rác.</p>
+                                <button
+                                    onClick={handleMainPopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Bắt Đầu
+                                </button>
+                            </>
+                        }
                     </div>
                 </div>
             )}
-            <LRIGPopup isOpen={isPopupLRIG} onClose={handleClosePopupLRIG} numberCard={numberLRIGCard} />
-            <MAINPopup isOpen={isPopupMAIN} onClose={handleClosePopupMAIN} view={false} numberCard={numberMAINCard.length} />
-            <ChooseLRIGPopup isOpen={isChoosePopupLRIG} onClose={handleCloseChoosePopupLRIG} numberCard={numberLRIGCard} type={isTypePopupLRIG} setCardSpace={setCardLRIGSpacePlayer} setNumberLRIGCard={setNumberLRIGCard} />
-            <HandCardPopup isOpen={isPopupHand} onClose={handleClosePopupHand} numberCard={numberHandCard} />
-            <ChooseHandPopup isOpen={isChoosePopupHand} setIsComplete={setIsCompleteChoosePopupHand} onClose={handleCloseChoosePopupHand} numberHandCard={numberHandCard} numberMAINCard={numberMAINCard} setNumberMAINCard={setNumberMAINCard} setNumberHandCard={setNumberHandCard} />
+            <LRIGPopup isOpen={isPopupLRIG}
+                onClose={handleClosePopupLRIG}
+                numberCard={numberLRIGCard} />
+            <MAINPopup isOpen={isPopupMAIN}
+                onClose={handleClosePopupMAIN}
+                view={false}
+                numberCard={numberMAINCard} />
+            <ChooseLRIGPopup isOpen={isChoosePopupLRIG}
+                onClose={handleCloseChoosePopupLRIG}
+                numberCardLRIG={numberLRIGCard}
+                type={isTypePopupLRIG}
+                numberCardSpace={cardLRIGSpacePlayer}
+                setCardSpace={setCardLRIGSpacePlayer}
+                setNumberLRIGCard={setNumberLRIGCard} />
+            <HandCardPopup isOpen={isPopupHand}
+                onClose={handleClosePopupHand}
+                numberCard={numberHandCard} />
+            <ChooseHandPopup isOpen={isChoosePopupHand}
+                setIsComplete={setIsCompleteChoosePopupHand}
+                onClose={handleCloseChoosePopupHand}
+                numberHandCard={numberHandCard}
+                numberMAINCard={numberMAINCard}
+                numberEnterCard={numberEnterCard}
+                setNumberEnterCard={setNumberEnterCard}
+                setNumberMAINCard={setNumberMAINCard}
+                setNumberHandCard={setNumberHandCard}
+                type={isTypePopupChooseHand} />
+            <EnterCardPopup isOpen={isPopupEnter}
+                onClose={handleClosePopupEnter}
+                numberCard={numberEnterCard} />
         </>
     );
 };
