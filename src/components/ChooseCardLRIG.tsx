@@ -18,6 +18,10 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose }) => {
         setSelectedCard(card);
     };
 
+    const handleChooseCard = (card: Card) => {
+
+    };
+
     const handleCloseDetail = () => {
         setSelectedCard(null);
     };
@@ -38,16 +42,21 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose }) => {
                             {cardList.map(card => (
                                 <div
                                     key={card.id}
-                                    className="flex flex-col items-center cursor-pointer"
-                                    onClick={() => handleCardClick(card)}
+                                    className="flex flex-col items-center"
                                 >
                                     <Image
                                         src={card.imageUrl}
                                         alt={card.name}
                                         width={750}
                                         height={1047}
-                                        className="w-full h-auto mb-2"
+                                        className="w-full h-auto mb-2 cursor-pointer"
+                                        onClick={() => handleCardClick(card)}
                                     />
+                                    <button className='px-3 text-xs py-1 text-white bg-blue-500 rounded-lg cursor-pointer'
+                                        onClick={() => handleChooseCard(card)}
+                                    >
+                                        Chọn
+                                    </button>
                                 </div>
                             ))}
                         </div>

@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 import LRIGPopup from '../../components/LRIGCard';
+import ChooseLRIGPopup from '../../components/ChooseCardLRIG';
 import MAINPopup from '../../components/MAINCard';
 
 const PlayGround: React.FC = () => {
@@ -10,6 +11,8 @@ const PlayGround: React.FC = () => {
     const [startPhase, setStartPhase] = useState<number>(0);
     const [isPopupLRIG, setIsPopupLRIG] = useState(false);
     const [isPopupMAIN, setIsPopupMAIN] = useState(false);
+    const [isChoosePopupLRIG, setIsChoosePopupLRIG] = useState(false);
+    const [numberMAINCard, setNumberMAINCard] = useState(40);
 
     const handleOpenPopupLRIG = () => {
         setIsPopupLRIG(true);
@@ -17,6 +20,10 @@ const PlayGround: React.FC = () => {
 
     const handleClosePopupLRIG = () => {
         setIsPopupLRIG(false);
+    };
+
+    const handleCloseChoosePopupLRIG = () => {
+        setIsChoosePopupLRIG(false);
     };
 
     const handleOpenPopupMAIN = () => {
@@ -35,7 +42,7 @@ const PlayGround: React.FC = () => {
     const handlePopup = () => {
         setStartPhase(prev => prev + 1);
         if (startPhase === 1) {
-
+            setIsChoosePopupLRIG(true);
         }
     };
 
@@ -257,7 +264,8 @@ const PlayGround: React.FC = () => {
                 </div>
             )}
             <LRIGPopup isOpen={isPopupLRIG} onClose={handleClosePopupLRIG} />
-            <MAINPopup isOpen={isPopupMAIN} onClose={handleClosePopupMAIN} />
+            <MAINPopup isOpen={isPopupMAIN} onClose={handleClosePopupMAIN} view={false} numberCard={numberMAINCard} />
+            <ChooseLRIGPopup isOpen={isChoosePopupLRIG} onClose={handleCloseChoosePopupLRIG} />
         </>
     );
 };
