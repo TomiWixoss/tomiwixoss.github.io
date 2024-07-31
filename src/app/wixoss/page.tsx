@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 import LRIGPopup from '../../components/LRIGCard';
 import ChooseLRIGPopup from '../../components/ChooseCardLRIG';
+import ChooseHandPopup from '../../components/ChooseCardHand';
 import MAINPopup from '../../components/MAINCard';
 import HandCardPopup from '../../components/HandCard';
 import cardList from '../../components/CardDB';
@@ -15,6 +16,8 @@ const PlayGround: React.FC = () => {
     const [isPopupMAIN, setIsPopupMAIN] = useState(false);
     const [isChoosePopupLRIG, setIsChoosePopupLRIG] = useState(false);
     const [isPopupHand, setIsPopupHand] = useState(false);
+    const [isChoosePopupHand, setIsChoosePopupHand] = useState(false);
+    const [isCompleteChoosePopupHand, setIsCompleteChoosePopupHand] = useState<number[]>([]);
     const [isTypePopupLRIG, setIsTypePopupLRIG] = useState(1);
     const [numberMAINCard, setNumberMAINCard] = useState<number[]>([
         12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
@@ -45,7 +48,6 @@ const PlayGround: React.FC = () => {
 
         // Lấy 5 phần tử đầu tiên của mảng đã xáo trộn
         const itemsToMove = shuffledArray.slice(0, 5);
-
         // Cập nhật mảng numberMAINCard và newArray
         setNumberMAINCard(shuffledArray.slice(5));
         setNumberHandCard(itemsToMove);
@@ -57,6 +59,14 @@ const PlayGround: React.FC = () => {
 
     const handleClosePopupHand = () => {
         setIsPopupHand(false);
+    };
+
+    const handleOpenPopupHand = () => {
+        setIsPopupHand(true);
+    };
+
+    const handleCloseChoosePopupHand = () => {
+        setIsChoosePopupHand(false);
     };
 
     const handleClosePopupLRIG = () => {
@@ -94,8 +104,34 @@ const PlayGround: React.FC = () => {
                 setIsPopupHand(true);
                 handleArrayUpdate();
                 break;
+            case 5:
+                setIsChoosePopupHand(true);
+                break;
+            case 6:
+                setIsPopupHand(true);
+                break;
         }
     };
+
+    useEffect(() => {
+        if (isCompleteChoosePopupHand[0] === 1) {
+            // Xáo trộn mảng numberMAINCard
+            const shuffledArray = shuffleArray(numberMAINCard);
+
+            // Lấy các phần tử đầu tiên của mảng đã xáo trộn
+            const itemsToMove = shuffledArray.slice(0, isCompleteChoosePopupHand[1]);
+            // Cập nhật mảng numberMAINCard và newArray
+            setNumberMAINCard(shuffledArray.slice(isCompleteChoosePopupHand[1]));
+
+            const handCard = [...numberHandCard];
+            itemsToMove.forEach((value, index) => {
+                handCard.push(value);
+            });
+
+            setNumberHandCard(handCard);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isCompleteChoosePopupHand]);
 
     useEffect(() => {
         if (isChoosePopupLRIG === true) {
@@ -187,6 +223,7 @@ const PlayGround: React.FC = () => {
                         <p className='text-white my-5 text-center mx-5'>Lượt 1</p>
                         <button
                             className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                            onClick={handleOpenPopupHand}
                         >
                             Tay Người Chơi
                         </button>
@@ -316,8 +353,8 @@ const PlayGround: React.FC = () => {
                         }
                         {startPhase === 4 &&
                             <>
-                                <p className="text-xl mb-4 font-bold">Giai đoạn lượt đầu</p>
-                                <p className="text-md mb-4 font-bold">Giả sử bạn đi lượt đầu thì rút 5 lá bài từ bộ bài chính</p>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
+                                <p className="text-md mb-4 font-bold">Tiếp theo rút 5 lá bài từ bộ bài chính</p>
                                 <button
                                     onClick={handlePopup}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -328,13 +365,25 @@ const PlayGround: React.FC = () => {
                         }
                         {startPhase === 5 &&
                             <>
-                                <p className="text-xl mb-4 font-bold">Giai đoạn lượt đầu</p>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
                                 <p className="text-md mb-4 font-bold">Bạn có quyền loại bỏ bất kỳ số lượng lá bài trên tay và rút lại tương ứng!</p>
                                 <button
                                     onClick={handlePopup}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 >
                                     Bỏ Bài
+                                </button>
+                            </>
+                        }
+                        {startPhase === 6 && isCompleteChoosePopupHand[0] === 1 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
+                                <p className="text-md mb-4 font-bold">Bạn đã bỏ {isCompleteChoosePopupHand[1]} lá bài nên bây giờ bạn sẽ rút lại số lá bài tương ứng!</p>
+                                <button
+                                    onClick={handlePopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Rút Lại
                                 </button>
                             </>
                         }
@@ -345,6 +394,7 @@ const PlayGround: React.FC = () => {
             <MAINPopup isOpen={isPopupMAIN} onClose={handleClosePopupMAIN} view={false} numberCard={numberMAINCard.length} />
             <ChooseLRIGPopup isOpen={isChoosePopupLRIG} onClose={handleCloseChoosePopupLRIG} numberCard={numberLRIGCard} type={isTypePopupLRIG} setCardSpace={setCardLRIGSpacePlayer} setNumberLRIGCard={setNumberLRIGCard} />
             <HandCardPopup isOpen={isPopupHand} onClose={handleClosePopupHand} numberCard={numberHandCard} />
+            <ChooseHandPopup isOpen={isChoosePopupHand} setIsComplete={setIsCompleteChoosePopupHand} onClose={handleCloseChoosePopupHand} numberHandCard={numberHandCard} numberMAINCard={numberMAINCard} setNumberMAINCard={setNumberMAINCard} setNumberHandCard={setNumberHandCard} />
         </>
     );
 };

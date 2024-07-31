@@ -22,6 +22,21 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard }) =>
         setSelectedCard(null);
     };
 
+    // Hàm lọc phần tử dựa trên numberCard
+    const filterCardsByNumberCard = (cardList: Card[], numberCard: number[]): Card[] => {
+        const result: Card[] = [];
+
+        for (const number of numberCard) {
+            // Tìm card trong cardList với id khớp với số trong numberCard
+            const matchingCard = cardList.find(card => card.id === number);
+            if (matchingCard) {
+                result.push(matchingCard); // Thêm card vào mảng kết quả
+            }
+        }
+
+        return result;
+    };
+
     return (
         <>
             {isOpen && (
@@ -35,20 +50,18 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard }) =>
                             />
                         </div>
                         <div className="mt-4 grid grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
-                            {cardList
-                                .filter(card => numberCard.includes(card.id)) // Lọc các card có id trùng với giá trị trong numberMain
-                                .map((card, index) => (
-                                    <div key={`${card.id}-${index}`} className="flex flex-col items-center cursor-pointer">
-                                        <Image
-                                            src={card.imageUrl}
-                                            alt={card.name}
-                                            width={750}
-                                            height={1047}
-                                            className="w-full h-auto mb-2"
-                                            onClick={() => handleCardClick(card)}
-                                        />
-                                    </div>
-                                ))}
+                            {filterCardsByNumberCard(cardList, numberCard).map((card, index) => (
+                                <div key={`${card.id}-${index}`} className="flex flex-col items-center cursor-pointer">
+                                    <Image
+                                        src={card.imageUrl}
+                                        alt={card.name}
+                                        width={750}
+                                        height={1047}
+                                        className="w-full h-auto mb-2"
+                                        onClick={() => handleCardClick(card)}
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
