@@ -182,7 +182,7 @@ const PlayGround: React.FC = () => {
     }, [isCompleteChoosePopupHand]);
 
     useEffect(() => {
-        if (isChoosePopupLRIG === true) {
+        if (isChoosePopupLRIG === true || isPopupHand === true || isChoosePopupHand === true) {
             setPopupAction(false);
         }
         else {
@@ -192,7 +192,7 @@ const PlayGround: React.FC = () => {
             setMainPhase(1);
             setStartPhase(10);
         }
-    }, [isChoosePopupLRIG, startPhase]);
+    }, [isChoosePopupHand, isChoosePopupLRIG, isPopupHand, startPhase]);
 
     return (
         <>
