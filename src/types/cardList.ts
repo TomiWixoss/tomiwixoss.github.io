@@ -16,4 +16,6 @@ export default interface Card {
     cardPower: number;
     cardBurst: string;
     cardUseTime: string;
+    isLRIGCenter: boolean;
+    isLRIGSupport: boolean;
 }
