@@ -24,10 +24,20 @@ interface HandPopupProps {
 const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, numberEnerCard, setNumberEnerCard, setNumberMAINCard, setNumberHandCard, type, numberCardSpaceLRIG, targetCardSpace, numberCardSpaceMAIN }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [numberChooseCard, setNumberChooseCard] = useState<number[]>([0, 0, 0, 0, 0]);
-    const [checkCardCenter, setCheckCardCenter] = useState<Card[]>(cardList.filter(card => card.id === numberCardSpaceLRIG[1]));
+    const [checkCardSpaceLRIG, setCheckCardSpaceLRIG] = useState<Card[]>([]);
+    const [checkLimitCardMAIN, setCheckLimitCardMAIN] = useState<number>(0);
 
     useEffect(() => {
-        setCheckCardCenter(cardList.filter(card => card.id === numberCardSpaceLRIG[1]));
+        const cardSpaceLRIG: Card[] = [];
+
+        numberCardSpaceLRIG.forEach((value, index) => {
+            const card = cardList.find(card => card.id === value);
+            if (card) {
+                cardSpaceLRIG.push(card);
+            }
+        });
+
+        setCheckCardSpaceLRIG(cardSpaceLRIG);
     }, [numberCardSpaceLRIG, type])
 
     const handleCardClick = (card: Card) => {
@@ -94,17 +104,29 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
             const SpaceCard: number[] = [];
             let handCard: number[] = [];
 
+            let found = false; // Biến cờ để kiểm tra xem phần tử có id khớp đã được thêm vào SpaceCard chưa
+
             HandCard.forEach((value, index) => {
-                if (value !== id) {
-                    handCard.push(HandCard[index]);
-                }
-                else {
-                    SpaceCard.push(HandCard[index]);
+                if (value !== id || found) {
+                    // Nếu id không khớp hoặc phần tử đã được tìm thấy, thêm vào handCard
+                    handCard.push(value);
+                } else {
+                    // Nếu id khớp và phần tử chưa được thêm vào SpaceCard
+                    SpaceCard.push(value);
+                    found = true; // Đánh dấu đã tìm thấy phần tử
                 }
             });
 
             numberCardSpaceMAIN[targetCardSpace] = SpaceCard[0];
             setNumberHandCard(handCard);
+
+            let count: number = 0;
+            numberCardSpaceMAIN.forEach((value, index) => {
+                count += cardList
+                    .filter(card => card.id === value)
+                    .reduce((sum, card) => sum + card.cardLevel, 0);
+            });
+            setCheckLimitCardMAIN(count);
         }
         onClose();
     };
@@ -212,7 +234,10 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
                         <div className="mt-4 grid grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
                             {filterCardsBynumberHandCard(cardList, numberHandCard)
                                 .filter(card => (
-                                    type === 2 ? card.cardType === "SIGNI" && card.cardLevel <= checkCardCenter[0].cardLevel : true
+                                    type === 2 ?
+                                        (card.cardType === "SIGNI" || card.cardType === "Guard")
+                                        && card.cardLevel <= checkCardSpaceLRIG[1].cardLevel
+                                        && checkLimitCardMAIN <= checkCardSpaceLRIG[1].cardLimit + checkCardSpaceLRIG[0].cardLimit + checkCardSpaceLRIG[2].cardLimit : true
                                 )).map((card, index) => (
                                     <div key={`${card.id}-${index}`} className="flex flex-col items-center cursor-pointer">
                                         <Image
@@ -233,7 +258,10 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
                         </div>
                         {filterCardsBynumberHandCard(cardList, numberHandCard)
                             .filter(card => (
-                                type === 2 ? card.cardType === "SIGNI" && card.cardLevel <= checkCardCenter[0].cardLevel : true
+                                type === 2 ?
+                                    (card.cardType === "SIGNI" || card.cardType === "Guard")
+                                    && card.cardLevel <= checkCardSpaceLRIG[1].cardLevel
+                                    && checkLimitCardMAIN <= checkCardSpaceLRIG[1].cardLimit + checkCardSpaceLRIG[0].cardLimit + checkCardSpaceLRIG[2].cardLimit : true
                             )).length === 0 && (
                                 <div className="text-center font-[500] text-black my-5 mx-5">
                                     Không có thẻ nào phù hợp.

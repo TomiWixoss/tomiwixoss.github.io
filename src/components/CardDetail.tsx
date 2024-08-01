@@ -1,13 +1,10 @@
 // components/CardDetail.tsx
 import React from 'react';
 import Image from 'next/image';
+import Card from "../types/cardList";
 
 interface CardDetailProps {
-    card: {
-        id: number;
-        name: string;
-        imageUrl: string
-    } | null;
+    card: Card | null;
     onClose: () => void;
 }
 
@@ -24,6 +21,14 @@ const CardDetail: React.FC<CardDetailProps> = ({ card, onClose }) => {
                     height={1047}
                     className='cursor-pointer'
                     onClick={onClose} />
+                <div className='px-2 max-h-[25vh] overflow-auto'>
+                    {card.cardText !== "" && (
+                        <p className='mt-2 font-[500] text-center'>Hiệu Ứng Bài: {card.cardText}</p>
+                    )}
+                    {card.cardBurst !== "" && (
+                        <p className='mt-2 font-[500] text-center'>Hiệu Ứng Bùng Nổ: {card.cardBurst}</p>
+                    )}
+                </div>
             </div>
         </div>
     );
