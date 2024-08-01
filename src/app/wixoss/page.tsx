@@ -65,6 +65,8 @@ const PlayGround: React.FC = () => {
     const [cardLRIGSpaceTarget, setCardLRIGSpaceTarget] = useState([0, 0, 0]);
     const [cardMAINSpacePlayer, setCardMAINSpacePlayer] = useState([-1, -1, -1]);
     const [cardMAINSpaceTarget, setCardMAINSpaceTarget] = useState([-1, -1, -1]);
+    const [cardPowerMAINSpacePlayer, setCardPowerMAINSpacePlayer] = useState([0, 0, 0]);
+    const [cardPowerMAINSpaceTarget, setCardPowerMAINSpaceTarget] = useState([0, 0, 0]);
     const [targetSpaceMAINPlayer, setTargetSpaceMAINPlayer] = useState(0);
     const [checkLRIGCardLevelUp, setCheckLRIGCardLevelUp] = useState<Card | null>(null);
     const [checkLRIGCardLevelUpPosition, setCheckLRIGCardLevelUpPosition] = useState(0);
@@ -105,8 +107,12 @@ const PlayGround: React.FC = () => {
 
     }, [cardLRIGSpacePlayer, cardMAINSpacePlayer, checkEnterCardEffectLRIG]);
 
-    const handleActiveEnterEffect = () => {
+    const handleActiveEnterEffect = (card: Card) => {
+        switch (card.id) {
+            case 6:
 
+                break;
+        }
     };
 
     const handleLRIGCardClick = (card: Card) => {
@@ -507,17 +513,22 @@ const PlayGround: React.FC = () => {
                             const card = cardList.find(card => card.id === id);
                             if (card && card.imageUrl) {
                                 return (
-                                    <Image
-                                        key={index}
-                                        src={card.imageUrl}
-                                        alt={'Ảnh bìa chính'}
-                                        width={750}
-                                        height={1047}
-                                        className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
-                                        onClick={() => { setSelectedCard(card) }}
-                                    />
+                                    <div key={index} className={`relative w-[20%] cursor-pointer ${index === 1 ? 'mx-12' : ''}`}>
+                                        <Image
+                                            src={card.imageUrl}
+                                            alt={'Ảnh bìa chính'}
+                                            width={750}
+                                            height={1047}
+                                            className={`w-full h-auto`}
+                                            onClick={() => { setSelectedCard(card) }}
+                                        />
+                                        <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
+                                            {`${card.cardPower + cardPowerMAINSpaceTarget[index]}`}
+                                        </p>
+                                    </div>
                                 );
                             }
+                            return null;
                         })}
                     </div>
                     <div className='flex justify-center items-center'>
@@ -560,17 +571,22 @@ const PlayGround: React.FC = () => {
                             const card = cardList.find(card => card.id === id);
                             if (card && card.imageUrl) {
                                 return (
-                                    <Image
-                                        key={index}
-                                        src={card.imageUrl}
-                                        alt={'Ảnh bìa chính'}
-                                        width={750}
-                                        height={1047}
-                                        className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
-                                        onClick={() => { handleChooseSIGNICard(index, card.id, card) }}
-                                    />
+                                    <div key={index} className={`relative w-[20%] cursor-pointer ${index === 1 ? 'mx-12' : ''}`}>
+                                        <Image
+                                            src={card.imageUrl}
+                                            alt={'Ảnh bìa chính'}
+                                            width={750}
+                                            height={1047}
+                                            className={`w-full h-auto`}
+                                            onClick={() => { handleChooseSIGNICard(index, card.id, card) }}
+                                        />
+                                        <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
+                                            {`${card.cardPower + cardPowerMAINSpacePlayer[index]}`}
+                                        </p>
+                                    </div>
                                 );
                             }
+                            return null;
                         })}
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
@@ -852,7 +868,7 @@ const PlayGround: React.FC = () => {
                             </button>
                             <button
                                 className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={handleActiveEnterEffect}
+                                onClick={() => { handleActiveEnterEffect(isPopupEnter) }}
                             >
                                 Kích Hoạt
                             </button>

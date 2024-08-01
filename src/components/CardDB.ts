@@ -274,7 +274,7 @@ const cardList: Card[] = [
         cardColor: "green, red, blue",
         cardText: "Điều Kiện Sử Dụng: Có Nhóm <Ancient Surprise> trên sân với tất cả thành viên từ cấp 1 trở lên: Nhìn vào tám lá bài trên cùng của bộ bài của bạn. Đặt tối đa một SIGNI cấp 1, một SIGNI cấp 2 và một SIGNI cấp 3 trong số đó vào sân của bạn. Đặt phần còn lại ở dưới cùng của bộ bài của bạn theo thứ tự ngẫu nhiên. Sau đó, SIGNI cấp 1 đạt được 【Assassin】, SIGNI cấp 2 đạt được 【Double Crush】 và SIGNI cấp 3 đạt được 【Lancer】 cho đến khi kết thúc lượt.(Hiệu ứng vào sân của lá bài được đưa vào theo cách này sẽ không thể kích hoạt cho đến khi kết thúc lượt!).",
         cardLevel: 0,
-        cardCost: 0,
+        cardCost: 8,
         cardGrowCost: 0,
         cardLimit: 0,
         cardLRIGType: "",
