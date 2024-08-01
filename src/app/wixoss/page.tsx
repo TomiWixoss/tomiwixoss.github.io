@@ -8,10 +8,16 @@ import ChooseHandPopup from '../../components/ChooseCardHand';
 import MAINPopup from '../../components/MAINCard';
 import HandCardPopup from '../../components/HandCard';
 import EnerCardPopup from '../../components/EnerCard';
+import TrashCardPopup from '../../components/TrashCard';
 import cardList from '../../components/CardDB';
 import CardDetail from '../../components/CardDetail';
 import Card from "../../types/cardList";
 import { IoMdClose } from "react-icons/io";
+import LRIGPopupBot from '../../components/LRIGCardBot';
+import MAINPopupBot from '../../components/MAINCardBot';
+import HandCardPopupBot from '../../components/HandCardBot';
+import EnerCardPopupBot from '../../components/EnerCardBot';
+import TrashCardPopupBot from '../../components/TrashCardBot';
 
 const PlayGround: React.FC = () => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
@@ -21,9 +27,15 @@ const PlayGround: React.FC = () => {
     const [isPopupLRIG, setIsPopupLRIG] = useState(false);
     const [isPopupEner, setIsPopupEner] = useState(false);
     const [isPopupMAIN, setIsPopupMAIN] = useState(false);
+    const [isPopupTrash, setIsPopupTrash] = useState(false);
     const [isChoosePopupLRIG, setIsChoosePopupLRIG] = useState(false);
     const [isPopupHand, setIsPopupHand] = useState(false);
     const [isChoosePopupHand, setIsChoosePopupHand] = useState(false);
+    const [isPopupLRIGBot, setIsPopupLRIGBot] = useState(false);
+    const [isPopupEnerBot, setIsPopupEnerBot] = useState(false);
+    const [isPopupMAINBot, setIsPopupMAINBot] = useState(false);
+    const [isPopupHandBot, setIsPopupHandBot] = useState(false);
+    const [isPopupTrashBot, setIsPopupTrashBot] = useState(false);
     const [isCompleteChoosePopupHand, setIsCompleteChoosePopupHand] = useState<number[]>([]);
     const [isTypePopupLRIG, setIsTypePopupLRIG] = useState(1);
     const [isTypePopupChooseHand, setIsTypePopupChooseHand] = useState(0);
@@ -37,6 +49,18 @@ const PlayGround: React.FC = () => {
     const [numberLifeCard, setNumberLifeCard] = useState<number[]>([]);
     const [numberHandCard, setNumberHandCard] = useState<number[]>([]);
     const [numberEnerCard, setNumberEnerCard] = useState<number[]>([]);
+    const [numberTrashCard, setNumberTrashCard] = useState<number[]>([]);
+    const [numberMAINCardBot, setNumberMAINCardBot] = useState<number[]>([
+        12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
+        15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17,
+        18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 20,
+        21, 21, 21, 21
+    ]);
+    const [numberLRIGCardBot, setNumberLRIGCardBot] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    const [numberLifeCardBot, setNumberLifeCardBot] = useState<number[]>([]);
+    const [numberHandCardBot, setNumberHandCardBot] = useState<number[]>([]);
+    const [numberEnerCardBot, setNumberEnerCardBot] = useState<number[]>([]);
+    const [numberTrashCardBot, setNumberTrashCardBot] = useState<number[]>([]);
     const [cardLRIGSpacePlayer, setCardLRIGSpacePlayer] = useState([0, 0, 0]);
     const [cardLRIGSpaceTarget, setCardLRIGSpaceTarget] = useState([0, 0, 0]);
     const [cardMAINSpacePlayer, setCardMAINSpacePlayer] = useState([-1, -1, -1]);
@@ -109,6 +133,38 @@ const PlayGround: React.FC = () => {
         setNumberHandCard(itemsToMove);
     };
 
+    const handleOpenPopupLRIGBot = () => {
+        setIsPopupLRIGBot(true);
+    };
+
+    const handleClosePopupLRIGBot = () => {
+        setIsPopupLRIGBot(false);
+    };
+
+    const handleOpenPopupMAINBot = () => {
+        setIsPopupMAINBot(true);
+    };
+
+    const handleClosePopupMAINBot = () => {
+        setIsPopupMAINBot(false);
+    };
+
+    const handleOpenPopupHandBot = () => {
+        setIsPopupHandBot(true);
+    };
+
+    const handleClosePopupHandBot = () => {
+        setIsPopupHandBot(false);
+    };
+
+    const handleOpenPopupEnerBot = () => {
+        setIsPopupEnerBot(true);
+    };
+
+    const handleClosePopupEnerBot = () => {
+        setIsPopupEnerBot(false);
+    };
+
     const handleOpenPopupLRIG = () => {
         setIsPopupLRIG(true);
     };
@@ -149,6 +205,22 @@ const PlayGround: React.FC = () => {
         setIsPopupMAIN(false);
     };
 
+    const handleOpenPopupTrash = () => {
+        setIsPopupTrash(true);
+    };
+
+    const handleClosePopupTrash = () => {
+        setIsPopupTrash(false);
+    };
+
+    const handleOpenPopupTrashBot = () => {
+        setIsPopupTrashBot(true);
+    };
+
+    const handleClosePopupTrashBot = () => {
+        setIsPopupTrashBot(false);
+    };
+
     const handleChooseSIGNICard = (index: number, id: number, card: Card) => {
         if (id === -1) {
             setTargetSpaceMAINPlayer(index);
@@ -180,33 +252,114 @@ const PlayGround: React.FC = () => {
         }
     };
 
+    const removeCardById = (cardList: number[], idToRemove: number) => {
+        return cardList.map(card => ({ id: card } as { id: number }))
+            .filter(card => card.id !== idToRemove)
+            .map(card => card.id);
+    };
+
+    const setUpBot = (id: number) => {
+        let cardIsChoose: number[] = [...cardLRIGSpaceTarget];
+        let drawBotCardHand: number[] = [...numberHandCardBot];
+        let drawBotCardMAIN: number[] = [...numberMAINCardBot];
+        let cardBotHand: number[] = [...numberHandCardBot];
+        let cardBotMAIN: number[] = [...numberMAINCardBot];
+        switch (id) {
+            case 1:
+                const cardChoose1 = cardList.filter(card => numberLRIGCardBot.includes(card.id) && card.cardLevel === 0 && card.isLRIGCenter === true);
+                cardIsChoose[1] = cardChoose1[0].id;
+                setCardLRIGSpaceTarget(cardIsChoose);
+                setNumberLRIGCardBot(removeCardById(numberLRIGCardBot, cardChoose1[0].id));
+                break;
+            case 2:
+                const cardChoose2 = cardList.filter(card => numberLRIGCardBot.includes(card.id) && card.cardLevel === 0 && card.isLRIGSupport === true);
+                cardIsChoose[0] = cardChoose2[0].id;
+                setCardLRIGSpaceTarget(cardIsChoose);
+                setNumberLRIGCardBot(removeCardById(numberLRIGCardBot, cardChoose2[0].id));
+                break;
+            case 3:
+                const cardChoose3 = cardList.filter(card => numberLRIGCardBot.includes(card.id) && card.cardLevel === 0 && card.isLRIGSupport === true);
+                cardIsChoose[2] = cardChoose3[0].id;
+                setCardLRIGSpaceTarget(cardIsChoose);
+                setNumberLRIGCardBot(removeCardById(numberLRIGCardBot, cardChoose3[0].id));
+                break;
+            case 4:
+                const shuffledArray1 = shuffleArray(drawBotCardMAIN);
+                drawBotCardHand = shuffledArray1.splice(0, 5);
+                setNumberHandCardBot(drawBotCardHand);
+                setNumberMAINCardBot(shuffledArray1);
+                break;
+            case 5:
+                const result: Card[] = [];
+                for (const number of cardBotHand) {
+                    // Tìm card trong cardList với id khớp với số trong cardBotHand
+                    const matchingCard = cardList.find(card => card.id === number && card.cardLevel > 1);
+                    if (matchingCard) {
+                        result.push(matchingCard); // Thêm card vào mảng kết quả
+                    }
+                }
+                let handCardUse: number[] = [];
+                let handCard: number[] = [];
+                let handCardBot: Card[] = result;
+                handCardBot.forEach((value, index) => {
+                    handCard.push(value.id);
+                });
+
+                handCard.forEach((value, index) => {
+                    cardBotMAIN.push(value);
+                });
+
+                handCardUse = cardBotHand.filter(valueCard => !handCard.includes(valueCard));
+
+                const shuffledArray2 = shuffleArray(cardBotMAIN);
+                const numberBotCardHand = shuffledArray2.splice(0, handCard.length);
+
+                numberBotCardHand.forEach((value, index) => {
+                    handCardUse.push(value);
+                });
+
+                setNumberHandCardBot(handCardUse);
+                setNumberMAINCardBot(shuffledArray2);
+                break;
+            case 6:
+                setNumberLifeCardBot(numberMAINCardBot.splice(0, 7));
+                break;
+        }
+    }
+
     const handlePopup = () => {
         setStartPhase(prev => prev + 1);
         switch (startPhase) {
             case 1:
                 setIsChoosePopupLRIG(true);
                 setIsTypePopupLRIG(2);
+                setUpBot(1);
                 break;
             case 2:
                 setIsChoosePopupLRIG(true);
                 setIsTypePopupLRIG(1);
+                setUpBot(2);
                 break;
             case 3:
                 setIsChoosePopupLRIG(true);
                 setIsTypePopupLRIG(3);
+                setUpBot(3);
                 break;
             case 4:
                 setIsPopupHand(true);
                 handleArrayUpdate();
+                setUpBot(4);
                 break;
             case 5:
                 setIsChoosePopupHand(true);
+                setUpBot(5);
                 break;
             case 6:
                 setIsPopupHand(true);
                 break;
             case 7:
                 setNumberLifeCard(numberMAINCard.splice(0, 7));
+                setUpBot(6);
                 break;
         }
     };
@@ -301,15 +454,17 @@ const PlayGround: React.FC = () => {
                             height={1047}
                             className='w-[15%] h-auto'
                         />
-                        <p className='text-2xl text-white mx-4'>x1</p>
+                        <p className='text-2xl text-white mx-4'>x{numberLifeCardBot.length}</p>
                         <div className='flex flex-col justify-center items-center'>
                             <button
                                 className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                                onClick={handleOpenPopupMAINBot}
                             >
                                 Bộ Bài Chính
                             </button>
                             <button
                                 className="px-2 py-1 text-xs mt-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                                onClick={handleOpenPopupLRIGBot}
                             >
                                 Bộ Bài LRIG
                             </button>
@@ -317,11 +472,13 @@ const PlayGround: React.FC = () => {
                         <div className='flex flex-col ml-2 justify-center items-center'>
                             <button
                                 className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                                onClick={handleOpenPopupEnerBot}
                             >
                                 Nguyên Liệu
                             </button>
                             <button
                                 className="px-2 py-1 text-xs mt-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                                onClick={handleOpenPopupTrashBot}
                             >
                                 Thùng Rác
                             </button>
@@ -338,7 +495,8 @@ const PlayGround: React.FC = () => {
                                         alt={'Ảnh bìa chính'}
                                         width={750}
                                         height={1047}
-                                        className={`w-[20%] h-auto ${index === 1 ? 'mx-12' : ''}`}
+                                        className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
+                                        onClick={() => { setSelectedCard(card) }}
                                     />
                                 );
                             }
@@ -355,7 +513,8 @@ const PlayGround: React.FC = () => {
                                         alt={'Ảnh bìa chính'}
                                         width={750}
                                         height={1047}
-                                        className={`w-[20%] h-auto ${index === 1 ? 'mx-12' : ''}`}
+                                        className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
+                                        onClick={() => { setSelectedCard(card) }}
                                     />
                                 );
                             }
@@ -364,6 +523,7 @@ const PlayGround: React.FC = () => {
                     <div className='flex justify-center items-center'>
                         <button
                             className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                            onClick={handleOpenPopupHandBot}
                         >
                             Tay Đối Thủ
                         </button>
@@ -463,6 +623,7 @@ const PlayGround: React.FC = () => {
                             </button>
                             <button
                                 className="px-2 py-1 text-xs mt-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                                onClick={handleOpenPopupTrash}
                             >
                                 Thùng Rác
                             </button>
@@ -735,6 +896,25 @@ const PlayGround: React.FC = () => {
             <EnerCardPopup isOpen={isPopupEner}
                 onClose={handleClosePopupEner}
                 numberCard={numberEnerCard} />
+            <TrashCardPopup isOpen={isPopupTrash}
+                onClose={handleClosePopupTrash}
+                numberCard={numberTrashCard} />
+            <LRIGPopupBot isOpen={isPopupLRIGBot}
+                onClose={handleClosePopupLRIGBot}
+                numberCard={numberLRIGCardBot} />
+            <MAINPopupBot isOpen={isPopupMAINBot}
+                onClose={handleClosePopupMAINBot}
+                view={false}
+                numberCard={numberMAINCardBot} />
+            <HandCardPopupBot isOpen={isPopupHandBot}
+                onClose={handleClosePopupHandBot}
+                numberCard={numberHandCardBot} />
+            <EnerCardPopupBot isOpen={isPopupEnerBot}
+                onClose={handleClosePopupEnerBot}
+                numberCard={numberEnerCardBot} />
+            <TrashCardPopupBot isOpen={isPopupTrashBot}
+                onClose={handleClosePopupTrashBot}
+                numberCard={numberTrashCardBot} />
             {selectedCard && <CardDetail card={selectedCard} onClose={() => { setSelectedCard(null) }} />}
         </>
     );
