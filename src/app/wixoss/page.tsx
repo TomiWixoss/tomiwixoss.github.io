@@ -150,6 +150,7 @@ const PlayGround: React.FC = () => {
                 setIsChoosePopupLRIG(true);
                 break;
             case 5:
+                setStartPhase(11);
                 setPopupAction(false);
                 break;
         }
@@ -191,6 +192,9 @@ const PlayGround: React.FC = () => {
         if (startPhase === 9) {
             setMainPhase(1);
             setStartPhase(10);
+        }
+        if (startPhase === 11) {
+            setPopupAction(false);
         }
     }, [isChoosePopupHand, isChoosePopupLRIG, isPopupHand, startPhase]);
 
@@ -286,6 +290,9 @@ const PlayGround: React.FC = () => {
                         }
                         {MainPhase === 4 &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Phát Triển</p>
+                        }
+                        {MainPhase === 5 &&
+                            <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Chính</p>
                         }
                         {MainPhase === 6 &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Chính</p>
