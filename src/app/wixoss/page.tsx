@@ -114,7 +114,7 @@ const PlayGround: React.FC = () => {
             setIsTypePopupChooseHand(2);
             setIsChoosePopupHand(true);
         } else {
-            if (card.isActionEffect === false) {
+            if (card.cardEffect.includes("Action") === false) {
                 setSelectedCard(card);
             }
         }
@@ -129,7 +129,7 @@ const PlayGround: React.FC = () => {
                 cardSpaceLRIG.push(card);
             }
         });
-        if (card.cardLevel < cardSpaceLRIG[1].cardLevel || card.isActionEffect === true) {
+        if (card.cardLevel < cardSpaceLRIG[1].cardLevel || card.cardEffect.includes("Action") === true) {
             handleLRIGCardClick(card);
         }
         else {
@@ -633,7 +633,8 @@ const PlayGround: React.FC = () => {
                 setNumberLRIGCard={setNumberLRIGCard} />
             <HandCardPopup isOpen={isPopupHand}
                 onClose={handleClosePopupHand}
-                numberCard={numberHandCard} />
+                numberCard={numberHandCard}
+                phase={MainPhase} />
             <ChooseHandPopup isOpen={isChoosePopupHand}
                 setIsComplete={setIsCompleteChoosePopupHand}
                 onClose={handleCloseChoosePopupHand}

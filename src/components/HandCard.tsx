@@ -9,14 +9,15 @@ interface HandPopupProps {
     isOpen: boolean;
     onClose: () => void;
     numberCard: number[];
+    phase: number;
 }
 
-const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard }) => {
+const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, phase }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isSelectedSpell, setIsSelectedSpell] = useState<Card | null>(null);
 
     const handleCardClick = (card: Card) => {
-        if (card.cardType !== "SPELL") {
+        if (card.cardType !== "SPELL" || phase !== 6) {
             setSelectedCard(card);
         }
         else {

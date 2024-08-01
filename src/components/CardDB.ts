@@ -21,7 +21,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 0,
@@ -43,7 +43,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 1,
@@ -65,7 +65,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: true,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 2,
@@ -87,7 +87,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: true,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 3,
@@ -109,7 +109,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: true,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 4,
@@ -131,7 +131,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: true,
         isLRIGSupport: false,
-        isActionEffect: true
+        cardEffect: ["Action", "Enter"]
     },
     {
         id: 5,
@@ -153,7 +153,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 6,
@@ -175,7 +175,7 @@ const cardList: Card[] = [
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        isActionEffect: false
+        cardEffect: ["Enter"]
     },
     {
         id: 7,
@@ -197,7 +197,7 @@ const cardList: Card[] = [
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        isActionEffect: false
+        cardEffect: ["Enter"]
     },
     {
         id: 8,
@@ -219,7 +219,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 9,
@@ -241,7 +241,7 @@ const cardList: Card[] = [
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        isActionEffect: false
+        cardEffect: ["Enter"]
     },
     {
         id: 10,
@@ -263,7 +263,7 @@ const cardList: Card[] = [
         cardUseTime: "Main Phase, Attack Phase",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        isActionEffect: false
+        cardEffect: ["Enter"]
     },
     {
         id: 11,
@@ -285,7 +285,7 @@ const cardList: Card[] = [
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 12,
@@ -307,7 +307,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: ["Const"]
     },
     {
         id: 13,
@@ -329,7 +329,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 14,
@@ -351,7 +351,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: true
+        cardEffect: ["Const", "Action"]
     },
     {
         id: 15,
@@ -373,7 +373,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: ["Auto", "Enter"]
     },
     {
         id: 16,
@@ -395,7 +395,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: ["Auto"]
     },
     {
         id: 17,
@@ -417,7 +417,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: ["Enter"]
     },
     {
         id: 18,
@@ -439,7 +439,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 19,
@@ -461,7 +461,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 20,
@@ -483,7 +483,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     },
     {
         id: 21,
@@ -505,7 +505,7 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        isActionEffect: false
+        cardEffect: [""]
     }
 ];
 
