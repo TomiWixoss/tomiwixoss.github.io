@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { IoMdClose } from "react-icons/io";
 import CardDetail from './CardDetail';
@@ -12,15 +12,23 @@ interface HandPopupProps {
     numberHandCard: number[];
     numberMAINCard: number[];
     numberEnerCard: number[];
+    numberCardSpaceLRIG: number[];
+    targetCardSpace: number;
+    numberCardSpaceMAIN: number[];
     setNumberEnerCard: React.Dispatch<React.SetStateAction<number[]>>;
     setNumberMAINCard: React.Dispatch<React.SetStateAction<number[]>>;
     setNumberHandCard: React.Dispatch<React.SetStateAction<number[]>>;
     type: number;
 }
 
-const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, numberEnerCard, setNumberEnerCard, setNumberMAINCard, setNumberHandCard, type }) => {
+const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, numberEnerCard, setNumberEnerCard, setNumberMAINCard, setNumberHandCard, type, numberCardSpaceLRIG, targetCardSpace, numberCardSpaceMAIN }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [numberChooseCard, setNumberChooseCard] = useState<number[]>([0, 0, 0, 0, 0]);
+    const [checkCardCenter, setCheckCardCenter] = useState<Card[]>(cardList.filter(card => card.id === numberCardSpaceLRIG[1]));
+
+    useEffect(() => {
+        setCheckCardCenter(cardList.filter(card => card.id === numberCardSpaceLRIG[1]));
+    }, [numberCardSpaceLRIG, type])
 
     const handleCardClick = (card: Card) => {
         setSelectedCard(card);
@@ -63,22 +71,41 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
         setNumberChooseCard(updatedChooseCard);
     };
 
-    const handleChooseEnterCard = (card: number) => {
-        const HandCard = [...numberHandCard];
-        const EnerCard = [...numberEnerCard]
-        let handCard: number[] = [];
+    const handleChooseHandCard = (card: number, type: number, id: number) => {
+        if (type === 1) {
+            const HandCard = [...numberHandCard];
+            const EnerCard = [...numberEnerCard]
+            let handCard: number[] = [];
 
-        HandCard.forEach((value, index) => {
-            if (index !== card) {
-                handCard.push(HandCard[index]);
-            }
-            else {
-                EnerCard.push(HandCard[index]);
-            }
-        });
+            HandCard.forEach((value, index) => {
+                if (index !== card) {
+                    handCard.push(HandCard[index]);
+                }
+                else {
+                    EnerCard.push(HandCard[index]);
+                }
+            });
 
-        setNumberHandCard(handCard);
-        setNumberEnerCard(EnerCard);
+            setNumberHandCard(handCard);
+            setNumberEnerCard(EnerCard);
+        }
+        if (type === 2) {
+            const HandCard = [...numberHandCard];
+            const SpaceCard: number[] = [];
+            let handCard: number[] = [];
+
+            HandCard.forEach((value, index) => {
+                if (value !== id) {
+                    handCard.push(HandCard[index]);
+                }
+                else {
+                    SpaceCard.push(HandCard[index]);
+                }
+            });
+
+            numberCardSpaceMAIN[targetCardSpace] = SpaceCard[0];
+            setNumberHandCard(handCard);
+        }
         onClose();
     };
 
@@ -162,31 +189,56 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
                     </div>
                 </div>
             )}
-            {isOpen && type === 1 && (
+            {isOpen && (type === 1 || type === 2) && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative overflow-auto max-h-[80vh]">
                         <div className="flex justify-between items-center mb-4">
-                            <p className="font-bold text-lg">Chọn Bài Cần Nhập</p>
+                            {type === 1 &&
+                                <p className="font-bold text-lg">Chọn Bài Cần Nhập</p>
+                            }
+                            {type === 2 &&
+                                <>
+                                    <p className="font-bold text-lg">Chọn SIGNI để vào sân</p>
+                                    <IoMdClose
+                                        onClick={() => {
+                                            setIsComplete([0, 0]);
+                                            onClose();
+                                        }}
+                                        className="font-bold text-2xl cursor-pointer"
+                                    />
+                                </>
+                            }
                         </div>
                         <div className="mt-4 grid grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
-                            {filterCardsBynumberHandCard(cardList, numberHandCard).map((card, index) => (
-                                <div key={`${card.id}-${index}`} className="flex flex-col items-center cursor-pointer">
-                                    <Image
-                                        src={card.imageUrl}
-                                        alt={card.name}
-                                        width={750}
-                                        height={1047}
-                                        className={`w-full h-auto mb-2`}
-                                        onClick={() => handleCardClick(card)}
-                                    />
-                                    <button className={`text-white px-3 text-xs py-1 bg-blue-500 hover:bg-blue-600 rounded-lg cursor-pointer`}
-                                        onClick={() => { handleChooseEnterCard(index) }}
-                                    >
-                                        Chọn
-                                    </button>
-                                </div>
-                            ))}
+                            {filterCardsBynumberHandCard(cardList, numberHandCard)
+                                .filter(card => (
+                                    type === 2 ? card.cardType === "SIGNI" && card.cardLevel <= checkCardCenter[0].cardLevel : true
+                                )).map((card, index) => (
+                                    <div key={`${card.id}-${index}`} className="flex flex-col items-center cursor-pointer">
+                                        <Image
+                                            src={card.imageUrl}
+                                            alt={card.name}
+                                            width={750}
+                                            height={1047}
+                                            className={`w-full h-auto mb-2`}
+                                            onClick={() => handleCardClick(card)}
+                                        />
+                                        <button className={`text-white px-3 text-xs py-1 bg-blue-500 hover:bg-blue-600 rounded-lg cursor-pointer`}
+                                            onClick={() => { handleChooseHandCard(index, type, card.id) }}
+                                        >
+                                            Chọn
+                                        </button>
+                                    </div>
+                                ))}
                         </div>
+                        {filterCardsBynumberHandCard(cardList, numberHandCard)
+                            .filter(card => (
+                                type === 2 ? card.cardType === "SIGNI" && card.cardLevel <= checkCardCenter[0].cardLevel : true
+                            )).length === 0 && (
+                                <div className="text-center font-[500] text-black my-5 mx-5">
+                                    Không có thẻ nào phù hợp.
+                                </div>
+                            )}
                     </div>
                 </div>
             )}

@@ -37,7 +37,7 @@ const PlayGround: React.FC = () => {
     const [cardLRIGSpaceTarget, setCardLRIGSpaceTarget] = useState([0, 0, 0]);
     const [cardMAINSpacePlayer, setCardMAINSpacePlayer] = useState([-1, -1, -1]);
     const [cardMAINSpaceTarget, setCardMAINSpaceTarget] = useState([-1, -1, -1]);
-
+    const [targetSpaceMAINPlayer, setTargetSpaceMAINPlayer] = useState(0);
     // Hàm xáo trộn mảng
     const shuffleArray = (array: number[]) => {
         let shuffledArray = array.slice(); // Tạo bản sao của mảng
@@ -97,6 +97,14 @@ const PlayGround: React.FC = () => {
 
     const handleClosePopupMAIN = () => {
         setIsPopupMAIN(false);
+    };
+
+    const handleChooseSIGNICard = (index: number, id: number) => {
+        if (id === -1) {
+            setTargetSpaceMAINPlayer(index);
+            setIsTypePopupChooseHand(2);
+            setIsChoosePopupHand(true);
+        }
     };
 
     const handlePopup = () => {
@@ -316,6 +324,7 @@ const PlayGround: React.FC = () => {
                                         width={750}
                                         height={1047}
                                         className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
+                                        onClick={() => { handleChooseSIGNICard(index, card.id) }}
                                     />
                                 );
                             }
@@ -577,7 +586,10 @@ const PlayGround: React.FC = () => {
                 setNumberEnerCard={setNumberEnerCard}
                 setNumberMAINCard={setNumberMAINCard}
                 setNumberHandCard={setNumberHandCard}
-                type={isTypePopupChooseHand} />
+                type={isTypePopupChooseHand}
+                numberCardSpaceLRIG={cardLRIGSpacePlayer}
+                numberCardSpaceMAIN={cardMAINSpacePlayer}
+                targetCardSpace={targetSpaceMAINPlayer} />
             <EnerCardPopup isOpen={isPopupEner}
                 onClose={handleClosePopupEner}
                 numberCard={numberEnerCard} />
