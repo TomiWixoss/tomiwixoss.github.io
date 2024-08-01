@@ -45,6 +45,45 @@ const PlayGround: React.FC = () => {
     const [checkLRIGCardLevelUp, setCheckLRIGCardLevelUp] = useState<Card | null>(null);
     const [checkLRIGCardLevelUpPosition, setCheckLRIGCardLevelUpPosition] = useState(0);
     const [isSelectedLRIGCard, setIsSelectedLRIGCard] = useState<Card | null>(null);
+    const [checkEnterCardEffectLRIG, setCheckEnterCardEffectLRIG] = useState<Card[]>([]);
+    const [isPopupEnter, setIsPopupEnter] = useState<Card | null>(null);
+
+    useEffect(() => {
+        const LRIGCard = [...cardLRIGSpacePlayer];
+        const MAINCard = [...cardMAINSpacePlayer];
+
+        const checkLRIGCard: Card[] = [];
+        const checkMAINCard: Card[] = [];
+
+        LRIGCard.forEach((value, index) => {
+            const matchingCard = cardList.find(card => card.id === value);
+            if (matchingCard) {
+                checkLRIGCard.push(matchingCard); // Thêm card vào mảng kết quả
+            }
+        });
+
+        MAINCard.forEach((value, index) => {
+            const matchingCard = cardList.find(card => card.id === value);
+            if (matchingCard) {
+                checkMAINCard.push(matchingCard); // Thêm card vào mảng kết quả
+            }
+        });
+
+        // Tìm tất cả thẻ có hiệu ứng "Enter"
+        const foundCardsLRIG = checkLRIGCard.filter(card => card.cardEffect.includes("Enter"));
+
+        foundCardsLRIG.forEach(foundCardLRIG => {
+            if (!checkEnterCardEffectLRIG.some(card => card.id === foundCardLRIG.id)) {
+                checkEnterCardEffectLRIG.push(foundCardLRIG);
+                setIsPopupEnter(foundCardLRIG);
+            }
+        });
+
+    }, [cardLRIGSpacePlayer, cardMAINSpacePlayer, checkEnterCardEffectLRIG]);
+
+    const handleActiveEnterEffect = () => {
+
+    };
 
     const handleLRIGCardClick = (card: Card) => {
         setIsSelectedLRIGCard(card);
@@ -627,6 +666,34 @@ const PlayGround: React.FC = () => {
                                 onClick={handleLevelUpLRIG}
                             >
                                 Phát Triển
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+            {isPopupEnter &&
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-lg mr-4">Hiệu Ứng</p>
+                            <IoMdClose
+                                onClick={() => { setIsPopupEnter(null) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col justify-center items-center'>
+                            <p className='text-center mx-2 my-2 font-[500]'>Phát hiện hiệu ứng vào sân!</p>
+                            <button
+                                className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setSelectedCard(isPopupEnter) }}
+                            >
+                                Xem Thẻ
+                            </button>
+                            <button
+                                className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={handleActiveEnterEffect}
+                            >
+                                Kích Hoạt
                             </button>
                         </div>
                     </div>

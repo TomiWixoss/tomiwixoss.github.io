@@ -20,7 +20,6 @@ interface LRIGPopupProps {
 
 const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCardLRIG, type, numberCardSpace, setCardSpace, setNumberLRIGCard, cardLevelUp, setIsSelectedLRIGCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
-    const [cardIsChoose, setCardIsChoose] = useState<number[]>([0, 0, 0]);
     const [checkCardCenter, setCheckCardCenter] = useState<Card[]>(cardList.filter(card => card.id === numberCardSpace[1]));
 
     const handleCardClick = (card: Card) => {
@@ -34,6 +33,7 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCardLRIG, 
     };
 
     const handleChooseCard = (card: Card) => {
+        let cardIsChoose: number[] = [...numberCardSpace]
         if (type <= 3) {
             cardIsChoose[type - 1] = card.id;
             setCardSpace(cardIsChoose);
