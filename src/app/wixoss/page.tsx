@@ -42,6 +42,8 @@ const PlayGround: React.FC = () => {
     const [cardMAINSpacePlayer, setCardMAINSpacePlayer] = useState([-1, -1, -1]);
     const [cardMAINSpaceTarget, setCardMAINSpaceTarget] = useState([-1, -1, -1]);
     const [targetSpaceMAINPlayer, setTargetSpaceMAINPlayer] = useState(0);
+    const [checkLRIGCardLevelUp, setCheckLRIGCardLevelUp] = useState<Card | null>(null);
+    const [checkLRIGCardLevelUpPosition, setCheckLRIGCardLevelUpPosition] = useState(0);
     const [isSelectedLRIGCard, setIsSelectedLRIGCard] = useState<Card | null>(null);
 
     const handleLRIGCardClick = (card: Card) => {
@@ -120,7 +122,7 @@ const PlayGround: React.FC = () => {
         }
     };
 
-    const handleChooseLRIGCard = (card: Card) => {
+    const handleChooseLRIGCard = (index: number, card: Card) => {
         const cardSpaceLRIG: Card[] = [];
 
         cardLRIGSpacePlayer.forEach((value, index) => {
@@ -131,6 +133,8 @@ const PlayGround: React.FC = () => {
         });
         if (card.cardLevel < cardSpaceLRIG[1].cardLevel || card.cardEffect.includes("Action") === true) {
             handleLRIGCardClick(card);
+            setCheckLRIGCardLevelUp(card);
+            setCheckLRIGCardLevelUpPosition(index);
         }
         else {
             setSelectedCard(card);
@@ -193,6 +197,16 @@ const PlayGround: React.FC = () => {
                 break;
         }
     };
+
+    const handleLevelUpLRIG = () => {
+        if (checkLRIGCardLevelUpPosition === 0) {
+            setIsTypePopupLRIG(5);
+        }
+        else {
+            setIsTypePopupLRIG(6);
+        }
+        setIsChoosePopupLRIG(true);
+    }
 
     useEffect(() => {
         if (startPhase === 6 && isCompleteChoosePopupHand[0] === 0) {
@@ -372,7 +386,7 @@ const PlayGround: React.FC = () => {
                                         width={750}
                                         height={1047}
                                         className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
-                                        onClick={() => { handleChooseLRIGCard(card) }}
+                                        onClick={() => { handleChooseLRIGCard(index, card) }}
                                     />
                                 );
                             }
@@ -610,6 +624,7 @@ const PlayGround: React.FC = () => {
                             </button>
                             <button
                                 className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={handleLevelUpLRIG}
                             >
                                 Phát Triển
                             </button>
@@ -630,7 +645,9 @@ const PlayGround: React.FC = () => {
                 type={isTypePopupLRIG}
                 numberCardSpace={cardLRIGSpacePlayer}
                 setCardSpace={setCardLRIGSpacePlayer}
-                setNumberLRIGCard={setNumberLRIGCard} />
+                setNumberLRIGCard={setNumberLRIGCard}
+                cardLevelUp={checkLRIGCardLevelUp}
+                setIsSelectedLRIGCard={setIsSelectedLRIGCard} />
             <HandCardPopup isOpen={isPopupHand}
                 onClose={handleClosePopupHand}
                 numberCard={numberHandCard}
