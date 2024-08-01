@@ -14,9 +14,15 @@ interface LRIGPopupProps {
 
 const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+    const [isSelectedPIECE, setIsSelectedPIECE] = useState<Card | null>(null);
 
     const handleCardClick = (card: Card) => {
-        setSelectedCard(card);
+        if (card.cardType !== "PIECE") {
+            setSelectedCard(card);
+        }
+        else {
+            setIsSelectedPIECE(card);
+        }
     };
 
     const handleCloseDetail = () => {
@@ -55,9 +61,35 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard }) =>
                                 ))}
                         </div>
                     </div>
-                    {selectedCard && <CardDetail card={selectedCard} onClose={handleCloseDetail} />}
                 </div >
             )}
+            {isSelectedPIECE &&
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-lg mr-4">Bài PIECE</p>
+                            <IoMdClose
+                                onClick={() => { setIsSelectedPIECE(null) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col justify-center items-center'>
+                            <button
+                                className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setSelectedCard(isSelectedPIECE) }}
+                            >
+                                Xem Thẻ
+                            </button>
+                            <button
+                                className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            >
+                                Kích Hoạt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+            {selectedCard && <CardDetail card={selectedCard} onClose={handleCloseDetail} />}
         </>
     );
 };

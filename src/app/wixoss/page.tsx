@@ -9,8 +9,12 @@ import MAINPopup from '../../components/MAINCard';
 import HandCardPopup from '../../components/HandCard';
 import EnerCardPopup from '../../components/EnerCard';
 import cardList from '../../components/CardDB';
+import CardDetail from '../../components/CardDetail';
+import Card from "../../types/cardList";
+import { IoMdClose } from "react-icons/io";
 
 const PlayGround: React.FC = () => {
+    const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState(true);
     const [startPhase, setStartPhase] = useState<number>(0);
     const [MainPhase, setMainPhase] = useState<number>(0);
@@ -38,6 +42,11 @@ const PlayGround: React.FC = () => {
     const [cardMAINSpacePlayer, setCardMAINSpacePlayer] = useState([-1, -1, -1]);
     const [cardMAINSpaceTarget, setCardMAINSpaceTarget] = useState([-1, -1, -1]);
     const [targetSpaceMAINPlayer, setTargetSpaceMAINPlayer] = useState(0);
+    const [isSelectedLRIGCard, setIsSelectedLRIGCard] = useState<Card | null>(null);
+
+    const handleLRIGCardClick = (card: Card) => {
+        setIsSelectedLRIGCard(card);
+    };
     // Hàm xáo trộn mảng
     const shuffleArray = (array: number[]) => {
         let shuffledArray = array.slice(); // Tạo bản sao của mảng
@@ -99,11 +108,32 @@ const PlayGround: React.FC = () => {
         setIsPopupMAIN(false);
     };
 
-    const handleChooseSIGNICard = (index: number, id: number) => {
+    const handleChooseSIGNICard = (index: number, id: number, card: Card) => {
         if (id === -1) {
             setTargetSpaceMAINPlayer(index);
             setIsTypePopupChooseHand(2);
             setIsChoosePopupHand(true);
+        } else {
+            if (card.isActionEffect === false) {
+                setSelectedCard(card);
+            }
+        }
+    };
+
+    const handleChooseLRIGCard = (card: Card) => {
+        const cardSpaceLRIG: Card[] = [];
+
+        cardLRIGSpacePlayer.forEach((value, index) => {
+            const card = cardList.find(card => card.id === value);
+            if (card) {
+                cardSpaceLRIG.push(card);
+            }
+        });
+        if (card.cardLevel < cardSpaceLRIG[1].cardLevel || card.isActionEffect === true) {
+            handleLRIGCardClick(card);
+        }
+        else {
+            setSelectedCard(card);
         }
     };
 
@@ -324,7 +354,7 @@ const PlayGround: React.FC = () => {
                                         width={750}
                                         height={1047}
                                         className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
-                                        onClick={() => { handleChooseSIGNICard(index, card.id) }}
+                                        onClick={() => { handleChooseSIGNICard(index, card.id, card) }}
                                     />
                                 );
                             }
@@ -342,6 +372,7 @@ const PlayGround: React.FC = () => {
                                         width={750}
                                         height={1047}
                                         className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
+                                        onClick={() => { handleChooseLRIGCard(card) }}
                                     />
                                 );
                             }
@@ -560,6 +591,32 @@ const PlayGround: React.FC = () => {
                     </div>
                 </div>
             )}
+            {isSelectedLRIGCard &&
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-lg mr-4">Bài LRIG</p>
+                            <IoMdClose
+                                onClick={() => { setIsSelectedLRIGCard(null) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col justify-center items-center'>
+                            <button
+                                className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setSelectedCard(isSelectedLRIGCard) }}
+                            >
+                                Xem Thẻ
+                            </button>
+                            <button
+                                className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            >
+                                Phát Triển
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
             <LRIGPopup isOpen={isPopupLRIG}
                 onClose={handleClosePopupLRIG}
                 numberCard={numberLRIGCard} />
@@ -593,6 +650,7 @@ const PlayGround: React.FC = () => {
             <EnerCardPopup isOpen={isPopupEner}
                 onClose={handleClosePopupEner}
                 numberCard={numberEnerCard} />
+            {selectedCard && <CardDetail card={selectedCard} onClose={() => { setSelectedCard(null) }} />}
         </>
     );
 };

@@ -20,7 +20,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 0,
@@ -41,7 +42,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 1,
@@ -62,7 +64,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: true,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 2,
@@ -83,7 +86,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: true,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 3,
@@ -104,7 +108,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: true,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 4,
@@ -125,7 +130,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: true,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: true
     },
     {
         id: 5,
@@ -146,7 +152,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: true
+        isLRIGSupport: true,
+        isActionEffect: false
     },
     {
         id: 6,
@@ -167,7 +174,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
-        isLRIGSupport: true
+        isLRIGSupport: true,
+        isActionEffect: false
     },
     {
         id: 7,
@@ -188,7 +196,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
-        isLRIGSupport: true
+        isLRIGSupport: true,
+        isActionEffect: false
     },
     {
         id: 8,
@@ -209,7 +218,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: true
+        isLRIGSupport: true,
+        isActionEffect: false
     },
     {
         id: 9,
@@ -230,7 +240,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
-        isLRIGSupport: true
+        isLRIGSupport: true,
+        isActionEffect: false
     },
     {
         id: 10,
@@ -251,7 +262,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "Main Phase, Attack Phase",
         isLRIGCenter: false,
-        isLRIGSupport: true
+        isLRIGSupport: true,
+        isActionEffect: false
     },
     {
         id: 11,
@@ -272,7 +284,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 12,
@@ -293,7 +306,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 13,
@@ -314,7 +328,8 @@ const cardList: Card[] = [
         cardBurst: "[Nhập 3 lá bài]",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 14,
@@ -335,7 +350,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: true
     },
     {
         id: 15,
@@ -356,7 +372,8 @@ const cardList: Card[] = [
         cardBurst: "Chọn 1 trong 2 hiệu ứng: 1-Loại bỏ 1 SIGNI trên sân đối thủ. 2-Rút 1 lá bài.",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 16,
@@ -377,7 +394,8 @@ const cardList: Card[] = [
         cardBurst: "Hạ 1 SIGNI trên sân đối thủ và đóng băng nó. Rút 1 lá bài.",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 17,
@@ -398,7 +416,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 18,
@@ -419,7 +438,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 19,
@@ -440,7 +460,8 @@ const cardList: Card[] = [
         cardBurst: "",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 20,
@@ -461,7 +482,8 @@ const cardList: Card[] = [
         cardBurst: "Chọn 1 SIGNI từ thùng rác lên tay.",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     },
     {
         id: 21,
@@ -482,7 +504,8 @@ const cardList: Card[] = [
         cardBurst: "Loại bỏ 1 SIGNI đã mở trên sân của đối thủ.",
         cardUseTime: "",
         isLRIGCenter: false,
-        isLRIGSupport: false
+        isLRIGSupport: false,
+        isActionEffect: false
     }
 ];
 

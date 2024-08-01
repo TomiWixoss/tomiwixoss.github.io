@@ -18,4 +18,5 @@ export default interface Card {
     cardUseTime: string;
     isLRIGCenter: boolean;
     isLRIGSupport: boolean;
+    isActionEffect: boolean;
 }

@@ -237,7 +237,7 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
                                     type === 2 ?
                                         (card.cardType === "SIGNI" || card.cardType === "Guard")
                                         && card.cardLevel <= checkCardSpaceLRIG[1].cardLevel
-                                        && checkLimitCardMAIN <= checkCardSpaceLRIG[1].cardLimit + checkCardSpaceLRIG[0].cardLimit + checkCardSpaceLRIG[2].cardLimit : true
+                                        && checkLimitCardMAIN < checkCardSpaceLRIG[1].cardLimit + checkCardSpaceLRIG[0].cardLimit + checkCardSpaceLRIG[2].cardLimit : true
                                 )).map((card, index) => (
                                     <div key={`${card.id}-${index}`} className="flex flex-col items-center cursor-pointer">
                                         <Image
@@ -261,7 +261,7 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
                                 type === 2 ?
                                     (card.cardType === "SIGNI" || card.cardType === "Guard")
                                     && card.cardLevel <= checkCardSpaceLRIG[1].cardLevel
-                                    && checkLimitCardMAIN <= checkCardSpaceLRIG[1].cardLimit + checkCardSpaceLRIG[0].cardLimit + checkCardSpaceLRIG[2].cardLimit : true
+                                    && checkLimitCardMAIN < checkCardSpaceLRIG[1].cardLimit + checkCardSpaceLRIG[0].cardLimit + checkCardSpaceLRIG[2].cardLimit : true
                             )).length === 0 && (
                                 <div className="text-center font-[500] text-black my-5 mx-5">
                                     Không có thẻ nào phù hợp.

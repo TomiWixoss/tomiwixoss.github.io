@@ -13,9 +13,15 @@ interface HandPopupProps {
 
 const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+    const [isSelectedSpell, setIsSelectedSpell] = useState<Card | null>(null);
 
     const handleCardClick = (card: Card) => {
-        setSelectedCard(card);
+        if (card.cardType !== "SPELL") {
+            setSelectedCard(card);
+        }
+        else {
+            setIsSelectedSpell(card);
+        }
     };
 
     const handleCloseDetail = () => {
@@ -66,6 +72,32 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard }) =>
                     </div>
                 </div>
             )}
+            {isSelectedSpell &&
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-lg mr-4">Bài Phép</p>
+                            <IoMdClose
+                                onClick={() => { setIsSelectedSpell(null) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col justify-center items-center'>
+                            <button
+                                className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setSelectedCard(isSelectedSpell) }}
+                            >
+                                Xem Thẻ
+                            </button>
+                            <button
+                                className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            >
+                                Kích Hoạt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
             {selectedCard && <CardDetail card={selectedCard} onClose={handleCloseDetail} />}
         </>
     );
