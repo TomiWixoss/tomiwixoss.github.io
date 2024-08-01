@@ -18,12 +18,18 @@ import MAINPopupBot from '../../components/MAINCardBot';
 import HandCardPopupBot from '../../components/HandCardBot';
 import EnerCardPopupBot from '../../components/EnerCardBot';
 import TrashCardPopupBot from '../../components/TrashCardBot';
+import ChooseMAINSpacePopup from '../../components/ChooseMAINSpace';
 
 const PlayGround: React.FC = () => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState(true);
     const [startPhase, setStartPhase] = useState<number>(0);
     const [MainPhase, setMainPhase] = useState<number>(0);
+    const [isPopupEffectAction, setPopupEffectAction] = useState(false);
+    const [actionType, setActionType] = useState<number>(0);
+    const [drawCardNumber, setDrawCardNumber] = useState<number>(0);
+    const [discardCardNumber, setDiscardCardNumber] = useState<number>(0);
+    const [idCardActiveEffect, setIdCardActiveEffect] = useState<number>(0);
     const [isPopupLRIG, setIsPopupLRIG] = useState(false);
     const [isPopupEner, setIsPopupEner] = useState(false);
     const [isPopupMAIN, setIsPopupMAIN] = useState(false);
@@ -73,6 +79,9 @@ const PlayGround: React.FC = () => {
     const [isSelectedLRIGCard, setIsSelectedLRIGCard] = useState<Card | null>(null);
     const [checkEnterCardEffectLRIG, setCheckEnterCardEffectLRIG] = useState<Card[]>([]);
     const [isPopupEnter, setIsPopupEnter] = useState<Card | null>(null);
+    const [isPopupChooseMAINSpace, setIsPopupChooseMAINSpace] = useState(false);
+    const [isTypePopupChooseMAINSpace, setIsTypePopupChooseMAINSpace] = useState(0);
+    const [isPowerCheckPopupChooseMAINSpace, setIsPowerCheckPopupChooseMAINSpace] = useState(0);
 
     useEffect(() => {
         const LRIGCard = [...cardLRIGSpacePlayer];
@@ -108,12 +117,51 @@ const PlayGround: React.FC = () => {
     }, [cardLRIGSpacePlayer, cardMAINSpacePlayer, checkEnterCardEffectLRIG]);
 
     const handleActiveEnterEffect = (card: Card) => {
+        setIsPopupEnter(null);
+        setIdCardActiveEffect(0);
         switch (card.id) {
             case 6:
-
+                setActionType(1);
+                setDrawCardNumber(1);
+                setPopupEffectAction(true);
+                setIdCardActiveEffect(6);
+                setIsTypePopupChooseMAINSpace(1);
+                setIsPopupChooseMAINSpace(true);
+                break;
+            case 9:
+                setActionType(1);
+                setDrawCardNumber(2);
+                setPopupEffectAction(true);
                 break;
         }
     };
+
+    const handleEffectDrawCard = () => {
+        const cardDrawHand: number[] = [...numberHandCard];
+        const cardDrawMAIN: number[] = [...numberMAINCard];
+
+        const draw = cardDrawMAIN.splice(0, drawCardNumber);
+
+        draw.forEach((value, index) => {
+            cardDrawHand.push(value);
+        });
+
+        setNumberHandCard(cardDrawHand);
+        setNumberMAINCard(cardDrawMAIN);
+        setPopupEffectAction(false);
+        switch (idCardActiveEffect) {
+            case 6:
+                setDiscardCardNumber(1);
+                break;
+        }
+    };
+
+    useEffect(() => {
+        if (discardCardNumber > 0) {
+            setIsTypePopupChooseHand(3);
+            setIsChoosePopupHand(true);
+        }
+    }, [discardCardNumber])
 
     const handleLRIGCardClick = (card: Card) => {
         setIsSelectedLRIGCard(card);
@@ -192,6 +240,10 @@ const PlayGround: React.FC = () => {
     };
 
     const handleCloseChoosePopupHand = () => {
+        if (discardCardNumber > 0) {
+            const discardNumber = discardCardNumber - 1;
+            setDiscardCardNumber(discardNumber);
+        }
         setIsChoosePopupHand(false);
     };
 
@@ -225,6 +277,14 @@ const PlayGround: React.FC = () => {
 
     const handleClosePopupTrashBot = () => {
         setIsPopupTrashBot(false);
+    };
+
+    const handleOpenPopupChooseMAINSpace = () => {
+        setIsPopupChooseMAINSpace(true);
+    };
+
+    const handleClosePopupChooseMAINSpace = () => {
+        setIsPopupChooseMAINSpace(false);
     };
 
     const handleChooseSIGNICard = (index: number, id: number, card: Card) => {
@@ -522,9 +582,11 @@ const PlayGround: React.FC = () => {
                                             className={`w-full h-auto`}
                                             onClick={() => { setSelectedCard(card) }}
                                         />
-                                        <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
-                                            {`${card.cardPower + cardPowerMAINSpaceTarget[index]}`}
-                                        </p>
+                                        {card.id !== -1 &&
+                                            <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
+                                                {`${card.cardPower + cardPowerMAINSpaceTarget[index]}`}
+                                            </p>
+                                        }
                                     </div>
                                 );
                             }
@@ -580,9 +642,11 @@ const PlayGround: React.FC = () => {
                                             className={`w-full h-auto`}
                                             onClick={() => { handleChooseSIGNICard(index, card.id, card) }}
                                         />
-                                        <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
-                                            {`${card.cardPower + cardPowerMAINSpacePlayer[index]}`}
-                                        </p>
+                                        {card.id !== -1 &&
+                                            <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
+                                                {`${card.cardPower + cardPowerMAINSpacePlayer[index]}`}
+                                            </p>
+                                        }
                                     </div>
                                 );
                             }
@@ -821,6 +885,24 @@ const PlayGround: React.FC = () => {
                     </div>
                 </div>
             )}
+            {isPopupEffectAction && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        {actionType === 1 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Rút Bài</p>
+                                <p className="text-md mb-4 font-bold">Hãy rút {drawCardNumber} lá bài!</p>
+                                <button
+                                    onClick={handleEffectDrawCard}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Rút Bài
+                                </button>
+                            </>
+                        }
+                    </div>
+                </div>
+            )}
             {isSelectedLRIGCard &&
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative">
@@ -902,6 +984,7 @@ const PlayGround: React.FC = () => {
                 numberHandCard={numberHandCard}
                 numberMAINCard={numberMAINCard}
                 numberEnerCard={numberEnerCard}
+                numberTrashCard={numberTrashCard}
                 setNumberEnerCard={setNumberEnerCard}
                 setNumberMAINCard={setNumberMAINCard}
                 setNumberHandCard={setNumberHandCard}
@@ -931,6 +1014,14 @@ const PlayGround: React.FC = () => {
             <TrashCardPopupBot isOpen={isPopupTrashBot}
                 onClose={handleClosePopupTrashBot}
                 numberCard={numberTrashCardBot} />
+            <ChooseMAINSpacePopup
+                isOpen={isPopupChooseMAINSpace}
+                onClose={handleClosePopupChooseMAINSpace}
+                numberCardSpaceMAIN={cardMAINSpaceTarget}
+                setNumberCardSpaceMAIN={setCardMAINSpaceTarget}
+                type={isTypePopupChooseMAINSpace}
+                powerCheck={isPowerCheckPopupChooseMAINSpace}
+            />
             {selectedCard && <CardDetail card={selectedCard} onClose={() => { setSelectedCard(null) }} />}
         </>
     );

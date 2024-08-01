@@ -12,6 +12,7 @@ interface HandPopupProps {
     numberHandCard: number[];
     numberMAINCard: number[];
     numberEnerCard: number[];
+    numberTrashCard: number[];
     numberCardSpaceLRIG: number[];
     targetCardSpace: number;
     numberCardSpaceMAIN: number[];
@@ -21,7 +22,7 @@ interface HandPopupProps {
     type: number;
 }
 
-const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, numberEnerCard, setNumberEnerCard, setNumberMAINCard, setNumberHandCard, type, numberCardSpaceLRIG, targetCardSpace, numberCardSpaceMAIN }) => {
+const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, numberEnerCard, numberTrashCard, setNumberEnerCard, setNumberMAINCard, setNumberHandCard, type, numberCardSpaceLRIG, targetCardSpace, numberCardSpaceMAIN }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [numberChooseCard, setNumberChooseCard] = useState<number[]>([0, 0, 0, 0, 0]);
     const [checkCardSpaceLRIG, setCheckCardSpaceLRIG] = useState<Card[]>([]);
@@ -70,6 +71,16 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
 
     const handleCloseDetail = () => {
         setSelectedCard(null);
+    };
+
+    const removeCardByIndex = (cardList: number[], indexToRemove: number): number[] => {
+        return cardList.filter((_, index) => index !== indexToRemove);
+    };
+
+    const handleDiscardCard = (card: Card, index: number) => {
+        numberTrashCard.push(card.id);
+        setNumberHandCard(removeCardByIndex(numberHandCard, index))
+        onClose();
     };
 
     const handleChooseCard = (index: number) => {
@@ -267,6 +278,36 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
                                     Không có thẻ nào phù hợp.
                                 </div>
                             )}
+                    </div>
+                </div>
+            )}
+            {isOpen && type === 3 && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative overflow-auto max-h-[80vh]">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-lg">Loại Bỏ Bài Trên Tay</p>
+                        </div>
+                        <div className="mt-4 grid grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
+                            {filterCardsBynumberHandCard(cardList, numberHandCard).map((card, index) => (
+                                <div key={`${card.id}-${index}`} className="flex flex-col items-center cursor-pointer">
+                                    <Image
+                                        src={card.imageUrl}
+                                        alt={card.name}
+                                        width={750}
+                                        height={1047}
+                                        className={`w-full h-auto mb-2`}
+                                        onClick={() => handleCardClick(card)}
+                                    />
+                                    <button className={`text-white px-3 text-xs py-1 bg-blue-500 hover:bg-blue-600 rounded-lg cursor-pointer`}
+                                        onClick={() => {
+                                            handleDiscardCard(card, index);
+                                        }}
+                                    >
+                                        Loại
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             )}
