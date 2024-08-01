@@ -5,13 +5,13 @@ import CardDetail from './CardDetail';
 import Card from "../types/cardList";
 import cardList from './CardDB';
 
-interface EnterPopupProps {
+interface EnerPopupProps {
     isOpen: boolean;
     onClose: () => void;
     numberCard: number[];
 }
 
-const EnterPopup: React.FC<EnterPopupProps> = ({ isOpen, onClose, numberCard }) => {
+const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
     const handleCardClick = (card: Card) => {
@@ -71,4 +71,4 @@ const EnterPopup: React.FC<EnterPopupProps> = ({ isOpen, onClose, numberCard }) 
     );
 };
 
-export default EnterPopup;
+export default EnerPopup;

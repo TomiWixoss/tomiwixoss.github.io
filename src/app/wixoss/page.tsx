@@ -7,7 +7,7 @@ import ChooseLRIGPopup from '../../components/ChooseCardLRIG';
 import ChooseHandPopup from '../../components/ChooseCardHand';
 import MAINPopup from '../../components/MAINCard';
 import HandCardPopup from '../../components/HandCard';
-import EnterCardPopup from '../../components/EnterCard';
+import EnerCardPopup from '../../components/EnerCard';
 import cardList from '../../components/CardDB';
 
 const PlayGround: React.FC = () => {
@@ -15,7 +15,7 @@ const PlayGround: React.FC = () => {
     const [startPhase, setStartPhase] = useState<number>(0);
     const [MainPhase, setMainPhase] = useState<number>(0);
     const [isPopupLRIG, setIsPopupLRIG] = useState(false);
-    const [isPopupEnter, setIsPopupEnter] = useState(false);
+    const [isPopupEner, setIsPopupEner] = useState(false);
     const [isPopupMAIN, setIsPopupMAIN] = useState(false);
     const [isChoosePopupLRIG, setIsChoosePopupLRIG] = useState(false);
     const [isPopupHand, setIsPopupHand] = useState(false);
@@ -32,7 +32,7 @@ const PlayGround: React.FC = () => {
     const [numberLRIGCard, setNumberLRIGCard] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
     const [numberLifeCard, setNumberLifeCard] = useState<number[]>([]);
     const [numberHandCard, setNumberHandCard] = useState<number[]>([]);
-    const [numberEnterCard, setNumberEnterCard] = useState<number[]>([]);
+    const [numberEnerCard, setNumberEnerCard] = useState<number[]>([]);
     const [cardLRIGSpacePlayer, setCardLRIGSpacePlayer] = useState([0, 0, 0]);
     const [cardLRIGSpaceTarget, setCardLRIGSpaceTarget] = useState([0, 0, 0]);
     const [cardMAINSpacePlayer, setCardMAINSpacePlayer] = useState([-1, -1, -1]);
@@ -67,12 +67,12 @@ const PlayGround: React.FC = () => {
         setIsPopupHand(false);
     };
 
-    const handleClosePopupEnter = () => {
-        setIsPopupEnter(false);
+    const handleClosePopupEner = () => {
+        setIsPopupEner(false);
     };
 
-    const handleOpenPopupEnter = () => {
-        setIsPopupEnter(true);
+    const handleOpenPopupEner = () => {
+        setIsPopupEner(true);
     };
 
     const handleOpenPopupHand = () => {
@@ -357,7 +357,7 @@ const PlayGround: React.FC = () => {
                         <div className='flex flex-col ml-2 justify-center items-center'>
                             <button
                                 className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
-                                onClick={handleOpenPopupEnter}
+                                onClick={handleOpenPopupEner}
                             >
                                 Nguyên Liệu
                             </button>
@@ -566,14 +566,14 @@ const PlayGround: React.FC = () => {
                 onClose={handleCloseChoosePopupHand}
                 numberHandCard={numberHandCard}
                 numberMAINCard={numberMAINCard}
-                numberEnterCard={numberEnterCard}
-                setNumberEnterCard={setNumberEnterCard}
+                numberEnerCard={numberEnerCard}
+                setNumberEnerCard={setNumberEnerCard}
                 setNumberMAINCard={setNumberMAINCard}
                 setNumberHandCard={setNumberHandCard}
                 type={isTypePopupChooseHand} />
-            <EnterCardPopup isOpen={isPopupEnter}
-                onClose={handleClosePopupEnter}
-                numberCard={numberEnterCard} />
+            <EnerCardPopup isOpen={isPopupEner}
+                onClose={handleClosePopupEner}
+                numberCard={numberEnerCard} />
         </>
     );
 };

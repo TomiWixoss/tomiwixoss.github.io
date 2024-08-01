@@ -11,14 +11,14 @@ interface HandPopupProps {
     onClose: () => void;
     numberHandCard: number[];
     numberMAINCard: number[];
-    numberEnterCard: number[];
-    setNumberEnterCard: React.Dispatch<React.SetStateAction<number[]>>;
+    numberEnerCard: number[];
+    setNumberEnerCard: React.Dispatch<React.SetStateAction<number[]>>;
     setNumberMAINCard: React.Dispatch<React.SetStateAction<number[]>>;
     setNumberHandCard: React.Dispatch<React.SetStateAction<number[]>>;
     type: number;
 }
 
-const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, numberEnterCard, setNumberEnterCard, setNumberMAINCard, setNumberHandCard, type }) => {
+const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, numberEnerCard, setNumberEnerCard, setNumberMAINCard, setNumberHandCard, type }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [numberChooseCard, setNumberChooseCard] = useState<number[]>([0, 0, 0, 0, 0]);
 
@@ -65,7 +65,7 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
 
     const handleChooseEnterCard = (card: number) => {
         const HandCard = [...numberHandCard];
-        const EnterCard = [...numberEnterCard]
+        const EnerCard = [...numberEnerCard]
         let handCard: number[] = [];
 
         HandCard.forEach((value, index) => {
@@ -73,12 +73,12 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
                 handCard.push(HandCard[index]);
             }
             else {
-                EnterCard.push(HandCard[index]);
+                EnerCard.push(HandCard[index]);
             }
         });
 
         setNumberHandCard(handCard);
-        setNumberEnterCard(EnterCard);
+        setNumberEnerCard(EnerCard);
         onClose();
     };
 
