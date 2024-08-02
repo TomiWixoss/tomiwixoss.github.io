@@ -16,13 +16,15 @@ interface HandPopupProps {
     numberCardSpaceLRIG: number[];
     targetCardSpace: number;
     numberCardSpaceMAIN: number[];
+    numberCardUseMAIN: Card[];
+    setNumberCardUseMAIN: React.Dispatch<React.SetStateAction<Card[]>>;
     setNumberEnerCard: React.Dispatch<React.SetStateAction<number[]>>;
     setNumberMAINCard: React.Dispatch<React.SetStateAction<number[]>>;
     setNumberHandCard: React.Dispatch<React.SetStateAction<number[]>>;
     type: number;
 }
 
-const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, numberEnerCard, numberTrashCard, setNumberEnerCard, setNumberMAINCard, setNumberHandCard, type, numberCardSpaceLRIG, targetCardSpace, numberCardSpaceMAIN }) => {
+const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, numberHandCard, numberMAINCard, numberEnerCard, numberTrashCard, setNumberEnerCard, setNumberMAINCard, setNumberHandCard, type, numberCardSpaceLRIG, targetCardSpace, numberCardSpaceMAIN, numberCardUseMAIN, setNumberCardUseMAIN }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [numberChooseCard, setNumberChooseCard] = useState<number[]>([0, 0, 0, 0, 0]);
     const [checkCardSpaceLRIG, setCheckCardSpaceLRIG] = useState<Card[]>([]);
@@ -39,7 +41,7 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
         });
 
         setCheckCardSpaceLRIG(cardSpaceLRIG);
-    }, [numberCardSpaceLRIG, type])
+    }, [numberCardSpaceLRIG, type]);
 
     const handleCardClick = (card: Card) => {
         setSelectedCard(card);
@@ -128,6 +130,12 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, setIsComplete, onClose, n
                 }
             });
 
+            const cardUseMAIN = [...numberCardUseMAIN];
+            const foundCard: Card | undefined = cardList.find(card => card.id === SpaceCard[0]);
+            if (foundCard !== undefined) {
+                cardUseMAIN[targetCardSpace] = foundCard;
+            }
+            setNumberCardUseMAIN(cardUseMAIN);
             numberCardSpaceMAIN[targetCardSpace] = SpaceCard[0];
             setNumberHandCard(handCard);
 

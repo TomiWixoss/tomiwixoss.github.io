@@ -71,8 +71,8 @@ const PlayGround: React.FC = () => {
     const [cardLRIGSpaceTarget, setCardLRIGSpaceTarget] = useState([0, 0, 0]);
     const [cardMAINSpacePlayer, setCardMAINSpacePlayer] = useState([-1, -1, -1]);
     const [cardMAINSpaceTarget, setCardMAINSpaceTarget] = useState([-1, -1, -1]);
-    const [cardPowerMAINSpacePlayer, setCardPowerMAINSpacePlayer] = useState([0, 0, 0]);
-    const [cardPowerMAINSpaceTarget, setCardPowerMAINSpaceTarget] = useState([0, 0, 0]);
+    const [cardUseMAINSpacePlayer, setCardUseMAINSpacePlayer] = useState<Card[]>([]);
+    const [cardUseMAINSpaceTarget, setCardUseMAINSpaceTarget] = useState<Card[]>([]);
     const [targetSpaceMAINPlayer, setTargetSpaceMAINPlayer] = useState(0);
     const [checkLRIGCardLevelUp, setCheckLRIGCardLevelUp] = useState<Card | null>(null);
     const [checkLRIGCardLevelUpPosition, setCheckLRIGCardLevelUpPosition] = useState(0);
@@ -82,6 +82,58 @@ const PlayGround: React.FC = () => {
     const [isPopupChooseMAINSpace, setIsPopupChooseMAINSpace] = useState(false);
     const [isTypePopupChooseMAINSpace, setIsTypePopupChooseMAINSpace] = useState(0);
     const [isPowerCheckPopupChooseMAINSpace, setIsPowerCheckPopupChooseMAINSpace] = useState(0);
+    const requestRef = useRef<number>();
+
+    const constEffect = (time: number) => {
+        if (cardMAINSpacePlayer.includes(12)) {
+            const position = cardMAINSpacePlayer.indexOf(12);
+            if (numberEnerCard.length >= 3) {
+                const checkEnerCard: Card[] = [];
+                numberEnerCard.forEach((value, index) => {
+                    const card = cardList.find(card => card.id === value);
+                    if (card) checkEnerCard.push(card);
+                })
+                // Sử dụng Set để lưu các giá trị cardClass duy nhất
+                const cardClassSet = new Set<string>();
+                checkEnerCard.forEach(card => cardClassSet.add(card.cardClass));
+                if (cardClassSet.size >= 3) {
+                    const cardUseMAIN = [...cardUseMAINSpacePlayer];
+                    cardUseMAIN[position].cardPower += 4000;
+                    setCardUseMAINSpacePlayer(cardUseMAIN);
+                }
+            }
+        }
+        requestRef.current = requestAnimationFrame(constEffect);
+    };
+
+    useEffect(() => {
+        const cardUseMAINPlayer = [...cardUseMAINSpacePlayer];
+        const cardUseMAINTarget = [...cardUseMAINSpaceTarget];
+        cardMAINSpacePlayer.forEach((value, index) => {
+            const card = cardList.find(card => card.id === value);
+            if (card) {
+                cardUseMAINPlayer.push(card);
+            }
+        });
+        cardMAINSpaceTarget.forEach((value, index) => {
+            const card = cardList.find(card => card.id === value);
+            if (card) {
+                cardUseMAINTarget.push(card);
+            }
+        });
+
+        setCardUseMAINSpacePlayer(cardUseMAINPlayer);
+        setCardUseMAINSpaceTarget(cardUseMAINTarget);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        requestRef.current = requestAnimationFrame(constEffect);
+        return () => {
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         const LRIGCard = [...cardLRIGSpacePlayer];
@@ -104,7 +156,7 @@ const PlayGround: React.FC = () => {
             }
         });
 
-        // Tìm tất cả thẻ có hiệu ứng "Enter"
+        // Tìm tất cả thẻ LRIG có hiệu ứng "Enter"
         const foundCardsLRIG = checkLRIGCard.filter(card => card.cardEffect.includes("Enter"));
 
         foundCardsLRIG.forEach(foundCardLRIG => {
@@ -569,29 +621,23 @@ const PlayGround: React.FC = () => {
                         })}
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
-                        {cardMAINSpaceTarget.map((id, index) => {
-                            const card = cardList.find(card => card.id === id);
-                            if (card && card.imageUrl) {
-                                return (
-                                    <div key={index} className={`relative w-[20%] cursor-pointer ${index === 1 ? 'mx-12' : ''}`}>
-                                        <Image
-                                            src={card.imageUrl}
-                                            alt={'Ảnh bìa chính'}
-                                            width={750}
-                                            height={1047}
-                                            className={`w-full h-auto`}
-                                            onClick={() => { setSelectedCard(card) }}
-                                        />
-                                        {card.id !== -1 &&
-                                            <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
-                                                {`${card.cardPower + cardPowerMAINSpaceTarget[index]}`}
-                                            </p>
-                                        }
-                                    </div>
-                                );
-                            }
-                            return null;
-                        })}
+                        {cardUseMAINSpaceTarget.map((card, index) => (
+                            <div key={index} className={`relative w-[20%] cursor-pointer ${index === 1 ? 'mx-12' : ''}`}>
+                                <Image
+                                    src={card.imageUrl}
+                                    alt={'Ảnh bìa chính'}
+                                    width={750}
+                                    height={1047}
+                                    className={`w-full h-auto`}
+                                    onClick={() => { setSelectedCard(card) }}
+                                />
+                                {card.id !== -1 &&
+                                    <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
+                                        {`${card.cardPower}`}
+                                    </p>
+                                }
+                            </div>
+                        ))}
                     </div>
                     <div className='flex justify-center items-center'>
                         <button
@@ -629,29 +675,23 @@ const PlayGround: React.FC = () => {
                         </button>
                     </div>
                     <div className='flex justify-center items-center'>
-                        {cardMAINSpacePlayer.map((id, index) => {
-                            const card = cardList.find(card => card.id === id);
-                            if (card && card.imageUrl) {
-                                return (
-                                    <div key={index} className={`relative w-[20%] cursor-pointer ${index === 1 ? 'mx-12' : ''}`}>
-                                        <Image
-                                            src={card.imageUrl}
-                                            alt={'Ảnh bìa chính'}
-                                            width={750}
-                                            height={1047}
-                                            className={`w-full h-auto`}
-                                            onClick={() => { handleChooseSIGNICard(index, card.id, card) }}
-                                        />
-                                        {card.id !== -1 &&
-                                            <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
-                                                {`${card.cardPower + cardPowerMAINSpacePlayer[index]}`}
-                                            </p>
-                                        }
-                                    </div>
-                                );
-                            }
-                            return null;
-                        })}
+                        {cardUseMAINSpacePlayer.map((card, index) => (
+                            <div key={index} className={`relative w-[20%] cursor-pointer ${index === 1 ? 'mx-12' : ''}`}>
+                                <Image
+                                    src={card.imageUrl}
+                                    alt={'Ảnh bìa chính'}
+                                    width={750}
+                                    height={1047}
+                                    className={`w-full h-auto`}
+                                    onClick={() => { handleChooseSIGNICard(index, card.id, card) }}
+                                />
+                                {card.id !== -1 &&
+                                    <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
+                                        {`${card.cardPower}`}
+                                    </p>
+                                }
+                            </div>
+                        ))}
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
                         {cardLRIGSpacePlayer.map((id, index) => {
@@ -991,7 +1031,9 @@ const PlayGround: React.FC = () => {
                 type={isTypePopupChooseHand}
                 numberCardSpaceLRIG={cardLRIGSpacePlayer}
                 numberCardSpaceMAIN={cardMAINSpacePlayer}
-                targetCardSpace={targetSpaceMAINPlayer} />
+                targetCardSpace={targetSpaceMAINPlayer}
+                numberCardUseMAIN={cardUseMAINSpacePlayer}
+                setNumberCardUseMAIN={setCardUseMAINSpacePlayer} />
             <EnerCardPopup isOpen={isPopupEner}
                 onClose={handleClosePopupEner}
                 numberCard={numberEnerCard} />
