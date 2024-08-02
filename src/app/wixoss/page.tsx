@@ -25,6 +25,7 @@ const PlayGround: React.FC = () => {
     const [isPopupAction, setPopupAction] = useState(true);
     const [startPhase, setStartPhase] = useState<number>(0);
     const [MainPhase, setMainPhase] = useState<number>(0);
+    const [botMainPhase, setBotMainPhase] = useState<number>(0);
     const [isPopupEffectAction, setPopupEffectAction] = useState(false);
     const [actionType, setActionType] = useState<number>(0);
     const [drawCardNumber, setDrawCardNumber] = useState<number>(0);
@@ -84,6 +85,7 @@ const PlayGround: React.FC = () => {
     const [isPowerCheckPopupChooseMAINSpace, setIsPowerCheckPopupChooseMAINSpace] = useState(0);
     const [turnGame, setTurnGame] = useState<number>(0);
     const [isFirstTurn, setIsFirstTurn] = useState<boolean>(false);
+    const [checkLimitCardMAINBot, setCheckLimitCardMAINBot] = useState<number>(0);
     const requestRef = useRef<number>();
 
     const constEffect = (time: number) => {
@@ -271,8 +273,226 @@ const PlayGround: React.FC = () => {
 
     }
 
-    const botTurn = () => {
-        console.log("bot turn");
+    const drawCardBot = (numberDraw: number) => {
+        const cardDrawHandBot: number[] = [...numberHandCardBot];
+        const cardDrawMAINBot: number[] = [...numberMAINCardBot];
+
+        const drawBot = cardDrawMAINBot.splice(0, numberDraw);
+
+        drawBot.forEach((value, index) => {
+            cardDrawHandBot.push(value);
+        });
+        setNumberHandCardBot(cardDrawHandBot);
+        setNumberMAINCardBot(cardDrawMAINBot);
+    }
+
+    // Hàm delay trả về một Promise hoàn thành sau một khoảng thời gian nhất định
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const botTurn = async () => {
+        setBotMainPhase(1);
+        await delay(1000);
+
+        setBotMainPhase(2);
+        let numberDraw: number = 1;
+        if (turnGame >= 2) {
+            numberDraw = 2;
+        }
+        const cardDrawHandBot: number[] = [...numberHandCardBot];
+        const cardDrawMAINBot: number[] = [...numberMAINCardBot];
+
+        const drawBot = cardDrawMAINBot.splice(0, numberDraw);
+
+        drawBot.forEach((value, index) => {
+            cardDrawHandBot.push(value);
+        });
+        setNumberHandCardBot(cardDrawHandBot);
+        setNumberMAINCardBot(cardDrawMAINBot);
+        await delay(3000);
+
+        setBotMainPhase(3);
+        let cardInHandBot = cardDrawHandBot;
+        const cardInEnerBot = [...numberEnerCardBot];
+        const cardUse: Card[] = [];
+        cardInHandBot.forEach((value, index) => {
+            const card = cardList.find(card => card.id === value);
+            if (card) cardUse.push(card);
+        });
+
+        let cardPut: Card | undefined = cardUse.find(card => card.cardLevel > 1);
+
+        const randomIndex = Math.floor(Math.random() * cardUse.length);
+        const cardPutIndex = cardUse.findIndex(card => card.id === cardPut?.id);
+        if (cardPut === undefined) {
+            cardPut = cardUse[randomIndex];
+            cardInEnerBot.push(cardPut.id);
+            cardInHandBot = removeCardByIndex(cardInHandBot, randomIndex);
+            setNumberHandCardBot(cardInHandBot);
+        }
+        else {
+            cardInEnerBot.push(cardPut.id);
+            // Tìm vị trí của cardPut trong cardUse
+            cardInHandBot = removeCardByIndex(cardInHandBot, cardPutIndex);
+            setNumberHandCardBot(cardInHandBot);;
+        }
+        setNumberEnerCardBot(cardInEnerBot);
+        await delay(3000);
+
+        setBotMainPhase(4);
+        const cardLRIGSpace = [...cardLRIGSpaceTarget];
+        const cardInLRIGBot = [...numberLRIGCardBot];
+
+        // Tìm thẻ ở trung tâm, có thể là undefined
+        const cardCheckCenter: Card | undefined = cardList.find(card => card.id === cardLRIGSpace[1]);
+
+        // Kiểm tra cardCheckCenter trước khi tiếp tục
+        if (cardCheckCenter) {
+            // Tìm thẻ có cardLevel lớn hơn cardCheckCenter.cardLevel
+            const cardLevelUp = cardList.find(card => card.cardLevel === cardCheckCenter.cardLevel + 1 && card.isLRIGCenter === true);
+
+            // Xử lý cardLevelUp, có thể là undefined
+            if (cardLevelUp) {
+                cardLRIGSpace[1] = cardLevelUp.id;
+                setCardLRIGSpaceTarget(cardLRIGSpace);
+                setNumberLRIGCardBot(removeCardById(cardInLRIGBot, cardLevelUp.id));
+            }
+        }
+        await delay(3000);
+
+        setBotMainPhase(5);
+        let cardMAINSpaceBot = [...cardMAINSpaceTarget];
+        let cardUseMAINSpaceBot = [...cardUseMAINSpaceTarget];
+        let cardUseForMAINTurn: Card[] = [];
+        cardInHandBot.forEach((value, index) => {
+            const card = cardList.find(card => card.id === value);
+            if (card) cardUseForMAINTurn.push(card);
+        });
+
+        let checkLimitBot = checkLimitCardMAINBot;
+
+        let checkLimitMAINBot: Card[] = [];
+        cardLRIGSpace.forEach((value, index) => {
+            const card = cardList.find(card => card.id === value);
+            if (card) checkLimitMAINBot.push(card);
+        });
+
+        if (cardMAINSpaceBot[1] === -1) {
+            if (cardCheckCenter) {
+                // Tìm thẻ có cardLevel lớn hơn cardCheckCenter.cardLevel
+                const cardLevelUp = cardList.find(card => card.cardLevel === cardCheckCenter.cardLevel + 1 && card.isLRIGCenter === true);
+                // Xử lý cardLevelUp, có thể là undefined
+                if (cardLevelUp) {
+                    // Tìm thẻ trong cardUseForMAINTurn có cardLevel nhỏ hơn hoặc bằng cardLevelUp.cardLevel
+                    const cardToUse = cardUseForMAINTurn.find(card => card.cardLevel <= cardLevelUp.cardLevel && card.cardType === "SIGNI");
+
+                    if (cardToUse) {
+                        if (cardToUse.cardLevel + checkLimitBot <= checkLimitMAINBot[0].cardLimit + checkLimitMAINBot[1].cardLimit + checkLimitMAINBot[2].cardLimit) {
+                            cardMAINSpaceBot[1] = cardToUse.id;
+                            cardUseMAINSpaceBot[1] = cardToUse;
+                            setCardMAINSpaceTarget(cardMAINSpaceBot);
+                            setCardUseMAINSpaceTarget(cardUseMAINSpaceBot);
+                            // Tìm index của cardToUse trong cardUseForMAINTurn
+                            const cardIndex = cardUseForMAINTurn.findIndex(card => card.id === cardToUse.id);
+                            cardInHandBot = removeCardByIndex(cardInHandBot, cardIndex);
+                            setNumberHandCardBot(cardInHandBot);
+                            checkLimitBot = checkLimitBot + cardToUse.cardLevel;
+                            setCheckLimitCardMAINBot(checkLimitBot);
+                        }
+                    }
+                }
+            }
+        }
+
+        cardUseForMAINTurn = [];
+        cardInHandBot.forEach((value, index) => {
+            const card = cardList.find(card => card.id === value);
+            if (card) cardUseForMAINTurn.push(card);
+        });
+
+        if (cardMAINSpaceBot[0] === -1) {
+            if (cardCheckCenter) {
+                // Tìm thẻ có cardLevel lớn hơn cardCheckCenter.cardLevel
+                const cardLevelUp = cardList.find(card => card.cardLevel === cardCheckCenter.cardLevel + 1 && card.isLRIGCenter === true);
+                // Xử lý cardLevelUp, có thể là undefined
+                if (cardLevelUp) {
+                    // Tìm thẻ trong cardUseForMAINTurn có cardLevel nhỏ hơn hoặc bằng cardLevelUp.cardLevel
+                    const cardToUse = cardUseForMAINTurn.find(card => card.cardLevel <= cardLevelUp.cardLevel && card.cardType === "SIGNI");
+
+                    if (cardToUse) {
+                        if (cardToUse.cardLevel + checkLimitBot <= checkLimitMAINBot[0].cardLimit + checkLimitMAINBot[1].cardLimit + checkLimitMAINBot[2].cardLimit) {
+                            cardMAINSpaceBot[0] = cardToUse.id;
+                            cardUseMAINSpaceBot[0] = cardToUse;
+                            setCardMAINSpaceTarget(cardMAINSpaceBot);
+                            setCardUseMAINSpaceTarget(cardUseMAINSpaceBot);
+                            // Tìm index của cardToUse trong cardUseForMAINTurn
+                            const cardIndex = cardUseForMAINTurn.findIndex(card => card.id === cardToUse.id);
+                            cardInHandBot = removeCardByIndex(cardInHandBot, cardIndex);
+                            setNumberHandCardBot(cardInHandBot);
+                            checkLimitBot = checkLimitBot + cardToUse.cardLevel;
+                            setCheckLimitCardMAINBot(checkLimitBot);
+                        }
+                    }
+                }
+            }
+        }
+
+        cardUseForMAINTurn = [];
+        cardInHandBot.forEach((value, index) => {
+            const card = cardList.find(card => card.id === value);
+            if (card) cardUseForMAINTurn.push(card);
+        });
+
+        if (cardMAINSpaceBot[2] === -1) {
+            if (cardCheckCenter) {
+                // Tìm thẻ có cardLevel lớn hơn cardCheckCenter.cardLevel
+                const cardLevelUp = cardList.find(card => card.cardLevel === cardCheckCenter.cardLevel + 1 && card.isLRIGCenter === true);
+                // Xử lý cardLevelUp, có thể là undefined
+                if (cardLevelUp) {
+                    // Tìm thẻ trong cardUseForMAINTurn có cardLevel nhỏ hơn hoặc bằng cardLevelUp.cardLevel
+                    const cardToUse = cardUseForMAINTurn.find(card => card.cardLevel <= cardLevelUp.cardLevel && card.cardType === "SIGNI");
+
+                    if (cardToUse) {
+                        if (cardToUse.cardLevel + checkLimitBot <= checkLimitMAINBot[0].cardLimit + checkLimitMAINBot[1].cardLimit + checkLimitMAINBot[2].cardLimit) {
+                            cardMAINSpaceBot[2] = cardToUse.id;
+                            cardUseMAINSpaceBot[2] = cardToUse;
+                            setCardMAINSpaceTarget(cardMAINSpaceBot);
+                            setCardUseMAINSpaceTarget(cardUseMAINSpaceBot);
+                            // Tìm index của cardToUse trong cardUseForMAINTurn
+                            const cardIndex = cardUseForMAINTurn.findIndex(card => card.id === cardToUse.id);
+                            cardInHandBot = removeCardByIndex(cardInHandBot, cardIndex);
+                            setNumberHandCardBot(cardInHandBot);
+                            checkLimitBot = checkLimitBot + cardToUse.cardLevel;
+                            setCheckLimitCardMAINBot(checkLimitBot);
+                        }
+                    }
+                }
+            }
+        }
+        await delay(3000);
+
+        setBotMainPhase(6);
+
+        await delay(3000);
+        setBotMainPhase(7);
+        if (cardInHandBot.length >= 7) {
+            cardUseForMAINTurn = [];
+            cardInHandBot.forEach((value, index) => {
+                const card = cardList.find(card => card.id === value);
+                if (card) cardUseForMAINTurn.push(card);
+            });
+            const trashCardBot: number[] = [...numberTrashCardBot];
+            const cardPut = cardInHandBot.splice(0, 1);
+            trashCardBot.push(cardPut[0]);
+            setNumberTrashCardBot(trashCardBot);
+            setNumberHandCardBot(cardInHandBot);
+        }
+        await delay(3000);
+        const turnPlay = turnGame + 1;
+        setTurnGame(turnPlay);
+        setMainPhase(1);
+        setBotMainPhase(-1);
+        setPopupAction(true);
+        setStartPhase(12);
     }
 
     useEffect(() => {
@@ -288,6 +508,7 @@ const PlayGround: React.FC = () => {
                 }
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isFirstTurn, turnGame])
 
     const handleOpenPopupLRIGBot = () => {
@@ -427,6 +648,10 @@ const PlayGround: React.FC = () => {
             .map(card => card.id);
     };
 
+    const removeCardByIndex = (cardList: number[], indexToRemove: number): number[] => {
+        return cardList.filter((_, index) => index !== indexToRemove);
+    };
+
     const setUpBot = (id: number) => {
         let cardIsChoose: number[] = [...cardLRIGSpaceTarget];
         let drawBotCardHand: number[] = [...numberHandCardBot];
@@ -504,6 +729,7 @@ const PlayGround: React.FC = () => {
                 setStartPhase(9);
                 break;
             case 2:
+                setMainPhase(-1);
                 setStartPhase(11);
                 setIsFirstTurn(false);
                 break;
@@ -722,17 +948,20 @@ const PlayGround: React.FC = () => {
                         {MainPhase === 0 &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Khởi Đầu</p>
                         }
-                        {MainPhase === 1 &&
+                        {(MainPhase === 1 || botMainPhase === 1) &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Mở Bài</p>
                         }
-                        {MainPhase === 2 &&
+                        {(MainPhase === 2 || botMainPhase === 2) &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Rút Bài</p>
                         }
-                        {MainPhase === 3 &&
+                        {(MainPhase === 3 || botMainPhase === 3) &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Nhập Bài</p>
                         }
-                        {MainPhase === 4 &&
+                        {(MainPhase === 4 || botMainPhase === 4) &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Phát Triển</p>
+                        }
+                        {botMainPhase === 5 &&
+                            <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Chính</p>
                         }
                         {(MainPhase === 5 || MainPhase === 6 || MainPhase === 7) &&
                             <p className='text-white cursor-pointer font-bold text-xs my-5 text-center mx-5'
@@ -740,13 +969,13 @@ const PlayGround: React.FC = () => {
                             >Giai Đoạn Chính
                             </p>
                         }
-                        {(MainPhase === 8) &&
+                        {(MainPhase === 8 || botMainPhase === 6) &&
                             <p className='text-white cursor-pointer font-bold text-xs my-5 text-center mx-5'
                                 onClick={() => { handleOpenPopupChoosePhase(2) }}
                             >Giai Đoạn Tấn Công
                             </p>
                         }
-                        {(MainPhase === 9 || MainPhase === 10) &&
+                        {(MainPhase === 9 || MainPhase === 10 || botMainPhase === 7) &&
                             <p className='text-white cursor-pointer font-bold text-xs my-5 text-center mx-5'
                             >Giai Đoạn Kết Thúc
                             </p>
@@ -954,15 +1183,15 @@ const PlayGround: React.FC = () => {
                                 </div>
                             </>
                         }
-                        {MainPhase === 1 && (turnGame === 1 || turnGame === 2) &&
+                        {MainPhase === 1 &&
                             <>
                                 <p className="text-xl mb-4 font-bold">Giai đoạn mở</p>
-                                <p className="text-md mb-4 font-bold">Giai đoạn chuyển các lá bài từ thế ngang sang dọc, do đi lượt đầu nên chưa có lá bài nào cần chuyển.</p>
+                                <p className="text-md mb-4 font-bold">Giai đoạn chuyển các lá bài từ thế hạ sang thế mở!</p>
                                 <button
                                     onClick={handleMainPopup}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 >
-                                    Tiếp Tục
+                                    Chuyển Bài
                                 </button>
                             </>
                         }
@@ -1086,6 +1315,7 @@ const PlayGround: React.FC = () => {
                                         setTurnGame(turnPlay);
                                         setPopupEffectAction(false);
                                         setPopupAction(false);
+                                        setMainPhase(-1);
                                     }}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 >
