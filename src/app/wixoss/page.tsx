@@ -82,7 +82,8 @@ const PlayGround: React.FC = () => {
     const [isPopupChooseMAINSpace, setIsPopupChooseMAINSpace] = useState(false);
     const [isTypePopupChooseMAINSpace, setIsTypePopupChooseMAINSpace] = useState(0);
     const [isPowerCheckPopupChooseMAINSpace, setIsPowerCheckPopupChooseMAINSpace] = useState(0);
-    const [turnGame, setTurnGame] = useState(0);
+    const [turnGame, setTurnGame] = useState<number>(0);
+    const [isFirstTurn, setIsFirstTurn] = useState<boolean>(false);
     const requestRef = useRef<number>();
 
     const constEffect = (time: number) => {
@@ -250,15 +251,44 @@ const PlayGround: React.FC = () => {
     };
 
     const handleCheckCardHand = () => {
-        setPopupAction(false);
         if (numberHandCard.length >= 7) {
             setDiscardCardNumber(numberHandCard.length - 6);
         }
+        setPopupEffectAction(true);
+        setActionType(0);
+        setMainPhase(10);
     }
 
     const handleRemoveEffect = () => {
-        setMainPhase(9);
+        if (numberHandCard.length >= 7) {
+            setMainPhase(9);
+        }
+        else {
+            setPopupEffectAction(true);
+            setActionType(0);
+            setMainPhase(10);
+        }
+
     }
+
+    const botTurn = () => {
+        console.log("bot turn");
+    }
+
+    useEffect(() => {
+        if (turnGame >= 1) {
+            if (isFirstTurn) { // Kiểm tra nếu là lượt đầu tiên
+                if (turnGame % 2 === 0) { // Kiểm tra nếu turnGame là số chẵn
+                    botTurn();
+                }
+            }
+            else {
+                if (turnGame % 2 !== 0) { // Kiểm tra nếu turnGame là số lẻ
+                    botTurn();
+                }
+            }
+        }
+    }, [isFirstTurn, turnGame])
 
     const handleOpenPopupLRIGBot = () => {
         setIsPopupLRIGBot(true);
@@ -466,6 +496,21 @@ const PlayGround: React.FC = () => {
         }
     }
 
+    const handleChooseTurn = (id: number) => {
+        switch (id) {
+            case 1:
+                setMainPhase(1);
+                setIsFirstTurn(true);
+                setStartPhase(9);
+                break;
+            case 2:
+                setStartPhase(11);
+                setIsFirstTurn(false);
+                break;
+        }
+        setTurnGame(1);
+    }
+
     const handlePopup = () => {
         setStartPhase(prev => prev + 1);
         switch (startPhase) {
@@ -500,9 +545,6 @@ const PlayGround: React.FC = () => {
                 setNumberLifeCard(numberMAINCard.splice(0, 7));
                 setUpBot(6);
                 break;
-            case 8:
-                setTurnGame(1);
-                break;
         }
     };
 
@@ -513,8 +555,16 @@ const PlayGround: React.FC = () => {
 
                 break;
             case 2:
-                const pushCard: number[] = numberMAINCard.splice(0, 1);
-                numberHandCard.push(pushCard[0]);
+                if (turnGame === 1) {
+                    const pushCard: number[] = numberMAINCard.splice(0, 1);
+                    numberHandCard.push(pushCard[0]);
+                }
+                else {
+                    const pushCard: number[] = numberMAINCard.splice(0, 2);
+                    pushCard.forEach((value, index) => {
+                        numberHandCard.push(value);
+                    });
+                }
                 setIsPopupHand(true);
                 break;
             case 3:
@@ -576,7 +626,6 @@ const PlayGround: React.FC = () => {
             setPopupAction(true);
         }
         if (startPhase === 9) {
-            setMainPhase(1);
             setStartPhase(10);
         }
         if (startPhase === 11) {
@@ -889,15 +938,23 @@ const PlayGround: React.FC = () => {
                             <>
                                 <p className="text-xl mb-4 font-bold">Giai đoạn khởi đầu</p>
                                 <p className="text-md mb-4 font-bold">Giai đoạn thiết lập sân khởi đầu đã hoàn tất!</p>
-                                <button
-                                    onClick={handlePopup}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                >
-                                    Đi Lượt Đầu
-                                </button>
+                                <div className='flex flex-col'>
+                                    <button
+                                        onClick={() => { handleChooseTurn(1) }}
+                                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    >
+                                        Đi Lượt Đầu
+                                    </button>
+                                    <button
+                                        onClick={() => { handleChooseTurn(2) }}
+                                        className="px-4 mt-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    >
+                                        Đi Lượt Sau
+                                    </button>
+                                </div>
                             </>
                         }
-                        {MainPhase === 1 &&
+                        {MainPhase === 1 && (turnGame === 1 || turnGame === 2) &&
                             <>
                                 <p className="text-xl mb-4 font-bold">Giai đoạn mở</p>
                                 <p className="text-md mb-4 font-bold">Giai đoạn chuyển các lá bài từ thế ngang sang dọc, do đi lượt đầu nên chưa có lá bài nào cần chuyển.</p>
@@ -909,10 +966,22 @@ const PlayGround: React.FC = () => {
                                 </button>
                             </>
                         }
-                        {MainPhase === 2 &&
+                        {MainPhase === 2 && turnGame === 1 &&
                             <>
                                 <p className="text-xl mb-4 font-bold">Giai đoạn rút bài</p>
                                 <p className="text-md mb-4 font-bold">Giai đoạn rút 2 lá bài từ bộ bài chính, nhưng do đây là lượt đầu nên chỉ rút được 1 lá!</p>
+                                <button
+                                    onClick={handleMainPopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Rút Bài
+                                </button>
+                            </>
+                        }
+                        {MainPhase === 2 && turnGame >= 2 &&
+                            <>
+                                <p className="text-xl mb-4 font-bold">Giai đoạn rút bài</p>
+                                <p className="text-md mb-4 font-bold">Giai đoạn rút 2 lá bài từ bộ bài chính!</p>
                                 <button
                                     onClick={handleMainPopup}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -989,7 +1058,7 @@ const PlayGround: React.FC = () => {
                                 </button>
                             </>
                         }
-                        {MainPhase === 9 &&
+                        {MainPhase === 9 && numberHandCard.length >= 7 &&
                             <>
                                 <p className="font-bold text-xl mb-4">Giai Đoạn Kết Thúc</p>
                                 <p className="text-md mb-4 font-bold">Giai đoạn này sẽ kết thúc các hiệu ứng đang diễn ra trên sân nếu có. Nếu bạn có trên tay từ 7 lá bài trở lên hãy loại bỏ cho đến khi còn 6 lá!</p>
@@ -997,7 +1066,7 @@ const PlayGround: React.FC = () => {
                                     onClick={handleCheckCardHand}
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 >
-                                    Chuyển Lượt
+                                    Loại Bỏ
                                 </button>
                             </>
                         }
@@ -1007,6 +1076,23 @@ const PlayGround: React.FC = () => {
             {isPopupEffectAction && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        {MainPhase === 10 &&
+                            <>
+                                <p className="font-bold text-xl mb-4">Giai Đoạn Chuyển Lượt</p>
+                                <p className="text-md mb-4 font-bold">Lượt của bạn đã kết thúc!</p>
+                                <button
+                                    onClick={() => {
+                                        const turnPlay = turnGame + 1;
+                                        setTurnGame(turnPlay);
+                                        setPopupEffectAction(false);
+                                        setPopupAction(false);
+                                    }}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Chuyển Lượt
+                                </button>
+                            </>
+                        }
                         {actionType === 1 &&
                             <>
                                 <p className="text-xl mb-4 font-bold">Rút Bài</p>
