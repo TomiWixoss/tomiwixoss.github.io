@@ -7,6 +7,7 @@ import HandPopup from './HandCard';
 import LRIGPopup from './LRIGCard';
 import MAINPopup from './MAINCard';
 import TrashPopup from './TrashCard';
+import { IoMdClose } from "react-icons/io";
 import EnerPopupBot from './EnerCardBot';
 import HandPopupBot from './HandCardBot';
 import LRIGPopupBot from './LRIGCardBot';
@@ -18,9 +19,9 @@ import cardList from '../../components/CardDB';
 
 const PlayGround: React.FC = () => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
-    const [isPopupAction, setPopupAction] = useState(true);
+    const [isPopupAction, setPopupAction] = useState<Card | null>(null);
+    const [isTypeAction, setIsTypeAction] = useState(0);
     const [MainPhase, setMainPhase] = useState<number>(0);
-    const [botMainPhase, setBotMainPhase] = useState<number>(0);
     const [isPopupLRIG, setIsPopupLRIG] = useState(false);
     const [isPopupEner, setIsPopupEner] = useState(false);
     const [isPopupMAIN, setIsPopupMAIN] = useState(false);
@@ -59,6 +60,10 @@ const PlayGround: React.FC = () => {
     const [cardMAINSpaceTarget, setCardMAINSpaceTarget] = useState([-1, -1, -1]);
     const [cardUseMAINSpacePlayer, setCardUseMAINSpacePlayer] = useState<Card[]>([]);
     const [cardUseMAINSpaceTarget, setCardUseMAINSpaceTarget] = useState<Card[]>([]);
+    const [isTypePopupLRIG, setIsTypePopupLRIG] = useState(0);
+    const [isTypePopupHand, setIsTypePopupHand] = useState(0);
+    const [isPositionSpace, setIsPositionSpace] = useState(0);
+    const [isPositionCard, setIsPositionCard] = useState(0);
 
     useEffect(() => {
         const cardUseMAINPlayer = [...cardUseMAINSpacePlayer];
@@ -80,6 +85,66 @@ const PlayGround: React.FC = () => {
         setCardUseMAINSpaceTarget(cardUseMAINTarget);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const handleClickLRIGCardPlayer = (card: Card, index: number) => {
+        if (card.id === 0) {
+            setIsTypePopupLRIG(1);
+            setIsPositionSpace(index);
+            setIsPopupLRIG(true);
+        } else {
+            setIsTypeAction(1);
+            setIsPositionCard(1);
+            setIsPositionSpace(index);
+            setPopupAction(card);
+        }
+    }
+
+    const handleClickLRIGCardTarget = (card: Card, index: number) => {
+        if (card.id === 0) {
+            setIsTypePopupLRIG(1);
+            setIsPositionSpace(index);
+            setIsPopupLRIGBot(true);
+        } else {
+            setIsTypeAction(1);
+            setIsPositionCard(2);
+            setIsPositionSpace(index);
+            setPopupAction(card);
+        }
+    }
+
+    const handleClickMAINCardPlayer = (card: Card) => {
+        if (card.id === -1) {
+            setIsPopupHand(true);
+        }
+    }
+
+    const handleClickMAINCardTarget = (card: Card) => {
+        if (card.id === -1) {
+            setIsPopupHandBot(true);
+        }
+    }
+
+    const handleChangeCard = (id: number) => {
+        switch (id) {
+            case 1:
+                switch (isPositionCard) {
+                    case 1:
+                        const cardPut1 = [...numberLRIGCard];  // Sao chép mảng hiện tại
+                        cardPut1.push(cardLRIGSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
+                        setNumberLRIGCard(cardPut1);  // Cập nhật trạng thái với mảng mới
+                        cardLRIGSpacePlayer[isPositionSpace] = 0;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
+                        break;
+                    case 2:
+                        const cardPut2 = [...numberLRIGCardBot];  // Sao chép mảng hiện tại
+                        cardPut2.push(cardLRIGSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
+                        setNumberLRIGCardBot(cardPut2);  // Cập nhật trạng thái với mảng mới
+                        cardLRIGSpaceTarget[isPositionSpace] = 0;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
+                        break;
+                }
+                break;
+        }
+        setPopupAction(null);
+    }
 
     return (
         <>
@@ -135,7 +200,7 @@ const PlayGround: React.FC = () => {
                                         width={750}
                                         height={1047}
                                         className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
-                                        onClick={() => { setSelectedCard(card) }}
+                                        onClick={() => { handleClickLRIGCardTarget(card, index) }}
                                     />
                                 );
                             }
@@ -150,7 +215,7 @@ const PlayGround: React.FC = () => {
                                     width={750}
                                     height={1047}
                                     className={`w-full h-auto`}
-                                    onClick={() => { setSelectedCard(card) }}
+                                    onClick={() => { handleClickMAINCardTarget(card) }}
                                 />
                                 {card.id !== -1 &&
                                     <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
@@ -167,30 +232,30 @@ const PlayGround: React.FC = () => {
                         >
                             Tay Đối Thủ
                         </button>
-                        {(MainPhase === 0 || botMainPhase === 0) &&
+                        {MainPhase === 0 &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Khởi Đầu</p>
                         }
-                        {(MainPhase === 1 || botMainPhase === 1) &&
+                        {MainPhase === 1 &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Mở Bài</p>
                         }
-                        {(MainPhase === 2 || botMainPhase === 2) &&
+                        {MainPhase === 2 &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Rút Bài</p>
                         }
-                        {(MainPhase === 3 || botMainPhase === 3) &&
+                        {MainPhase === 3 &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Nhập Bài</p>
                         }
-                        {(MainPhase === 4 || botMainPhase === 4) &&
+                        {MainPhase === 4 &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Phát Triển</p>
                         }
-                        {(MainPhase === 5 || botMainPhase === 5) &&
+                        {MainPhase === 5 &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Chính</p>
                         }
-                        {(MainPhase === 6 || botMainPhase === 6) &&
+                        {MainPhase === 6 &&
                             <p className='text-white cursor-pointer font-bold text-xs my-5 text-center mx-5'
                             >Giai Đoạn Tấn Công
                             </p>
                         }
-                        {(MainPhase === 7 || botMainPhase === 7) &&
+                        {MainPhase === 7 &&
                             <p className='text-white cursor-pointer font-bold text-xs my-5 text-center mx-5'
                             >Giai Đoạn Kết Thúc
                             </p>
@@ -211,7 +276,7 @@ const PlayGround: React.FC = () => {
                                     width={750}
                                     height={1047}
                                     className={`w-full h-auto`}
-                                    onClick={() => { setSelectedCard(card) }}
+                                    onClick={() => { handleClickMAINCardPlayer(card) }}
                                 />
                                 {card.id !== -1 &&
                                     <p className="absolute text-xs bottom-0 left-0 w-full bg-black bg-opacity-50 text-white text-center">
@@ -233,7 +298,7 @@ const PlayGround: React.FC = () => {
                                         width={750}
                                         height={1047}
                                         className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
-                                        onClick={() => { setSelectedCard(card) }}
+                                        onClick={() => { handleClickLRIGCardPlayer(card, index) }}
                                     />
                                 );
                             }
@@ -279,16 +344,100 @@ const PlayGround: React.FC = () => {
                     </div>
                 </div>
             </div>
+            {isPopupAction && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        {isTypeAction === 1 &&
+                            <>
+                                <div className="flex justify-between items-center mb-4">
+                                    <p className="font-bold text-xl mr-4">Hành Động</p>
+                                    <IoMdClose
+                                        onClick={() => { setPopupAction(null) }}
+                                        className="font-bold text-2xl cursor-pointer"
+                                    />
+                                </div>
+                                <div className='flex flex-col'>
+                                    <button
+                                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                        onClick={() => { setSelectedCard(isPopupAction) }}
+                                    >
+                                        Xem Thẻ
+                                    </button>
+                                    <button
+                                        className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                        onClick={() => { setIsTypeAction(2) }}
+                                    >
+                                        Di Chuyển
+                                    </button>
+                                </div>
+                            </>
+                        }
+                        {isTypeAction === 2 &&
+                            <>
+                                <div className="flex justify-between items-center mb-4">
+                                    <p className="font-bold text-xl mr-4">Di Chuyển</p>
+                                    <IoMdClose
+                                        onClick={() => { setPopupAction(null) }}
+                                        className="font-bold text-2xl cursor-pointer"
+                                    />
+                                </div>
+                                <div className='flex flex-col'>
+                                    {isPositionCard !== 3 &&
+                                        <button
+                                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                            onClick={() => { handleChangeCard(1) }}
+                                        >
+                                            Bộ Bài LRIG
+                                        </button>
+                                    }
+                                </div>
+                            </>
+                        }
+                    </div>
+                </div >
+            )}
             <EnerPopup isOpen={isPopupEner} onClose={() => { setIsPopupEner(false) }} numberCard={numberEnerCard} />
             <HandPopup isOpen={isPopupHand} onClose={() => { setIsPopupHand(false) }} numberCard={numberHandCard} />
-            <LRIGPopup isOpen={isPopupLRIG} onClose={() => { setIsPopupLRIG(false) }} numberCard={numberLRIGCard} />
-            <MAINPopup isOpen={isPopupMAIN} onClose={() => { setIsPopupMAIN(false) }} numberCard={numberMAINCard} />
+            <LRIGPopup
+                isOpen={isPopupLRIG}
+                onClose={() => {
+                    setIsPopupLRIG(false);
+                    setIsTypePopupLRIG(0);
+                }}
+                numberCard={numberLRIGCard}
+                type={isTypePopupLRIG}
+                LRIGSpace={cardLRIGSpacePlayer}
+                setNumberCard={setNumberLRIGCard}
+                position={isPositionSpace} />
+            <MAINPopup
+                isOpen={isPopupMAIN}
+                onClose={() => { setIsPopupMAIN(false) }}
+                numberCardMAIN={numberMAINCard}
+                setNumberCardMAIN={setNumberMAINCard}
+                numberCardHand={numberHandCard}
+                setNumberCardHand={setNumberHandCard} />
             <TrashPopup isOpen={isPopupTrash} onClose={() => { setIsPopupTrash(false) }} numberCard={numberTrashCard} />
             <EnerPopupBot isOpen={isPopupEnerBot} onClose={() => { setIsPopupEnerBot(false) }} numberCard={numberEnerCardBot} />
             <HandPopupBot isOpen={isPopupHandBot} onClose={() => { setIsPopupHandBot(false) }} numberCard={numberHandCardBot} />
-            <LRIGPopupBot isOpen={isPopupLRIGBot} onClose={() => { setIsPopupLRIGBot(false) }} numberCard={numberLRIGCardBot} />
-            <MAINPopupBot isOpen={isPopupMAINBot} onClose={() => { setIsPopupMAINBot(false) }} numberCard={numberMAINCardBot} />
+            <LRIGPopupBot isOpen={isPopupLRIGBot}
+                onClose={() => {
+                    setIsPopupLRIGBot(false);
+                    setIsTypePopupLRIG(0);
+                }}
+                numberCard={numberLRIGCardBot}
+                type={isTypePopupLRIG}
+                LRIGSpace={cardLRIGSpaceTarget}
+                setNumberCard={setNumberLRIGCardBot}
+                position={isPositionSpace} />
+            <MAINPopupBot
+                isOpen={isPopupMAINBot}
+                onClose={() => { setIsPopupMAINBot(false) }}
+                numberCardMAIN={numberMAINCardBot}
+                setNumberCardMAIN={setNumberMAINCardBot}
+                numberCardHand={numberHandCardBot}
+                setNumberCardHand={setNumberHandCardBot} />
             <TrashPopupBot isOpen={isPopupTrashBot} onClose={() => { setIsPopupTrashBot(false) }} numberCard={numberTrashCardBot} />
+            {selectedCard && <CardDetail card={selectedCard} onClose={() => { setSelectedCard(null) }} />}
         </>
     );
 };

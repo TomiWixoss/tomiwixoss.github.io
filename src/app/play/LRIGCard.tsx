@@ -10,13 +10,30 @@ interface LRIGPopupProps {
     isOpen: boolean;
     onClose: () => void;
     numberCard: number[];
+    type: number;
+    LRIGSpace: number[];
+    setNumberCard: React.Dispatch<React.SetStateAction<number[]>>;
+    position: number;
 }
 
-const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard }) => {
+const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type, LRIGSpace, setNumberCard, position }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
+    const removeCardById = (cardList: number[], idToRemove: number) => {
+        return cardList.map(card => ({ id: card } as { id: number }))
+            .filter(card => card.id !== idToRemove)
+            .map(card => card.id);
+    };
+
     const handleCardClick = (card: Card) => {
-        setSelectedCard(card);
+        if (type === 1) {
+            LRIGSpace[position] = card.id;
+            setNumberCard(removeCardById(numberCard, card.id));
+            onClose();
+        }
+        else {
+            setSelectedCard(card);
+        }
     };
 
     const handleCloseDetail = () => {
