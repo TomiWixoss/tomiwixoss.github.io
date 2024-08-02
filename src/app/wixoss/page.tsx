@@ -82,6 +82,7 @@ const PlayGround: React.FC = () => {
     const [isPopupChooseMAINSpace, setIsPopupChooseMAINSpace] = useState(false);
     const [isTypePopupChooseMAINSpace, setIsTypePopupChooseMAINSpace] = useState(0);
     const [isPowerCheckPopupChooseMAINSpace, setIsPowerCheckPopupChooseMAINSpace] = useState(0);
+    const [turnGame, setTurnGame] = useState(0);
     const requestRef = useRef<number>();
 
     const constEffect = (time: number) => {
@@ -239,6 +240,26 @@ const PlayGround: React.FC = () => {
         setNumberHandCard(itemsToMove);
     };
 
+    const handleOpenPopupChoosePhase = (id: number) => {
+        setPopupAction(true);
+        switch (id) {
+            case 1:
+                setMainPhase(7);
+                break;
+        }
+    };
+
+    const handleCheckCardHand = () => {
+        setPopupAction(false);
+        if (numberHandCard.length >= 7) {
+            setDiscardCardNumber(numberHandCard.length - 6);
+        }
+    }
+
+    const handleRemoveEffect = () => {
+        setMainPhase(9);
+    }
+
     const handleOpenPopupLRIGBot = () => {
         setIsPopupLRIGBot(true);
     };
@@ -340,7 +361,7 @@ const PlayGround: React.FC = () => {
     };
 
     const handleChooseSIGNICard = (index: number, id: number, card: Card) => {
-        if (id === -1) {
+        if (id === -1 && (MainPhase === 5 || MainPhase === 6 || MainPhase === 7)) {
             setTargetSpaceMAINPlayer(index);
             setIsTypePopupChooseHand(2);
             setIsChoosePopupHand(true);
@@ -478,6 +499,9 @@ const PlayGround: React.FC = () => {
             case 7:
                 setNumberLifeCard(numberMAINCard.splice(0, 7));
                 setUpBot(6);
+                break;
+            case 8:
+                setTurnGame(1);
                 break;
         }
     };
@@ -661,11 +685,22 @@ const PlayGround: React.FC = () => {
                         {MainPhase === 4 &&
                             <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Phát Triển</p>
                         }
-                        {MainPhase === 5 &&
-                            <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Chính</p>
+                        {(MainPhase === 5 || MainPhase === 6 || MainPhase === 7) &&
+                            <p className='text-white cursor-pointer font-bold text-xs my-5 text-center mx-5'
+                                onClick={() => { handleOpenPopupChoosePhase(1) }}
+                            >Giai Đoạn Chính
+                            </p>
                         }
-                        {MainPhase === 6 &&
-                            <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Chính</p>
+                        {(MainPhase === 8) &&
+                            <p className='text-white cursor-pointer font-bold text-xs my-5 text-center mx-5'
+                                onClick={() => { handleOpenPopupChoosePhase(2) }}
+                            >Giai Đoạn Tấn Công
+                            </p>
+                        }
+                        {(MainPhase === 9 || MainPhase === 10) &&
+                            <p className='text-white cursor-pointer font-bold text-xs my-5 text-center mx-5'
+                            >Giai Đoạn Kết Thúc
+                            </p>
                         }
                         <button
                             className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
@@ -919,6 +954,50 @@ const PlayGround: React.FC = () => {
                                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 >
                                     Bắt Đầu
+                                </button>
+                            </>
+                        }
+                        {MainPhase === 7 &&
+                            <>
+                                <div className="flex justify-between items-center mb-4">
+                                    <p className="font-bold text-lg">Chuyển Đổi Giai Đoạn</p>
+                                    <IoMdClose
+                                        onClick={() => {
+                                            setPopupAction(false);
+                                        }}
+                                        className="font-bold text-2xl cursor-pointer"
+                                    />
+                                </div>
+                                <p className="text-md mb-4 font-bold">Bạn có muốn chuyển sang giai đoạn tấn công?</p>
+                                <button
+                                    onClick={handleMainPopup}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Tấn Công
+                                </button>
+                            </>
+                        }
+                        {MainPhase === 8 && turnGame === 1 &&
+                            <>
+                                <p className="font-bold text-xl mb-4">Giai Đoạn Tấn Công</p>
+                                <p className="text-md mb-4 font-bold">Vì đây là lượt đầu nên bạn không thể tấn công đối thủ!</p>
+                                <button
+                                    onClick={handleRemoveEffect}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Kết Thúc
+                                </button>
+                            </>
+                        }
+                        {MainPhase === 9 &&
+                            <>
+                                <p className="font-bold text-xl mb-4">Giai Đoạn Kết Thúc</p>
+                                <p className="text-md mb-4 font-bold">Giai đoạn này sẽ kết thúc các hiệu ứng đang diễn ra trên sân nếu có. Nếu bạn có trên tay từ 7 lá bài trở lên hãy loại bỏ cho đến khi còn 6 lá!</p>
+                                <button
+                                    onClick={handleCheckCardHand}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                >
+                                    Chuyển Lượt
                                 </button>
                             </>
                         }
