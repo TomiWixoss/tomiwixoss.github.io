@@ -376,9 +376,23 @@ const PlayGround: React.FC = () => {
 
     const handleTitleCard = (id: number) => {
         const updateStatusName = (cards: Card[], position: number, statusName: string) => {
-            return cards.map((card, index) =>
-                index === position ? { ...card, statusName: statusName } : card
-            );
+            if (statusName !== "") {
+                return cards.map((card, index) => {
+                    if (index === position) {
+                        // Nếu statusName hiện tại không phải là chuỗi rỗng, thêm dấu phẩy trước giá trị mới
+                        const updatedStatus = card.statusName && card.statusName !== ""
+                            ? `${card.statusName} ${statusName}`
+                            : statusName;
+                        return { ...card, statusName: updatedStatus };
+                    }
+                    return card;
+                });
+            }
+            else {
+                return cards.map((card, index) =>
+                    index === position ? { ...card, statusName: statusName } : card
+                );
+            }
         };
 
         switch (id) {
