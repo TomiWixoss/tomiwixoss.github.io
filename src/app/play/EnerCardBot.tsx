@@ -9,13 +9,28 @@ interface EnerPopupProps {
     isOpen: boolean;
     onClose: () => void;
     numberCard: number[];
+    setNumberCard: React.Dispatch<React.SetStateAction<number[]>>;
+    numberMAINCard: number[];
+    setNumberMAINCard: React.Dispatch<React.SetStateAction<number[]>>;
+    numberHandCard: number[];
+    setNumberHandCard: React.Dispatch<React.SetStateAction<number[]>>;
+    numberTrashCard: number[];
+    setNumberTrashCard: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard }) => {
+const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setNumberCard, numberMAINCard, setNumberMAINCard, numberHandCard, setNumberHandCard, numberTrashCard, setNumberTrashCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+    const [isPopupAction, setPopupAction] = useState<Card | null>(null);
+    const [isChangePopupAction, setChangePopupAction] = useState<Card | null>(null);
+    const [isPositionCard, setIsPositionCard] = useState(0);
 
-    const handleCardClick = (card: Card) => {
-        setSelectedCard(card);
+    const removeCardByIndex = (cardList: number[], indexToRemove: number): number[] => {
+        return cardList.filter((_, index) => index !== indexToRemove);
+    };
+
+    const handleCardClick = (card: Card, index: number) => {
+        setIsPositionCard(index);
+        setPopupAction(card);
     };
 
     const handleCloseDetail = () => {
@@ -58,13 +73,98 @@ const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard }) =>
                                         width={750}
                                         height={1047}
                                         className="w-full h-auto mb-2"
-                                        onClick={() => handleCardClick(card)}
+                                        onClick={() => handleCardClick(card, index)}
                                     />
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
+            )}
+            {isPopupAction && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Hành Động</p>
+                            <IoMdClose
+                                onClick={() => { setPopupAction(null) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    setSelectedCard(isPopupAction);
+                                }}
+                            >
+                                Xem Thẻ
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    setChangePopupAction(isPopupAction);
+                                }}
+                            >
+                                Di Chuyển
+                            </button>
+                        </div>
+                    </div>
+                </div >
+            )}
+            {isChangePopupAction && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Di Chuyển</p>
+                            <IoMdClose
+                                onClick={() => { setChangePopupAction(null) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardPut = [...numberHandCard];
+                                    cardPut.push(isChangePopupAction.id);
+                                    setNumberHandCard(cardPut);
+                                    setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                    setChangePopupAction(null);
+                                    setPopupAction(null);
+                                }}
+                            >
+                                Bài Trên Tay
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardPut = [...numberTrashCard];
+                                    cardPut.push(isChangePopupAction.id);
+                                    setNumberTrashCard(cardPut);
+                                    setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                    setChangePopupAction(null);
+                                    setPopupAction(null);
+                                }}
+                            >
+                                Thùng Rác
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardPut = [...numberMAINCard];
+                                    cardPut.push(isChangePopupAction.id);
+                                    setNumberMAINCard(cardPut);
+                                    setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                    setChangePopupAction(null);
+                                    setPopupAction(null);
+                                }}
+                            >
+                                Bộ Bài Chính
+                            </button>
+                        </div>
+                    </div>
+                </div >
             )}
             {selectedCard && <CardDetail card={selectedCard} onClose={handleCloseDetail} />}
         </>

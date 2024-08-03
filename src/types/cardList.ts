@@ -19,4 +19,7 @@ export default interface Card {
     isLRIGCenter: boolean;
     isLRIGSupport: boolean;
     cardEffect: string[];
+    isDown: boolean;
+    isFreeze: boolean;
+    statusName: string;
 }

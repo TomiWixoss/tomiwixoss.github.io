@@ -21,7 +21,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 0,
@@ -43,7 +46,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 1,
@@ -65,7 +71,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: true,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 2,
@@ -87,7 +96,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: true,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 3,
@@ -109,7 +121,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: true,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 4,
@@ -131,7 +146,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: true,
         isLRIGSupport: false,
-        cardEffect: ["Action", "Enter"]
+        cardEffect: ["Action", "Enter"],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 5,
@@ -153,7 +171,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 6,
@@ -175,7 +196,10 @@ const cardList: Card[] = [
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        cardEffect: ["Enter"]
+        cardEffect: ["Enter"],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 7,
@@ -197,7 +221,10 @@ const cardList: Card[] = [
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        cardEffect: ["Enter"]
+        cardEffect: ["Enter"],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 8,
@@ -219,7 +246,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 9,
@@ -241,7 +271,10 @@ const cardList: Card[] = [
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        cardEffect: ["Enter"]
+        cardEffect: ["Enter"],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 10,
@@ -263,7 +296,10 @@ const cardList: Card[] = [
         cardUseTime: "Main Phase, Attack Phase",
         isLRIGCenter: false,
         isLRIGSupport: true,
-        cardEffect: ["Enter"]
+        cardEffect: ["Enter"],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 11,
@@ -285,7 +321,10 @@ const cardList: Card[] = [
         cardUseTime: "Main Phase",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 12,
@@ -307,7 +346,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: ["Const"]
+        cardEffect: ["Const"],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 13,
@@ -329,7 +371,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 14,
@@ -351,7 +396,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: ["Const", "Action"]
+        cardEffect: ["Const", "Action"],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 15,
@@ -369,11 +417,14 @@ const cardList: Card[] = [
         cardTeamName: "",
         cardClass: "War Tone: Armed",
         cardPower: 12000,
-        cardBurst: "Chọn 1 trong 2 hiệu ứng: 1-Loại bỏ 1 SIGNI trên sân đối thủ. 2-Rút 1 lá bài.",
+        cardBurst: "Chọn 1 trong 2 hiệu ứng: 1-Loại bỏ 1 SIGNI đã mở trên sân đối thủ. 2-Rút 1 lá bài.",
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: ["Auto", "Enter"]
+        cardEffect: ["Auto", "Enter"],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 16,
@@ -395,7 +446,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: ["Auto"]
+        cardEffect: ["Auto"],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 17,
@@ -417,7 +471,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: ["Enter"]
+        cardEffect: ["Enter"],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 18,
@@ -439,7 +496,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 19,
@@ -461,7 +521,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 20,
@@ -483,7 +546,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     },
     {
         id: 21,
@@ -505,7 +571,10 @@ const cardList: Card[] = [
         cardUseTime: "",
         isLRIGCenter: false,
         isLRIGSupport: false,
-        cardEffect: [""]
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     }
 ];
 

@@ -12,9 +12,15 @@ interface MAINPopupProps {
     setNumberCardMAIN: React.Dispatch<React.SetStateAction<number[]>>;
     numberCardHand: number[];
     setNumberCardHand: React.Dispatch<React.SetStateAction<number[]>>;
+    numberEnerCard: number[];
+    setNumberEnerCard: React.Dispatch<React.SetStateAction<number[]>>;
+    numberTrashCard: number[];
+    setNumberTrashCard: React.Dispatch<React.SetStateAction<number[]>>;
+    numberLifeCard: number[];
+    setNumberLifeCard: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, setNumberCardMAIN, numberCardHand, setNumberCardHand }) => {
+const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, setNumberCardMAIN, numberCardHand, setNumberCardHand, numberEnerCard, setNumberEnerCard, numberTrashCard, setNumberTrashCard, numberLifeCard, setNumberLifeCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState(false);
 
@@ -100,6 +106,48 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, 
                                 }}
                             >
                                 Xáo Bài
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardMAIN = [...numberCardMAIN];
+                                    const cardEner = [...numberEnerCard];
+                                    const cardPut = cardMAIN.splice(0, 1)[0];
+                                    cardEner.push(cardPut);
+                                    setNumberEnerCard(cardEner);
+                                    setNumberCardMAIN(cardMAIN);
+                                    setPopupAction(false);
+                                }}
+                            >
+                                Nhập Bài
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardMAIN = [...numberCardMAIN];
+                                    const cardTrash = [...numberTrashCard];
+                                    const cardPut = cardMAIN.splice(0, 1)[0];
+                                    cardTrash.push(cardPut);
+                                    setNumberTrashCard(cardTrash);
+                                    setNumberCardMAIN(cardMAIN);
+                                    setPopupAction(false);
+                                }}
+                            >
+                                Bỏ Bài
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardMAIN = [...numberCardMAIN];
+                                    const cardLife = [...numberLifeCard];
+                                    const cardPut = cardMAIN.splice(0, 1)[0];
+                                    cardLife.push(cardPut);
+                                    setNumberLifeCard(cardLife);
+                                    setNumberCardMAIN(cardMAIN);
+                                    setPopupAction(false);
+                                }}
+                            >
+                                Life Cloth
                             </button>
                         </div>
                     </div>
