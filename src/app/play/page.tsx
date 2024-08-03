@@ -98,8 +98,8 @@ const PlayGround: React.FC = () => {
 
     useEffect(() => {
         // Lấy dữ liệu từ localStorage khi component được render lần đầu tiên
-        const savedMAINCardPlayer = localStorage.getItem('MAINDeckPlayer');
-        const savedLRIGCardPlayer = localStorage.getItem('LRIGDeckPlayer');
+        const savedMAINCardPlayer = window.localStorage.getItem('MAINDeckPlayer');
+        const savedLRIGCardPlayer = window.localStorage.getItem('LRIGDeckPlayer');
 
         if (savedMAINCardPlayer) {
             setNumberMAINCard(JSON.parse(savedMAINCardPlayer));
@@ -120,8 +120,8 @@ const PlayGround: React.FC = () => {
             setNumberLRIGCard([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
         }
 
-        const savedMAINCardTarget = localStorage.getItem('MAINDeckTarget');
-        const savedLRIGCardTarget = localStorage.getItem('LRIGDeckTarget');
+        const savedMAINCardTarget = window.localStorage.getItem('MAINDeckTarget');
+        const savedLRIGCardTarget = window.localStorage.getItem('LRIGDeckTarget');
 
         if (savedMAINCardTarget) {
             setNumberMAINCard(JSON.parse(savedMAINCardTarget));
