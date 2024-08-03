@@ -38,6 +38,9 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, type
             MAINUseSpace[position] = card;
             setNumberCard(removeCardByIndex(numberCard, index));
             onClose();
+            if (card.cardEffect.includes("Enter")) {
+                setSelectedCard(card);
+            }
         }
         else {
             setIsPositionCard(index);

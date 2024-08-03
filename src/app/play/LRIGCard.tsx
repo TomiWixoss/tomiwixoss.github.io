@@ -36,6 +36,9 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type
             LRIGUseSpace[position] = card;
             setNumberCard(removeCardById(numberCard, card.id));
             onClose();
+            if (card.cardEffect.includes("Enter")) {
+                setSelectedCard(card);
+            }
         }
         else {
             setPopupAction(card);
