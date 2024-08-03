@@ -18,6 +18,8 @@ interface LRIGPopupProps {
 
 const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type, LRIGSpace, setNumberCard, position }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+    const [isPopupAction, setPopupAction] = useState<Card | null>(null);
+    const [isPopupAction2, setPopupAction2] = useState<Card | null>(null);
 
     const removeCardById = (cardList: number[], idToRemove: number) => {
         return cardList.map(card => ({ id: card } as { id: number }))
@@ -32,7 +34,7 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type
             onClose();
         }
         else {
-            setSelectedCard(card);
+            setPopupAction(card);
         }
     };
 
@@ -70,6 +72,63 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type
                                         />
                                     </div>
                                 ))}
+                        </div>
+                    </div>
+                </div >
+            )}
+            {isPopupAction && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Hành Động</p>
+                            <IoMdClose
+                                onClick={() => { setPopupAction(null) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    setSelectedCard(isPopupAction);
+                                }}
+                            >
+                                Xem Thẻ
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    setPopupAction2(isPopupAction);
+                                }}
+                            >
+                                Trục Xuất
+                            </button>
+                        </div>
+                    </div>
+                </div >
+            )}
+            {isPopupAction2 && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Trục Xuất</p>
+                            <IoMdClose
+                                onClick={() => { setPopupAction2(null) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardRemove = [...numberCard];
+                                    setNumberCard(removeCardById(cardRemove, isPopupAction2.id));
+                                    setPopupAction(null);
+                                    setPopupAction2(null);
+                                }}
+                            >
+                                Trục Xuất
+                            </button>
                         </div>
                     </div>
                 </div >
