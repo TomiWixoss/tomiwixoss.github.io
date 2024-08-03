@@ -4,7 +4,7 @@ export default interface Card {
     imageUrl: string;
     cardName: string;
     cardType: string;
-    cardColor: string;
+    cardColor: string[];
     cardText: string;
     cardLevel: number;
     cardCost: number;
@@ -15,7 +15,7 @@ export default interface Card {
     cardClass: string;
     cardPower: number;
     cardBurst: string;
-    cardUseTime: string;
+    cardUseTime: string[];
     isLRIGCenter: boolean;
     isLRIGSupport: boolean;
     cardEffect: string[];

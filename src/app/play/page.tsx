@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import Image from 'next/image';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import EnerPopup from './EnerCard';
 import HandPopup from './HandCard';
 import LRIGPopup from './LRIGCard';
@@ -362,6 +362,81 @@ const PlayGround: React.FC = () => {
         reSetSpace();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const requestRef = useRef<number>();
+
+    const updateCardPower = (
+        cardSpace: number[],
+        numberEnerCard: number[],
+        cardUseSpace: Card[],
+        setCardUseSpace: React.Dispatch<React.SetStateAction<Card[]>>,
+        powerChanges: { [key: number]: number } // Đối tượng ánh xạ id với sức mạnh
+    ) => {
+        const cardUse = [...cardUseSpace];
+
+        Object.entries(powerChanges).forEach(([id, powerChange]) => {
+            const cardId = parseInt(id, 10);
+            if (cardSpace.includes(cardId)) {
+                const position = cardSpace.indexOf(cardId);
+                if (numberEnerCard.length >= 3) {
+                    const checkEnerCard = numberEnerCard
+                        .map(value => cardList.find(card => card.id === value))
+                        .filter((card): card is Card => card !== undefined);
+
+                    const cardClassSet = new Set(checkEnerCard.map(card => card.cardClass));
+
+                    if (cardClassSet.size >= 3) {
+                        if (cardUse[position]?.cardEffect.includes("Const")) {
+                            cardUse[position].cardPower += powerChange;
+                            cardUse[position].cardEffect = cardUse[position].cardEffect.filter(effect => effect !== "Const");
+                            setSelectedCard(cardUse[position]);
+                        }
+                    } else {
+                        if (!cardUse[position]?.cardEffect.includes("Const")) {
+                            cardUse[position].cardPower -= powerChange;
+                            cardUse[position].cardEffect.push("Const");
+                        }
+                    }
+                } else {
+                    if (!cardUse[position]?.cardEffect.includes("Const")) {
+                        cardUse[position].cardPower -= powerChange;
+                        cardUse[position].cardEffect.push("Const");
+                    }
+                }
+            }
+        });
+    };
+
+    useEffect(() => {
+
+        const effect = () => {
+            const powerChangesPlayer = {
+                12: 4000,
+                14: 5000,
+            };
+
+            const powerChangesTarget = {
+                12: 4000,
+                14: 5000,
+            };
+
+            if (cardMAINSpacePlayer.some(id => id in powerChangesPlayer)) {
+                updateCardPower(cardMAINSpacePlayer, numberEnerCard, cardUseMAINSpacePlayer, setCardUseMAINSpacePlayer, powerChangesPlayer);
+            }
+
+            if (cardMAINSpaceTarget.some(id => id in powerChangesTarget)) {
+                updateCardPower(cardMAINSpaceTarget, numberEnerCardBot, cardUseMAINSpaceTarget, setCardUseMAINSpaceTarget, powerChangesTarget);
+            }
+
+            requestRef.current = requestAnimationFrame(effect);
+        };
+
+        requestRef.current = requestAnimationFrame(effect);
+
+        return () => {
+            if (requestRef.current) cancelAnimationFrame(requestRef.current);
+        };
+    }, [numberEnerCard, cardMAINSpacePlayer, cardUseMAINSpacePlayer, cardMAINSpaceTarget, cardUseMAINSpaceTarget, numberEnerCardBot]);
 
     const handleClickLRIGCardPlayer = (card: Card, index: number) => {
         if (card.id === 0) {
