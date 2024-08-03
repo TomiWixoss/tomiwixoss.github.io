@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { IoMdClose } from "react-icons/io";
-import CardDetail from '../../components/CardDetail';
-import Card from "../../types/cardList";
-import cardList from '../../components/CardDB';
+import CardDetail from './CardDetail';
+import Card from "../types/cardList";
+import cardList from './CardDB';
 
 interface LifePopupProps {
     isOpen: boolean;

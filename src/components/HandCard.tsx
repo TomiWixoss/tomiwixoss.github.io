@@ -9,19 +9,42 @@ interface HandPopupProps {
     isOpen: boolean;
     onClose: () => void;
     numberCard: number[];
-    phase: number;
+    type: number;
+    MAINSpace: number[];
+    MAINUseSpace: Card[];
+    setNumberCard: React.Dispatch<React.SetStateAction<number[]>>;
+    position: number;
+    numberMAINCard: number[];
+    setNumberMAINCard: React.Dispatch<React.SetStateAction<number[]>>;
+    numberEnerCard: number[];
+    setNumberEnerCard: React.Dispatch<React.SetStateAction<number[]>>;
+    numberTrashCard: number[];
+    setNumberTrashCard: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, phase }) => {
+const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, type, MAINSpace, MAINUseSpace, setNumberCard, position, numberMAINCard, setNumberMAINCard, numberEnerCard, setNumberEnerCard, numberTrashCard, setNumberTrashCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
-    const [isSelectedSpell, setIsSelectedSpell] = useState<Card | null>(null);
+    const [isPopupAction, setPopupAction] = useState<Card | null>(null);
+    const [isChangePopupAction, setChangePopupAction] = useState<Card | null>(null);
+    const [isPositionCard, setIsPositionCard] = useState(0);
 
-    const handleCardClick = (card: Card) => {
-        if (card.cardType !== "SPELL" || phase !== 6) {
-            setSelectedCard(card);
+    const removeCardByIndex = (cardList: number[], indexToRemove: number): number[] => {
+        return cardList.filter((_, index) => index !== indexToRemove);
+    };
+
+    const handleCardClick = (card: Card, index: number) => {
+        if (type === 1) {
+            MAINSpace[position] = card.id;
+            MAINUseSpace[position] = card;
+            setNumberCard(removeCardByIndex(numberCard, index));
+            onClose();
+            if (card.cardEffect.includes("Enter")) {
+                setSelectedCard(card);
+            }
         }
         else {
-            setIsSelectedSpell(card);
+            setIsPositionCard(index);
+            setPopupAction(card);
         }
     };
 
@@ -50,7 +73,7 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, phas
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative overflow-auto max-h-[80vh]">
                         <div className="flex justify-between items-center mb-4">
-                            <p className="font-bold text-lg">Bài Trên Tay</p>
+                            <p className="font-bold text-lg">Bài Trên Tay ({numberCard.length})</p>
                             <IoMdClose
                                 onClick={onClose}
                                 className="font-bold text-2xl cursor-pointer"
@@ -65,7 +88,7 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, phas
                                         width={750}
                                         height={1047}
                                         className="w-full h-auto mb-2"
-                                        onClick={() => handleCardClick(card)}
+                                        onClick={() => handleCardClick(card, index)}
                                     />
                                 </div>
                             ))}
@@ -73,32 +96,91 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, phas
                     </div>
                 </div>
             )}
-            {isSelectedSpell &&
+            {isPopupAction && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
                         <div className="flex justify-between items-center mb-4">
-                            <p className="font-bold text-lg mr-4">Bài Phép</p>
+                            <p className="font-bold text-xl mr-4">Hành Động</p>
                             <IoMdClose
-                                onClick={() => { setIsSelectedSpell(null) }}
+                                onClick={() => { setPopupAction(null) }}
                                 className="font-bold text-2xl cursor-pointer"
                             />
                         </div>
-                        <div className='flex flex-col justify-center items-center'>
+                        <div className='flex flex-col'>
                             <button
-                                className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={() => { setSelectedCard(isSelectedSpell) }}
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    setSelectedCard(isPopupAction);
+                                }}
                             >
                                 Xem Thẻ
                             </button>
                             <button
-                                className="px-4 py-2 my-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    setChangePopupAction(isPopupAction);
+                                }}
                             >
-                                Kích Hoạt
+                                Di Chuyển
                             </button>
                         </div>
                     </div>
-                </div>
-            }
+                </div >
+            )}
+            {isChangePopupAction && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Di Chuyển</p>
+                            <IoMdClose
+                                onClick={() => { setChangePopupAction(null) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardPut = [...numberEnerCard];
+                                    cardPut.push(isChangePopupAction.id);
+                                    setNumberEnerCard(cardPut);
+                                    setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                    setChangePopupAction(null);
+                                    setPopupAction(null);
+                                }}
+                            >
+                                Vùng Nguyên Liệu
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardPut = [...numberTrashCard];
+                                    cardPut.push(isChangePopupAction.id);
+                                    setNumberTrashCard(cardPut);
+                                    setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                    setChangePopupAction(null);
+                                    setPopupAction(null);
+                                }}
+                            >
+                                Thùng Rác
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardPut = [...numberMAINCard];
+                                    cardPut.push(isChangePopupAction.id);
+                                    setNumberMAINCard(cardPut);
+                                    setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                    setChangePopupAction(null);
+                                    setPopupAction(null);
+                                }}
+                            >
+                                Bộ Bài Chính
+                            </button>
+                        </div>
+                    </div>
+                </div >
+            )}
             {selectedCard && <CardDetail card={selectedCard} onClose={handleCloseDetail} />}
         </>
     );
