@@ -8,6 +8,7 @@ import LRIGPopup from './LRIGCard';
 import MAINPopup from './MAINCard';
 import TrashPopup from './TrashCard';
 import LifePopup from './LifeCard';
+import RemovePopup from './RemoveCard';
 import { IoMdClose } from "react-icons/io";
 import EnerPopupBot from './EnerCardBot';
 import HandPopupBot from './HandCardBot';
@@ -15,9 +16,16 @@ import LRIGPopupBot from './LRIGCardBot';
 import MAINPopupBot from './MAINCardBot';
 import TrashPopupBot from './TrashCardBot';
 import LifePopupBot from './LifeCardBot';
+import RemovePopupBot from './RemoveCardBot';
 import CardDetail from '../../components/CardDetail';
 import Card from "../../types/cardList";
 import cardList from '../../components/CardDB';
+import { IoHandLeft } from "react-icons/io5";
+import { TbCardsFilled } from "react-icons/tb";
+import { GiCardRandom } from "react-icons/gi";
+import { FaTrashRestore } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
+import { GiCardboardBox } from "react-icons/gi";
 
 const PlayGround: React.FC = () => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
@@ -34,12 +42,14 @@ const PlayGround: React.FC = () => {
     const [isPopupTrash, setIsPopupTrash] = useState(false);
     const [isPopupHand, setIsPopupHand] = useState(false);
     const [isPopupLife, setIsPopupLife] = useState(false);
+    const [isPopupRemove, setIsPopupRemove] = useState(false);
     const [isPopupLRIGBot, setIsPopupLRIGBot] = useState(false);
     const [isPopupEnerBot, setIsPopupEnerBot] = useState(false);
     const [isPopupMAINBot, setIsPopupMAINBot] = useState(false);
     const [isPopupHandBot, setIsPopupHandBot] = useState(false);
     const [isPopupTrashBot, setIsPopupTrashBot] = useState(false);
     const [isPopupLifeBot, setIsPopupLifeBot] = useState(false);
+    const [isPopupRemoveBot, setIsPopupRemoveBot] = useState(false);
     const [numberMAINCard, setNumberMAINCard] = useState<number[]>([
         12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
         15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17,
@@ -51,6 +61,7 @@ const PlayGround: React.FC = () => {
     const [numberHandCard, setNumberHandCard] = useState<number[]>([]);
     const [numberEnerCard, setNumberEnerCard] = useState<number[]>([]);
     const [numberTrashCard, setNumberTrashCard] = useState<number[]>([]);
+    const [numberRemoveCard, setNumberRemoveCard] = useState<number[]>([]);
     const [numberMAINCardBot, setNumberMAINCardBot] = useState<number[]>([
         12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
         15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17,
@@ -62,6 +73,7 @@ const PlayGround: React.FC = () => {
     const [numberHandCardBot, setNumberHandCardBot] = useState<number[]>([]);
     const [numberEnerCardBot, setNumberEnerCardBot] = useState<number[]>([]);
     const [numberTrashCardBot, setNumberTrashCardBot] = useState<number[]>([]);
+    const [numberRemoveCardBot, setNumberRemoveCardBot] = useState<number[]>([]);
     const [cardLRIGSpacePlayer, setCardLRIGSpacePlayer] = useState([0, 0, 0]);
     const [cardLRIGSpaceTarget, setCardLRIGSpaceTarget] = useState([0, 0, 0]);
     const [cardMAINSpacePlayer, setCardMAINSpacePlayer] = useState([-1, -1, -1]);
@@ -455,33 +467,35 @@ const PlayGround: React.FC = () => {
                             onClick={() => { setIsPopupLifeBot(true) }}
                         />
                         <p className='text-2xl text-white mx-4'>x{numberLifeCardBot.length}</p>
-                        <div className='flex flex-col justify-center items-center'>
-                            <button
-                                className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                        <div className='flex flex-col ml-6 justify-center items-center'>
+                            <IoHandLeft
+                                className='text-white my-2 text-xl cursor-pointer'
+                                onClick={() => { setIsPopupHandBot(true) }}
+                            />
+                            <GiCardRandom
+                                className='text-white my-2 text-xl cursor-pointer'
                                 onClick={() => { setIsPopupMAINBot(true) }}
-                            >
-                                Bộ Bài Chính
-                            </button>
-                            <button
-                                className="px-2 py-1 text-xs mt-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
-                                onClick={() => { setIsPopupLRIGBot(true) }}
-                            >
-                                Bộ Bài LRIG
-                            </button>
+                            />
                         </div>
-                        <div className='flex flex-col ml-2 justify-center items-center'>
-                            <button
-                                className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                        <div className='flex flex-col ml-6 justify-center items-center'>
+                            <GiCardboardBox
+                                className='text-white my-2 text-xl cursor-pointer'
                                 onClick={() => { setIsPopupEnerBot(true) }}
-                            >
-                                Nguyên Liệu
-                            </button>
-                            <button
-                                className="px-2 py-1 text-xs mt-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                            />
+                            <TbCardsFilled
+                                className='text-white my-2 text-xl cursor-pointer'
+                                onClick={() => { setIsPopupLRIGBot(true) }}
+                            />
+                        </div>
+                        <div className='flex flex-col ml-6 justify-center items-center'>
+                            <FaTrashRestore
+                                className='text-white my-2 text-xl cursor-pointer'
                                 onClick={() => { setIsPopupTrashBot(true) }}
-                            >
-                                Thùng Rác
-                            </button>
+                            />
+                            <FaTrash
+                                className='text-white my-2 text-xl cursor-pointer'
+                                onClick={() => { setIsPopupRemoveBot(true) }}
+                            />
                         </div>
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
@@ -522,12 +536,6 @@ const PlayGround: React.FC = () => {
                         ))}
                     </div>
                     <div className='flex justify-center items-center'>
-                        <button
-                            className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
-                            onClick={() => { setIsPopupHandBot(true) }}
-                        >
-                            Tay Đối Thủ
-                        </button>
                         <div className='cursor-pointer' onClick={() => { setPopupChangePhase(true) }}>
                             {MainPhase === 0 &&
                                 <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Khởi Đầu</p>
@@ -558,12 +566,6 @@ const PlayGround: React.FC = () => {
                                 </p>
                             }
                         </div>
-                        <button
-                            className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
-                            onClick={() => { setIsPopupHand(true) }}
-                        >
-                            Tay Người Chơi
-                        </button>
                     </div>
                     <div className='flex justify-center items-center'>
                         {cardUseMAINSpacePlayer.map((card, index) => (
@@ -612,33 +614,35 @@ const PlayGround: React.FC = () => {
                             onClick={() => { setIsPopupLife(true) }}
                         />
                         <p className='text-2xl text-white mx-4'>x{numberLifeCard.length}</p>
-                        <div className='flex flex-col justify-center items-center'>
-                            <button
-                                className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                        <div className='flex flex-col ml-6 justify-center items-center'>
+                            <IoHandLeft
+                                className='text-white my-2 text-xl cursor-pointer'
+                                onClick={() => { setIsPopupHand(true) }}
+                            />
+                            <GiCardRandom
+                                className='text-white my-2 text-xl cursor-pointer'
                                 onClick={() => { setIsPopupMAIN(true) }}
-                            >
-                                Bộ Bài Chính
-                            </button>
-                            <button
-                                className="px-2 py-1 text-xs mt-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
-                                onClick={() => { setIsPopupLRIG(true) }}
-                            >
-                                Bộ Bài LRIG
-                            </button>
+                            />
                         </div>
-                        <div className='flex flex-col ml-2 justify-center items-center'>
-                            <button
-                                className="px-2 py-1 text-xs text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                        <div className='flex flex-col ml-6 justify-center items-center'>
+                            <GiCardboardBox
+                                className='text-white my-2 text-xl cursor-pointer'
                                 onClick={() => { setIsPopupEner(true) }}
-                            >
-                                Nguyên Liệu
-                            </button>
-                            <button
-                                className="px-2 py-1 text-xs mt-1 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none"
+                            />
+                            <TbCardsFilled
+                                className='text-white my-2 text-xl cursor-pointer'
+                                onClick={() => { setIsPopupLRIG(true) }}
+                            />
+                        </div>
+                        <div className='flex flex-col ml-6 justify-center items-center'>
+                            <FaTrashRestore
+                                className='text-white my-2 text-xl cursor-pointer'
                                 onClick={() => { setIsPopupTrash(true) }}
-                            >
-                                Thùng Rác
-                            </button>
+                            />
+                            <FaTrash
+                                className='text-white my-2 text-xl cursor-pointer'
+                                onClick={() => { setIsPopupRemove(true) }}
+                            />
                         </div>
                     </div>
                 </div>
@@ -946,7 +950,10 @@ const PlayGround: React.FC = () => {
                 LRIGSpace={cardLRIGSpacePlayer}
                 LRIGUseSpace={cardUseLRIGSpacePlayer}
                 setNumberCard={setNumberLRIGCard}
-                position={isPositionSpace} />
+                position={isPositionSpace}
+                numberRemoveCard={numberRemoveCard}
+                setNumberRemoveCard={setNumberRemoveCard}
+            />
             <MAINPopup
                 isOpen={isPopupMAIN}
                 onClose={() => { setIsPopupMAIN(false) }}
@@ -982,6 +989,14 @@ const PlayGround: React.FC = () => {
                 setNumberEnerCard={setNumberEnerCard}
                 numberTrashCard={numberTrashCard}
                 setNumberTrashCard={setNumberTrashCard}
+            />
+            <RemovePopup
+                isOpen={isPopupRemove}
+                onClose={() => { setIsPopupRemove(false) }}
+                numberCard={numberRemoveCard}
+                setNumberCard={setNumberRemoveCard}
+                numberLRIGCard={numberLRIGCard}
+                setNumberLRIGCard={setNumberLRIGCard}
             />
             <EnerPopupBot
                 isOpen={isPopupEnerBot}
@@ -1023,7 +1038,10 @@ const PlayGround: React.FC = () => {
                 LRIGSpace={cardLRIGSpaceTarget}
                 LRIGUseSpace={cardUseLRIGSpaceTarget}
                 setNumberCard={setNumberLRIGCardBot}
-                position={isPositionSpace} />
+                position={isPositionSpace}
+                numberRemoveCard={numberRemoveCardBot}
+                setNumberRemoveCard={setNumberRemoveCardBot}
+            />
             <MAINPopupBot
                 isOpen={isPopupMAINBot}
                 onClose={() => { setIsPopupMAINBot(false) }}
@@ -1059,6 +1077,14 @@ const PlayGround: React.FC = () => {
                 setNumberEnerCard={setNumberEnerCardBot}
                 numberTrashCard={numberTrashCardBot}
                 setNumberTrashCard={setNumberTrashCardBot}
+            />
+            <RemovePopupBot
+                isOpen={isPopupRemoveBot}
+                onClose={() => { setIsPopupRemoveBot(false) }}
+                numberCard={numberRemoveCardBot}
+                setNumberCard={setNumberRemoveCardBot}
+                numberLRIGCard={numberLRIGCardBot}
+                setNumberLRIGCard={setNumberLRIGCardBot}
             />
             {selectedCard && <CardDetail card={selectedCard} onClose={() => { setSelectedCard(null) }} />}
         </>

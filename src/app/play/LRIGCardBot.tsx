@@ -15,9 +15,11 @@ interface LRIGPopupProps {
     LRIGUseSpace: Card[];
     setNumberCard: React.Dispatch<React.SetStateAction<number[]>>;
     position: number;
+    numberRemoveCard: number[];
+    setNumberRemoveCard: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type, LRIGSpace, LRIGUseSpace, setNumberCard, position }) => {
+const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type, LRIGSpace, LRIGUseSpace, setNumberCard, position, numberRemoveCard, setNumberRemoveCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState<Card | null>(null);
     const [isPopupAction2, setPopupAction2] = useState<Card | null>(null);
@@ -123,8 +125,11 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type
                             <button
                                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 onClick={() => {
-                                    const cardRemove = [...numberCard];
-                                    setNumberCard(removeCardById(cardRemove, isPopupAction2.id));
+                                    const cardLRIG = [...numberCard];
+                                    const cardRemove = [...numberRemoveCard];
+                                    cardRemove.push(isPopupAction2.id);
+                                    setNumberCard(removeCardById(cardLRIG, isPopupAction2.id));
+                                    setNumberRemoveCard(cardRemove);
                                     setPopupAction(null);
                                     setPopupAction2(null);
                                 }}
