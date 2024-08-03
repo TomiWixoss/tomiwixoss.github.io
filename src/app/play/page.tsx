@@ -726,30 +726,30 @@ const PlayGround: React.FC = () => {
                         <p className='text-white font-bold text-xs my-5 text-center mx-2'> - </p>
                         <div className='cursor-pointer' onClick={() => { setPopupChangePhase(true) }}>
                             {MainPhase === 0 &&
-                                <p className='text-white font-bold text-xs my-5 text-center mr-5'>Giai Đoạn Khởi Đầu</p>
+                                <p className='text-white font-bold text-xs my-5 text-center'>Giai Đoạn Khởi Đầu</p>
                             }
                             {MainPhase === 1 &&
-                                <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Mở Bài</p>
+                                <p className='text-white font-bold text-xs my-5 text-center'>Giai Đoạn Mở Bài</p>
                             }
                             {MainPhase === 2 &&
-                                <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Rút Bài</p>
+                                <p className='text-white font-bold text-xs my-5 text-center'>Giai Đoạn Rút Bài</p>
                             }
                             {MainPhase === 3 &&
-                                <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Nhập Bài</p>
+                                <p className='text-white font-bold text-xs my-5 text-center'>Giai Đoạn Nhập Bài</p>
                             }
                             {MainPhase === 4 &&
-                                <p className='text-white font-bold text-xs my-5 text-center mx-4'>Giai Đoạn Phát Triển</p>
+                                <p className='text-white font-bold text-xs my-5 text-center'>Giai Đoạn Phát Triển</p>
                             }
                             {MainPhase === 5 &&
-                                <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Chính</p>
+                                <p className='text-white font-bold text-xs my-5 text-center'>Giai Đoạn Chính</p>
                             }
                             {MainPhase === 6 &&
-                                <p className='text-white cursor-pointer font-bold text-xs my-5 text-center mx-5'
+                                <p className='text-white cursor-pointer font-bold text-xs my-5 text-center'
                                 >Giai Đoạn Tấn Công
                                 </p>
                             }
                             {MainPhase === 7 &&
-                                <p className='text-white cursor-pointer font-bold text-xs my-5 text-center mx-5'
+                                <p className='text-white cursor-pointer font-bold text-xs my-5 text-center'
                                 >Giai Đoạn Kết Thúc
                                 </p>
                             }

@@ -84,6 +84,7 @@ const DeckWixoss: React.FC = () => {
                                         window.localStorage.setItem('MAINDeckPlayer', JSON.stringify(deck1MAIN));
                                         window.localStorage.setItem('LRIGDeckPlayer', JSON.stringify(deck1LRIG));
                                     }
+                                    setPopupChangeDeck(false);
                                 }}
                             >
                                 Deck Người Chơi
@@ -95,6 +96,7 @@ const DeckWixoss: React.FC = () => {
                                         window.localStorage.setItem('MAINDeckTarget', JSON.stringify(deck1MAIN));
                                         window.localStorage.setItem('LRIGDeckTarget', JSON.stringify(deck1LRIG));
                                     }
+                                    setPopupChangeDeck(false);
                                 }}
                             >
                                 Deck Đối Thủ

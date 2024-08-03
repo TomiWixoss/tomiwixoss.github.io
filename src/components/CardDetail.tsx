@@ -19,11 +19,11 @@ const CardDetail: React.FC<CardDetailProps> = ({ card, onClose }) => {
                     alt={card.name}
                     width={750}
                     height={1047}
-                    className='cursor-pointer'
+                    className='cursor-pointer pb-2'
                     onClick={onClose} />
                 <div className='px-2 max-h-[25vh] overflow-auto'>
                     {card.cardText !== "" && (
-                        <p className='mt-2 font-[500] text-center'>Hiệu Ứng Bài: {card.cardText}</p>
+                        <p className='font-[500] text-center'>Hiệu Ứng Bài: {card.cardText}</p>
                     )}
                     {card.cardBurst !== "" && (
                         <p className='mt-2 font-[500] text-center'>Hiệu Ứng Bùng Nổ: {card.cardBurst}</p>
