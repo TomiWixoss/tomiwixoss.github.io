@@ -27,6 +27,7 @@ import { FaTrashRestore } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { GiCardboardBox } from "react-icons/gi";
 import { IoSettings } from "react-icons/io5";
+import { useRouter } from 'next/navigation';
 
 const PlayGround: React.FC = () => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
@@ -52,25 +53,17 @@ const PlayGround: React.FC = () => {
     const [isPopupTrashBot, setIsPopupTrashBot] = useState(false);
     const [isPopupLifeBot, setIsPopupLifeBot] = useState(false);
     const [isPopupRemoveBot, setIsPopupRemoveBot] = useState(false);
-    const [numberMAINCard, setNumberMAINCard] = useState<number[]>([
-        12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
-        15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17,
-        18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 20,
-        21, 21, 21, 21
-    ]);
-    const [numberLRIGCard, setNumberLRIGCard] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    // Khởi tạo state với giá trị mặc định
+    const [numberMAINCard, setNumberMAINCard] = useState<number[]>([]);
+    const [numberLRIGCard, setNumberLRIGCard] = useState<number[]>([]);
     const [numberLifeCard, setNumberLifeCard] = useState<number[]>([]);
     const [numberHandCard, setNumberHandCard] = useState<number[]>([]);
     const [numberEnerCard, setNumberEnerCard] = useState<number[]>([]);
     const [numberTrashCard, setNumberTrashCard] = useState<number[]>([]);
     const [numberRemoveCard, setNumberRemoveCard] = useState<number[]>([]);
-    const [numberMAINCardBot, setNumberMAINCardBot] = useState<number[]>([
-        12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
-        15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17,
-        18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 20,
-        21, 21, 21, 21
-    ]);
-    const [numberLRIGCardBot, setNumberLRIGCardBot] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    // Khởi tạo state với giá trị mặc định
+    const [numberMAINCardBot, setNumberMAINCardBot] = useState<number[]>([]);
+    const [numberLRIGCardBot, setNumberLRIGCardBot] = useState<number[]>([]);
     const [numberLifeCardBot, setNumberLifeCardBot] = useState<number[]>([]);
     const [numberHandCardBot, setNumberHandCardBot] = useState<number[]>([]);
     const [numberEnerCardBot, setNumberEnerCardBot] = useState<number[]>([]);
@@ -101,6 +94,54 @@ const PlayGround: React.FC = () => {
     const [saveSlot, setSaveSlot] = useState<boolean[]>(getSavedSlots());
     const [isPopupSaveGame, setPopupSaveGame] = useState(false);
     const [isPopupLoadGame, setPopupLoadGame] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        // Lấy dữ liệu từ localStorage khi component được render lần đầu tiên
+        const savedMAINCardPlayer = localStorage.getItem('MAINDeckPlayer');
+        const savedLRIGCardPlayer = localStorage.getItem('LRIGDeckPlayer');
+
+        if (savedMAINCardPlayer) {
+            setNumberMAINCard(JSON.parse(savedMAINCardPlayer));
+        } else {
+            // Nếu không có dữ liệu, khởi tạo với giá trị mặc định
+            setNumberMAINCard([
+                12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
+                15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17,
+                18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 20,
+                21, 21, 21, 21
+            ]);
+        }
+
+        if (savedLRIGCardPlayer) {
+            setNumberLRIGCard(JSON.parse(savedLRIGCardPlayer));
+        } else {
+            // Nếu không có dữ liệu, khởi tạo với giá trị mặc định
+            setNumberLRIGCard([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        }
+
+        const savedMAINCardTarget = localStorage.getItem('MAINDeckTarget');
+        const savedLRIGCardTarget = localStorage.getItem('LRIGDeckTarget');
+
+        if (savedMAINCardTarget) {
+            setNumberMAINCard(JSON.parse(savedMAINCardTarget));
+        } else {
+            // Nếu không có dữ liệu, khởi tạo với giá trị mặc định
+            setNumberMAINCard([
+                12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
+                15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17,
+                18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 20,
+                21, 21, 21, 21
+            ]);
+        }
+
+        if (savedLRIGCardTarget) {
+            setNumberLRIGCard(JSON.parse(savedLRIGCardTarget));
+        } else {
+            // Nếu không có dữ liệu, khởi tạo với giá trị mặc định
+            setNumberLRIGCard([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+        }
+    }, []);
 
     const saveData = (slot: number) => {
         const data = {
@@ -1063,15 +1104,9 @@ const PlayGround: React.FC = () => {
                         <div className='flex flex-col'>
                             <button
                                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-
+                                onClick={() => { router.push('/deck') }}
                             >
                                 Đổi Deck
-                            </button>
-                            <button
-                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-
-                            >
-                                Chỉnh Deck
                             </button>
                             <button
                                 className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
