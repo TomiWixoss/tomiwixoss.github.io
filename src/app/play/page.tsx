@@ -373,6 +373,7 @@ const PlayGround: React.FC = () => {
         powerChanges: { [key: number]: number } // Đối tượng ánh xạ id với sức mạnh
     ) => {
         const cardUse = JSON.parse(JSON.stringify(cardUseSpace));
+        let hasChanges = false; // Biến cờ để theo dõi sự thay đổi
 
         Object.entries(powerChanges).forEach(([id, powerChange]) => {
             const cardId = parseInt(id, 10);
@@ -390,23 +391,29 @@ const PlayGround: React.FC = () => {
                             cardUse[position].cardPower += powerChange;
                             cardUse[position].cardEffect = cardUse[position].cardEffect.filter((effect: string) => effect !== "Const");
                             setSelectedCard(cardUse[position]);
+                            hasChanges = true; // Đánh dấu là có thay đổi
                         }
                     } else {
                         if (!cardUse[position]?.cardEffect.includes("Const")) {
                             cardUse[position].cardPower -= powerChange;
                             cardUse[position].cardEffect.push("Const");
+                            hasChanges = true; // Đánh dấu là có thay đổi
                         }
                     }
                 } else {
                     if (!cardUse[position]?.cardEffect.includes("Const")) {
                         cardUse[position].cardPower -= powerChange;
                         cardUse[position].cardEffect.push("Const");
+                        hasChanges = true; // Đánh dấu là có thay đổi
                     }
                 }
             }
         });
 
-        setCardUseSpace(cardUse);
+        // Chỉ cập nhật trạng thái nếu có thay đổi
+        if (hasChanges) {
+            setCardUseSpace(cardUse);
+        }
     };
 
     useEffect(() => {

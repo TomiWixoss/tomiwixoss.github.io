@@ -57,7 +57,7 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, 
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative overflow-auto max-h-[80vh]">
                         <div className="flex justify-between items-center mb-4">
-                            <p className="font-bold text-lg cursor-pointer" onClick={handleCardClick}>Bộ Bài Chính ({numberCardMAIN.length})</p>
+                            <p className="font-bold text-lg">Bộ Bài Chính ({numberCardMAIN.length})</p>
                             <IoMdClose
                                 onClick={onClose}
                                 className="font-bold text-2xl cursor-pointer"
@@ -75,6 +75,7 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, 
                                             width={750}
                                             height={1047}
                                             className="w-full h-auto mb-2"
+                                            onClick={handleCardClick}
                                         />
                                     </div>
                                 );
