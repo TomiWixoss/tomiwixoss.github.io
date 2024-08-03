@@ -90,6 +90,131 @@ const PlayGround: React.FC = () => {
     const [isPositionCard, setIsPositionCard] = useState(0);
     const [cardData0, setCardData0] = useState<Card>();
     const [cardData1, setCardData1] = useState<Card>();
+    // Lấy dữ liệu từ localStorage và chuyển thành mảng boolean
+    const getSavedSlots = () => {
+        const saved = window.localStorage.getItem('save');
+        return saved ? JSON.parse(saved) : [false, false, false];
+    };
+
+    const [saveSlot, setSaveSlot] = useState<boolean[]>(getSavedSlots());
+    const [isPopupSaveGame, setPopupSaveGame] = useState(false);
+    const [isPopupLoadGame, setPopupLoadGame] = useState(false);
+
+    const saveData = (slot: number) => {
+        const data = {
+            selectedCard,
+            isPopupAction,
+            isPopupChangePhase,
+            isPopupChangePositionAction,
+            isEffectAction,
+            isTitleAction,
+            isPopupSetting,
+            isTypeAction,
+            MainPhase,
+            isPopupLRIG,
+            isPopupEner,
+            isPopupMAIN,
+            isPopupTrash,
+            isPopupHand,
+            isPopupLife,
+            isPopupRemove,
+            isPopupLRIGBot,
+            isPopupEnerBot,
+            isPopupMAINBot,
+            isPopupHandBot,
+            isPopupTrashBot,
+            isPopupLifeBot,
+            isPopupRemoveBot,
+            numberMAINCard,
+            numberLRIGCard,
+            numberLifeCard,
+            numberHandCard,
+            numberEnerCard,
+            numberTrashCard,
+            numberRemoveCard,
+            numberMAINCardBot,
+            numberLRIGCardBot,
+            numberLifeCardBot,
+            numberHandCardBot,
+            numberEnerCardBot,
+            numberTrashCardBot,
+            numberRemoveCardBot,
+            cardLRIGSpacePlayer,
+            cardLRIGSpaceTarget,
+            cardMAINSpacePlayer,
+            cardMAINSpaceTarget,
+            cardUseMAINSpacePlayer,
+            cardUseMAINSpaceTarget,
+            cardUseLRIGSpacePlayer,
+            cardUseLRIGSpaceTarget,
+            isTypePopupLRIG,
+            isTypePopupHand,
+            isPositionSpace,
+            isPositionCard,
+            cardData0,
+            cardData1
+        };
+        window.localStorage.setItem(`gameDataSlot${slot}`, JSON.stringify(data));
+    };
+
+    const loadData = (slot: number) => {
+        const savedData = window.localStorage.getItem(`gameDataSlot${slot}`);
+        if (savedData) {
+            const data = JSON.parse(savedData);
+
+            setSelectedCard(data.selectedCard);
+            setPopupAction(data.isPopupAction);
+            setPopupChangePhase(data.isPopupChangePhase);
+            setPopupChangePositionAction(data.isPopupChangePositionAction);
+            setEffectAction(data.isEffectAction);
+            setTitleAction(data.isTitleAction);
+            setPopupSetting(data.isPopupSetting);
+            setIsTypeAction(data.isTypeAction);
+            setMainPhase(data.MainPhase);
+            setIsPopupLRIG(data.isPopupLRIG);
+            setIsPopupEner(data.isPopupEner);
+            setIsPopupMAIN(data.isPopupMAIN);
+            setIsPopupTrash(data.isPopupTrash);
+            setIsPopupHand(data.isPopupHand);
+            setIsPopupLife(data.isPopupLife);
+            setIsPopupRemove(data.isPopupRemove);
+            setIsPopupLRIGBot(data.isPopupLRIGBot);
+            setIsPopupEnerBot(data.isPopupEnerBot);
+            setIsPopupMAINBot(data.isPopupMAINBot);
+            setIsPopupHandBot(data.isPopupHandBot);
+            setIsPopupTrashBot(data.isPopupTrashBot);
+            setIsPopupLifeBot(data.isPopupLifeBot);
+            setIsPopupRemoveBot(data.isPopupRemoveBot);
+            setNumberMAINCard(data.numberMAINCard);
+            setNumberLRIGCard(data.numberLRIGCard);
+            setNumberLifeCard(data.numberLifeCard);
+            setNumberHandCard(data.numberHandCard);
+            setNumberEnerCard(data.numberEnerCard);
+            setNumberTrashCard(data.numberTrashCard);
+            setNumberRemoveCard(data.numberRemoveCard);
+            setNumberMAINCardBot(data.numberMAINCardBot);
+            setNumberLRIGCardBot(data.numberLRIGCardBot);
+            setNumberLifeCardBot(data.numberLifeCardBot);
+            setNumberHandCardBot(data.numberHandCardBot);
+            setNumberEnerCardBot(data.numberEnerCardBot);
+            setNumberTrashCardBot(data.numberTrashCardBot);
+            setNumberRemoveCardBot(data.numberRemoveCardBot);
+            setCardLRIGSpacePlayer(data.cardLRIGSpacePlayer);
+            setCardLRIGSpaceTarget(data.cardLRIGSpaceTarget);
+            setCardMAINSpacePlayer(data.cardMAINSpacePlayer);
+            setCardMAINSpaceTarget(data.cardMAINSpaceTarget);
+            setCardUseMAINSpacePlayer(data.cardUseMAINSpacePlayer);
+            setCardUseMAINSpaceTarget(data.cardUseMAINSpaceTarget);
+            setCardUseLRIGSpacePlayer(data.cardUseLRIGSpacePlayer);
+            setCardUseLRIGSpaceTarget(data.cardUseLRIGSpaceTarget);
+            setIsTypePopupLRIG(data.isTypePopupLRIG);
+            setIsTypePopupHand(data.isTypePopupHand);
+            setIsPositionSpace(data.isPositionSpace);
+            setIsPositionCard(data.isPositionCard);
+            setCardData0(data.cardData0);
+            setCardData1(data.cardData1);
+        }
+    };
 
     const reSetSpace = () => {
 
@@ -942,19 +1067,78 @@ const PlayGround: React.FC = () => {
                             </button>
                             <button
                                 className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-
+                                onClick={() => { setPopupSaveGame(true) }}
                             >
                                 Lưu Dữ Liệu
                             </button>
                             <button
                                 className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-
+                                onClick={() => { setPopupLoadGame(true) }}
                             >
                                 Tải Dữ Liệu
                             </button>
                         </div>
                     </div>
                 </div >
+            )}
+            {isPopupSaveGame && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Lưu Dữ Liệu</p>
+                            <IoMdClose
+                                onClick={() => { setPopupSaveGame(false) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            {[0, 1, 2].map((slot) => (
+                                <button
+                                    key={slot}
+                                    className={`px-4 py-2 mt-4 bg-blue-500 text-white hover:bg-blue-600 rounded`}
+                                    onClick={() => {
+                                        const slots = [...saveSlot];
+                                        slots[slot] = true;
+                                        setSaveSlot(slots);
+                                        saveData(slot);
+                                        window.localStorage.setItem('save', JSON.stringify(slots));
+                                        setPopupSaveGame(false);
+                                    }}
+                                >
+                                    Ô Lưu {slot + 1}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div >
+            )}
+            {isPopupLoadGame && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Tải Dữ Liệu</p>
+                            <IoMdClose
+                                onClick={() => { setPopupLoadGame(false); }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            {[0, 1, 2].map((slot) => (
+                                <button
+                                    key={slot}
+                                    className={`px-4 py-2 mt-4 ${!saveSlot[slot] ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white hover:bg-blue-600'} rounded`}
+                                    onClick={() => {
+                                        loadData(slot);
+                                        setPopupLoadGame(false);
+                                    }}
+                                    disabled={!saveSlot[slot]}
+                                >
+                                    Ô Tải {slot + 1}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             )}
             <EnerPopup
                 isOpen={isPopupEner}
