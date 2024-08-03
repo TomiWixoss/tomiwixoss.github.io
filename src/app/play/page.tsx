@@ -126,10 +126,10 @@ const PlayGround: React.FC = () => {
         const savedLRIGCardTarget = window.localStorage.getItem('LRIGDeckTarget');
 
         if (savedMAINCardTarget) {
-            setNumberMAINCard(JSON.parse(savedMAINCardTarget));
+            setNumberMAINCardBot(JSON.parse(savedMAINCardTarget));
         } else {
             // Nếu không có dữ liệu, khởi tạo với giá trị mặc định
-            setNumberMAINCard([
+            setNumberMAINCardBot([
                 12, 12, 12, 12, 13, 13, 13, 13, 14, 14, 14, 14,
                 15, 15, 15, 15, 16, 16, 16, 16, 17, 17, 17, 17,
                 18, 18, 18, 18, 19, 19, 19, 19, 20, 20, 20, 20,
@@ -138,10 +138,10 @@ const PlayGround: React.FC = () => {
         }
 
         if (savedLRIGCardTarget) {
-            setNumberLRIGCard(JSON.parse(savedLRIGCardTarget));
+            setNumberLRIGCardBot(JSON.parse(savedLRIGCardTarget));
         } else {
             // Nếu không có dữ liệu, khởi tạo với giá trị mặc định
-            setNumberLRIGCard([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+            setNumberLRIGCardBot([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
         }
     }, []);
 
