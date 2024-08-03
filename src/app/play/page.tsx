@@ -87,8 +87,10 @@ const PlayGround: React.FC = () => {
     const [isPopupTurn, setPopupTurn] = useState(false);
     // Lấy dữ liệu từ localStorage và chuyển thành mảng boolean
     const getSavedSlots = () => {
-        const saved = window.localStorage.getItem('save');
-        return saved ? JSON.parse(saved) : [false, false, false];
+        if (typeof window !== "undefined") {
+            const saved = window.localStorage.getItem('save');
+            return saved ? JSON.parse(saved) : [false, false, false];
+        }
     };
 
     const [saveSlot, setSaveSlot] = useState<boolean[]>(getSavedSlots());
@@ -198,66 +200,70 @@ const PlayGround: React.FC = () => {
             cardData1,
             turnGame
         };
-        window.localStorage.setItem(`gameDataSlot${slot}`, JSON.stringify(data));
+        if (typeof window !== "undefined") {
+            window.localStorage.setItem(`gameDataSlot${slot}`, JSON.stringify(data));
+        }
     };
 
     const loadData = (slot: number) => {
-        const savedData = window.localStorage.getItem(`gameDataSlot${slot}`);
-        if (savedData) {
-            const data = JSON.parse(savedData);
+        if (typeof window !== "undefined") {
+            const savedData = window.localStorage.getItem(`gameDataSlot${slot}`);
+            if (savedData) {
+                const data = JSON.parse(savedData);
 
-            setSelectedCard(data.selectedCard);
-            setPopupAction(data.isPopupAction);
-            setPopupChangePhase(data.isPopupChangePhase);
-            setPopupChangePositionAction(data.isPopupChangePositionAction);
-            setEffectAction(data.isEffectAction);
-            setTitleAction(data.isTitleAction);
-            setPopupSetting(data.isPopupSetting);
-            setIsTypeAction(data.isTypeAction);
-            setMainPhase(data.MainPhase);
-            setIsPopupLRIG(data.isPopupLRIG);
-            setIsPopupEner(data.isPopupEner);
-            setIsPopupMAIN(data.isPopupMAIN);
-            setIsPopupTrash(data.isPopupTrash);
-            setIsPopupHand(data.isPopupHand);
-            setIsPopupLife(data.isPopupLife);
-            setIsPopupRemove(data.isPopupRemove);
-            setIsPopupLRIGBot(data.isPopupLRIGBot);
-            setIsPopupEnerBot(data.isPopupEnerBot);
-            setIsPopupMAINBot(data.isPopupMAINBot);
-            setIsPopupHandBot(data.isPopupHandBot);
-            setIsPopupTrashBot(data.isPopupTrashBot);
-            setIsPopupLifeBot(data.isPopupLifeBot);
-            setIsPopupRemoveBot(data.isPopupRemoveBot);
-            setNumberMAINCard(data.numberMAINCard);
-            setNumberLRIGCard(data.numberLRIGCard);
-            setNumberLifeCard(data.numberLifeCard);
-            setNumberHandCard(data.numberHandCard);
-            setNumberEnerCard(data.numberEnerCard);
-            setNumberTrashCard(data.numberTrashCard);
-            setNumberRemoveCard(data.numberRemoveCard);
-            setNumberMAINCardBot(data.numberMAINCardBot);
-            setNumberLRIGCardBot(data.numberLRIGCardBot);
-            setNumberLifeCardBot(data.numberLifeCardBot);
-            setNumberHandCardBot(data.numberHandCardBot);
-            setNumberEnerCardBot(data.numberEnerCardBot);
-            setNumberTrashCardBot(data.numberTrashCardBot);
-            setNumberRemoveCardBot(data.numberRemoveCardBot);
-            setCardLRIGSpacePlayer(data.cardLRIGSpacePlayer);
-            setCardLRIGSpaceTarget(data.cardLRIGSpaceTarget);
-            setCardMAINSpacePlayer(data.cardMAINSpacePlayer);
-            setCardMAINSpaceTarget(data.cardMAINSpaceTarget);
-            setCardUseMAINSpacePlayer(data.cardUseMAINSpacePlayer);
-            setCardUseMAINSpaceTarget(data.cardUseMAINSpaceTarget);
-            setCardUseLRIGSpacePlayer(data.cardUseLRIGSpacePlayer);
-            setCardUseLRIGSpaceTarget(data.cardUseLRIGSpaceTarget);
-            setIsTypePopupLRIG(data.isTypePopupLRIG);
-            setIsTypePopupHand(data.isTypePopupHand);
-            setIsPositionSpace(data.isPositionSpace);
-            setIsPositionCard(data.isPositionCard);
-            setCardData0(data.cardData0);
-            setCardData1(data.cardData1);
-            setTurnGame(data.turnGame);
+                setSelectedCard(data.selectedCard);
+                setPopupAction(data.isPopupAction);
+                setPopupChangePhase(data.isPopupChangePhase);
+                setPopupChangePositionAction(data.isPopupChangePositionAction);
+                setEffectAction(data.isEffectAction);
+                setTitleAction(data.isTitleAction);
+                setPopupSetting(data.isPopupSetting);
+                setIsTypeAction(data.isTypeAction);
+                setMainPhase(data.MainPhase);
+                setIsPopupLRIG(data.isPopupLRIG);
+                setIsPopupEner(data.isPopupEner);
+                setIsPopupMAIN(data.isPopupMAIN);
+                setIsPopupTrash(data.isPopupTrash);
+                setIsPopupHand(data.isPopupHand);
+                setIsPopupLife(data.isPopupLife);
+                setIsPopupRemove(data.isPopupRemove);
+                setIsPopupLRIGBot(data.isPopupLRIGBot);
+                setIsPopupEnerBot(data.isPopupEnerBot);
+                setIsPopupMAINBot(data.isPopupMAINBot);
+                setIsPopupHandBot(data.isPopupHandBot);
+                setIsPopupTrashBot(data.isPopupTrashBot);
+                setIsPopupLifeBot(data.isPopupLifeBot);
+                setIsPopupRemoveBot(data.isPopupRemoveBot);
+                setNumberMAINCard(data.numberMAINCard);
+                setNumberLRIGCard(data.numberLRIGCard);
+                setNumberLifeCard(data.numberLifeCard);
+                setNumberHandCard(data.numberHandCard);
+                setNumberEnerCard(data.numberEnerCard);
+                setNumberTrashCard(data.numberTrashCard);
+                setNumberRemoveCard(data.numberRemoveCard);
+                setNumberMAINCardBot(data.numberMAINCardBot);
+                setNumberLRIGCardBot(data.numberLRIGCardBot);
+                setNumberLifeCardBot(data.numberLifeCardBot);
+                setNumberHandCardBot(data.numberHandCardBot);
+                setNumberEnerCardBot(data.numberEnerCardBot);
+                setNumberTrashCardBot(data.numberTrashCardBot);
+                setNumberRemoveCardBot(data.numberRemoveCardBot);
+                setCardLRIGSpacePlayer(data.cardLRIGSpacePlayer);
+                setCardLRIGSpaceTarget(data.cardLRIGSpaceTarget);
+                setCardMAINSpacePlayer(data.cardMAINSpacePlayer);
+                setCardMAINSpaceTarget(data.cardMAINSpaceTarget);
+                setCardUseMAINSpacePlayer(data.cardUseMAINSpacePlayer);
+                setCardUseMAINSpaceTarget(data.cardUseMAINSpaceTarget);
+                setCardUseLRIGSpacePlayer(data.cardUseLRIGSpacePlayer);
+                setCardUseLRIGSpaceTarget(data.cardUseLRIGSpaceTarget);
+                setIsTypePopupLRIG(data.isTypePopupLRIG);
+                setIsTypePopupHand(data.isTypePopupHand);
+                setIsPositionSpace(data.isPositionSpace);
+                setIsPositionCard(data.isPositionCard);
+                setCardData0(data.cardData0);
+                setCardData1(data.cardData1);
+                setTurnGame(data.turnGame);
+            }
         }
     };
 
@@ -1144,7 +1150,9 @@ const PlayGround: React.FC = () => {
                                         slots[slot] = true;
                                         setSaveSlot(slots);
                                         saveData(slot);
-                                        window.localStorage.setItem('save', JSON.stringify(slots));
+                                        if (typeof window !== "undefined") {
+                                            window.localStorage.setItem('save', JSON.stringify(slots));
+                                        }
                                         setPopupSaveGame(false);
                                     }}
                                 >

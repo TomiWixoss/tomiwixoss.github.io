@@ -80,8 +80,10 @@ const DeckWixoss: React.FC = () => {
                             <button
                                 className={`px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded`}
                                 onClick={() => {
-                                    window.localStorage.setItem('MAINDeckPlayer', JSON.stringify(deck1MAIN));
-                                    window.localStorage.setItem('LRIGDeckPlayer', JSON.stringify(deck1LRIG));
+                                    if (typeof window !== "undefined") {
+                                        window.localStorage.setItem('MAINDeckPlayer', JSON.stringify(deck1MAIN));
+                                        window.localStorage.setItem('LRIGDeckPlayer', JSON.stringify(deck1LRIG));
+                                    }
                                 }}
                             >
                                 Deck Người Chơi
@@ -89,8 +91,10 @@ const DeckWixoss: React.FC = () => {
                             <button
                                 className={`px-4 py-2 mt-4 bg-blue-500 text-white hover:bg-blue-600 rounded`}
                                 onClick={() => {
-                                    window.localStorage.setItem('MAINDeckTarget', JSON.stringify(deck1MAIN));
-                                    window.localStorage.setItem('LRIGDeckTarget', JSON.stringify(deck1LRIG));
+                                    if (typeof window !== "undefined") {
+                                        window.localStorage.setItem('MAINDeckTarget', JSON.stringify(deck1MAIN));
+                                        window.localStorage.setItem('LRIGDeckTarget', JSON.stringify(deck1LRIG));
+                                    }
                                 }}
                             >
                                 Deck Đối Thủ
