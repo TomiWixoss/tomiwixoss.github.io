@@ -12,11 +12,12 @@ interface LRIGPopupProps {
     numberCard: number[];
     type: number;
     LRIGSpace: number[];
+    LRIGUseSpace: Card[];
     setNumberCard: React.Dispatch<React.SetStateAction<number[]>>;
     position: number;
 }
 
-const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type, LRIGSpace, setNumberCard, position }) => {
+const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type, LRIGSpace, LRIGUseSpace, setNumberCard, position }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState<Card | null>(null);
     const [isPopupAction2, setPopupAction2] = useState<Card | null>(null);
@@ -30,6 +31,7 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type
     const handleCardClick = (card: Card) => {
         if (type === 1) {
             LRIGSpace[position] = card.id;
+            LRIGUseSpace[position] = card;
             setNumberCard(removeCardById(numberCard, card.id));
             onClose();
         }

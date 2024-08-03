@@ -68,12 +68,14 @@ const PlayGround: React.FC = () => {
     const [cardMAINSpaceTarget, setCardMAINSpaceTarget] = useState([-1, -1, -1]);
     const [cardUseMAINSpacePlayer, setCardUseMAINSpacePlayer] = useState<Card[]>([]);
     const [cardUseMAINSpaceTarget, setCardUseMAINSpaceTarget] = useState<Card[]>([]);
+    const [cardUseLRIGSpacePlayer, setCardUseLRIGSpacePlayer] = useState<Card[]>([]);
+    const [cardUseLRIGSpaceTarget, setCardUseLRIGSpaceTarget] = useState<Card[]>([]);
     const [isTypePopupLRIG, setIsTypePopupLRIG] = useState(0);
     const [isTypePopupHand, setIsTypePopupHand] = useState(0);
     const [isPositionSpace, setIsPositionSpace] = useState(0);
     const [isPositionCard, setIsPositionCard] = useState(0);
 
-    const reSetMAINSpace = () => {
+    const reSetSpace = () => {
         let cardUseMAINPlayer = [...cardUseMAINSpacePlayer];
         let cardUseMAINTarget = [...cardUseMAINSpaceTarget];
         if (cardUseMAINPlayer.length === 0) {
@@ -114,10 +116,51 @@ const PlayGround: React.FC = () => {
         }
         setCardUseMAINSpacePlayer(cardUseMAINPlayer);
         setCardUseMAINSpaceTarget(cardUseMAINTarget);
+
+        let cardUseLRIGPlayer = [...cardUseLRIGSpacePlayer];
+        let cardUseLRIGTarget = [...cardUseLRIGSpaceTarget];
+        if (cardUseLRIGPlayer.length === 0) {
+            cardLRIGSpacePlayer.forEach((value, index) => {
+                const card = cardList.find(card => card.id === value);
+                if (card) {
+                    cardUseLRIGPlayer.push(card);
+                }
+            });
+        }
+        else {
+            const cardPut: Card[] = [];
+            cardLRIGSpacePlayer.forEach((value, index) => {
+                const card = cardList.find(card => card.id === value);
+                if (card) {
+                    cardPut.push(card);
+                }
+            });
+            cardUseLRIGPlayer = cardPut;
+        }
+        if (cardUseLRIGTarget.length === 0) {
+            cardLRIGSpaceTarget.forEach((value, index) => {
+                const card = cardList.find(card => card.id === value);
+                if (card) {
+                    cardUseLRIGTarget.push(card);
+                }
+            });
+        }
+        else {
+            const cardPut: Card[] = [];
+            cardLRIGSpaceTarget.forEach((value, index) => {
+                const card = cardList.find(card => card.id === value);
+                if (card) {
+                    cardPut.push(card);
+                }
+            });
+            cardUseLRIGTarget = cardPut;
+        }
+        setCardUseLRIGSpacePlayer(cardUseLRIGPlayer);
+        setCardUseLRIGSpaceTarget(cardUseLRIGTarget);
     }
 
     useEffect(() => {
-        reSetMAINSpace();
+        reSetSpace();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -182,12 +225,14 @@ const PlayGround: React.FC = () => {
                         cardPut1.push(cardLRIGSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberLRIGCard(cardPut1);  // Cập nhật trạng thái với mảng mới
                         cardLRIGSpacePlayer[isPositionSpace] = 0;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
+                        reSetSpace();
                         break;
                     case 2:
                         const cardPut2 = [...numberLRIGCardBot];  // Sao chép mảng hiện tại
                         cardPut2.push(cardLRIGSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberLRIGCardBot(cardPut2);  // Cập nhật trạng thái với mảng mới
                         cardLRIGSpaceTarget[isPositionSpace] = 0;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
+                        reSetSpace();
                         break;
                 }
                 break;
@@ -198,14 +243,14 @@ const PlayGround: React.FC = () => {
                         cardPut1.push(cardMAINSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberHandCard(cardPut1);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpacePlayer[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetMAINSpace();
+                        reSetSpace();
                         break;
                     case 4:
                         const cardPut2 = [...numberHandCardBot];  // Sao chép mảng hiện tại
                         cardPut2.push(cardMAINSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberHandCardBot(cardPut2);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpaceTarget[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetMAINSpace();
+                        reSetSpace();
                         break;
                 }
                 break;
@@ -216,14 +261,14 @@ const PlayGround: React.FC = () => {
                         cardPut1.push(cardMAINSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberEnerCard(cardPut1);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpacePlayer[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetMAINSpace();
+                        reSetSpace();
                         break;
                     case 4:
                         const cardPut2 = [...numberEnerCardBot];  // Sao chép mảng hiện tại
                         cardPut2.push(cardMAINSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberEnerCardBot(cardPut2);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpaceTarget[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetMAINSpace();
+                        reSetSpace();
                         break;
                 }
                 break;
@@ -234,14 +279,14 @@ const PlayGround: React.FC = () => {
                         cardPut1.push(cardMAINSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberTrashCard(cardPut1);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpacePlayer[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetMAINSpace();
+                        reSetSpace();
                         break;
                     case 4:
                         const cardPut2 = [...numberTrashCardBot];  // Sao chép mảng hiện tại
                         cardPut2.push(cardMAINSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberTrashCardBot(cardPut2);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpaceTarget[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetMAINSpace();
+                        reSetSpace();
                         break;
                 }
                 break;
@@ -265,6 +310,16 @@ const PlayGround: React.FC = () => {
             );
         };
         switch (id) {
+            case -1:
+                switch (isPositionCard) {
+                    case 1:
+                        setCardUseLRIGSpacePlayer(toggleCardProperty(cardUseLRIGSpacePlayer, isPositionSpace, 'isDown'));
+                        break;
+                    case 2:
+                        setCardUseLRIGSpaceTarget(toggleCardProperty(cardUseLRIGSpaceTarget, isPositionSpace, 'isDown'));
+                        break;
+                }
+                break;
             case 1:
                 switch (isPositionCard) {
                     case 3:
@@ -407,22 +462,17 @@ const PlayGround: React.FC = () => {
                         </div>
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
-                        {cardLRIGSpaceTarget.map((id, index) => {
-                            const card = cardList.find(card => card.id === id);
-                            if (card && card.imageUrl) {
-                                return (
-                                    <Image
-                                        key={index}
-                                        src={card.imageUrl}
-                                        alt={'Ảnh bìa chính'}
-                                        width={750}
-                                        height={1047}
-                                        className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
-                                        onClick={() => { handleClickLRIGCardTarget(card, index) }}
-                                    />
-                                );
-                            }
-                        })}
+                        {cardUseLRIGSpaceTarget.map((card, index) => (
+                            <Image
+                                key={index}
+                                src={card.imageUrl}
+                                alt={'Ảnh bìa chính'}
+                                width={750}
+                                height={1047}
+                                className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''} ${card.isDown ? 'rotate-90' : ''}`}
+                                onClick={() => { handleClickLRIGCardTarget(card, index) }}
+                            />
+                        ))}
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
                         {cardUseMAINSpaceTarget.map((card, index) => (
@@ -517,22 +567,17 @@ const PlayGround: React.FC = () => {
                         ))}
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
-                        {cardLRIGSpacePlayer.map((id, index) => {
-                            const card = cardList.find(card => card.id === id);
-                            if (card && card.imageUrl) {
-                                return (
-                                    <Image
-                                        key={index}
-                                        src={card.imageUrl}
-                                        alt={'Ảnh bìa chính'}
-                                        width={750}
-                                        height={1047}
-                                        className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''}`}
-                                        onClick={() => { handleClickLRIGCardPlayer(card, index) }}
-                                    />
-                                );
-                            }
-                        })}
+                        {cardUseLRIGSpacePlayer.map((card, index) => (
+                            <Image
+                                key={index}
+                                src={card.imageUrl}
+                                alt={'Ảnh bìa chính'}
+                                width={750}
+                                height={1047}
+                                className={`w-[20%] h-auto cursor-pointer ${index === 1 ? 'mx-12' : ''} ${card.isDown ? 'rotate-90' : ''}`}
+                                onClick={() => { handleClickLRIGCardPlayer(card, index) }}
+                            />
+                        ))}
                     </div>
                     <div className='flex justify-center mt-5 items-center'>
                         <Image
@@ -600,6 +645,14 @@ const PlayGround: React.FC = () => {
                                     >
                                         Di Chuyển
                                     </button>
+                                    {isPositionSpace === 1 &&
+                                        <button
+                                            className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                            onClick={() => { handleEffectCard(-1) }}
+                                        >
+                                            Đổi Tư Thế
+                                        </button>
+                                    }
                                 </div>
                             </>
                         }
@@ -868,6 +921,7 @@ const PlayGround: React.FC = () => {
                 numberCard={numberLRIGCard}
                 type={isTypePopupLRIG}
                 LRIGSpace={cardLRIGSpacePlayer}
+                LRIGUseSpace={cardUseLRIGSpacePlayer}
                 setNumberCard={setNumberLRIGCard}
                 position={isPositionSpace} />
             <MAINPopup
@@ -944,6 +998,7 @@ const PlayGround: React.FC = () => {
                 numberCard={numberLRIGCardBot}
                 type={isTypePopupLRIG}
                 LRIGSpace={cardLRIGSpaceTarget}
+                LRIGUseSpace={cardUseLRIGSpaceTarget}
                 setNumberCard={setNumberLRIGCardBot}
                 position={isPositionSpace} />
             <MAINPopupBot
