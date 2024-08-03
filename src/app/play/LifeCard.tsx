@@ -12,9 +12,11 @@ interface LifePopupProps {
     setNumberCardLife: React.Dispatch<React.SetStateAction<number[]>>;
     numberEnerCard: number[];
     setNumberEnerCard: React.Dispatch<React.SetStateAction<number[]>>;
+    numberTrashCard: number[];
+    setNumberTrashCard: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const LifePopup: React.FC<LifePopupProps> = ({ isOpen, onClose, numberCardLife, setNumberCardLife, numberEnerCard, setNumberEnerCard }) => {
+const LifePopup: React.FC<LifePopupProps> = ({ isOpen, onClose, numberCardLife, setNumberCardLife, numberEnerCard, setNumberEnerCard, numberTrashCard, setNumberTrashCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState<Card | null>(null);
 
@@ -90,11 +92,26 @@ const LifePopup: React.FC<LifePopupProps> = ({ isOpen, onClose, numberCardLife, 
                                     cardEner.push(cardPut);
                                     setNumberEnerCard(cardEner);
                                     setNumberCardLife(cardLife);
-                                    setSelectedCard(isPopupAction);
+                                    const cardShow = cardList.find(card => card.id === cardPut);
+                                    if (cardShow) setSelectedCard(cardShow);
                                     setPopupAction(null);
                                 }}
                             >
                                 Nghiền Nát
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardLife = [...numberCardLife];
+                                    const cardTrash = [...numberTrashCard];
+                                    const cardPut = cardLife.splice(0, 1)[0];
+                                    cardTrash.push(cardPut);
+                                    setNumberTrashCard(cardTrash);
+                                    setNumberCardLife(cardLife);
+                                    setPopupAction(null);
+                                }}
+                            >
+                                Loại Bỏ
                             </button>
                         </div>
                     </div>

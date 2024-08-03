@@ -903,6 +903,8 @@ const PlayGround: React.FC = () => {
                 setNumberCardLife={setNumberLifeCard}
                 numberEnerCard={numberEnerCard}
                 setNumberEnerCard={setNumberEnerCard}
+                numberTrashCard={numberTrashCard}
+                setNumberTrashCard={setNumberTrashCard}
             />
             <EnerPopupBot
                 isOpen={isPopupEnerBot}
@@ -977,6 +979,8 @@ const PlayGround: React.FC = () => {
                 setNumberCardLife={setNumberLifeCardBot}
                 numberEnerCard={numberEnerCardBot}
                 setNumberEnerCard={setNumberEnerCardBot}
+                numberTrashCard={numberTrashCardBot}
+                setNumberTrashCard={setNumberTrashCardBot}
             />
             {selectedCard && <CardDetail card={selectedCard} onClose={() => { setSelectedCard(null) }} />}
         </>

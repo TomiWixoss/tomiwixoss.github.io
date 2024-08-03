@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { IoMdClose } from "react-icons/io";
 import CardDetail from '../../components/CardDetail';
@@ -23,7 +23,15 @@ interface MAINPopupProps {
 const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, setNumberCardMAIN, numberCardHand, setNumberCardHand, numberEnerCard, setNumberEnerCard, numberTrashCard, setNumberTrashCard, numberLifeCard, setNumberLifeCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState(false);
+    const [isPopupRefresh, setPopupRefresh] = useState(false);
 
+    useEffect(() => {
+        if (isOpen === true) {
+            if (numberCardMAIN.length === 0) {
+                setPopupRefresh(true);
+            }
+        }
+    }, [numberCardMAIN, isOpen]);
     // Hàm xáo trộn mảng
     const shuffleArray = (array: number[]) => {
         let shuffledArray = array.slice(); // Tạo bản sao của mảng
@@ -55,18 +63,22 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, 
                             />
                         </div>
                         <div className="mt-4 grid grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
-                            {numberCardMAIN.map(index =>
-                                <div key={`${index}`} className="flex flex-col items-center cursor-pointer">
-                                    <Image
-                                        src={'/backside/MAIN.jpg'}
-                                        alt={'backside'}
-                                        width={750}
-                                        height={1047}
-                                        className="w-full h-auto mb-2"
-                                        onClick={handleCardClick}
-                                    />
-                                </div>
-                            )}
+                            {numberCardMAIN.map((index) => {
+                                // Sinh ra giá trị ngẫu nhiên, ví dụ từ 1 đến ...
+                                const randomValue = Math.floor(Math.random() * 999999999) + 1;
+                                return (
+                                    <div key={`${index}-${randomValue}`} className="flex flex-col items-center cursor-pointer">
+                                        <Image
+                                            src={'/backside/MAIN.jpg'}
+                                            alt={'backside'}
+                                            width={750}
+                                            height={1047}
+                                            className="w-full h-auto mb-2"
+                                            onClick={handleCardClick}
+                                        />
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
@@ -87,8 +99,8 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, 
                                 onClick={() => {
                                     const cardMAIN = [...numberCardMAIN];
                                     const cardHand = [...numberCardHand];
-                                    const cardPut = cardMAIN.splice(0, 1)[0];
-                                    cardHand.push(cardPut);
+                                    const cardPut = cardMAIN.shift();
+                                    if (cardPut) cardHand.push(cardPut);
                                     setNumberCardHand(cardHand);
                                     setNumberCardMAIN(cardMAIN);
                                     setPopupAction(false);
@@ -112,8 +124,8 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, 
                                 onClick={() => {
                                     const cardMAIN = [...numberCardMAIN];
                                     const cardEner = [...numberEnerCard];
-                                    const cardPut = cardMAIN.splice(0, 1)[0];
-                                    cardEner.push(cardPut);
+                                    const cardPut = cardMAIN.shift();
+                                    if (cardPut) cardEner.push(cardPut);
                                     setNumberEnerCard(cardEner);
                                     setNumberCardMAIN(cardMAIN);
                                     setPopupAction(false);
@@ -126,8 +138,8 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, 
                                 onClick={() => {
                                     const cardMAIN = [...numberCardMAIN];
                                     const cardTrash = [...numberTrashCard];
-                                    const cardPut = cardMAIN.splice(0, 1)[0];
-                                    cardTrash.push(cardPut);
+                                    const cardPut = cardMAIN.shift();
+                                    if (cardPut) cardTrash.push(cardPut);
                                     setNumberTrashCard(cardTrash);
                                     setNumberCardMAIN(cardMAIN);
                                     setPopupAction(false);
@@ -140,14 +152,49 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, 
                                 onClick={() => {
                                     const cardMAIN = [...numberCardMAIN];
                                     const cardLife = [...numberLifeCard];
-                                    const cardPut = cardMAIN.splice(0, 1)[0];
-                                    cardLife.push(cardPut);
+                                    const cardPut = cardMAIN.shift();
+                                    if (cardPut) cardLife.push(cardPut);
                                     setNumberLifeCard(cardLife);
                                     setNumberCardMAIN(cardMAIN);
                                     setPopupAction(false);
                                 }}
                             >
                                 Life Cloth
+                            </button>
+                        </div>
+                    </div>
+                </div >
+            )}
+            {isPopupRefresh && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Làm Mới</p>
+                            <IoMdClose
+                                onClick={() => { setPopupRefresh(false) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    let cardMAIN = [...numberCardMAIN];
+                                    let cardTrash = [...numberTrashCard];
+
+                                    cardTrash.forEach(value => {
+                                        const card = cardList.find(card => card.id === value);
+                                        if (card) {
+                                            cardMAIN.push(card.id);
+                                        }
+                                    });
+
+                                    setNumberTrashCard([]);
+                                    setNumberCardMAIN(cardMAIN);
+                                    setPopupRefresh(false);
+                                }}
+                            >
+                                Làm Mới Bộ Bài Chính
                             </button>
                         </div>
                     </div>
