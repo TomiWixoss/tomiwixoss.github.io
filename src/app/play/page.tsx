@@ -90,6 +90,8 @@ const PlayGround: React.FC = () => {
     const [isPositionCard, setIsPositionCard] = useState(0);
     const [cardData0, setCardData0] = useState<Card>();
     const [cardData1, setCardData1] = useState<Card>();
+    const [turnGame, setTurnGame] = useState(0);
+    const [isPopupTurn, setPopupTurn] = useState(false);
     // Lấy dữ liệu từ localStorage và chuyển thành mảng boolean
     const getSavedSlots = () => {
         const saved = window.localStorage.getItem('save');
@@ -152,7 +154,8 @@ const PlayGround: React.FC = () => {
             isPositionSpace,
             isPositionCard,
             cardData0,
-            cardData1
+            cardData1,
+            turnGame
         };
         window.localStorage.setItem(`gameDataSlot${slot}`, JSON.stringify(data));
     };
@@ -213,6 +216,7 @@ const PlayGround: React.FC = () => {
             setIsPositionCard(data.isPositionCard);
             setCardData0(data.cardData0);
             setCardData1(data.cardData1);
+            setTurnGame(data.turnGame);
         }
     };
 
@@ -669,9 +673,13 @@ const PlayGround: React.FC = () => {
                         ))}
                     </div>
                     <div className='flex justify-center items-center'>
+                        <p className='text-white font-bold text-xs my-5 text-center cursor-pointer'
+                            onClick={() => { setPopupTurn(true) }}
+                        >Lượt {turnGame}</p>
+                        <p className='text-white font-bold text-xs my-5 text-center mx-2'> - </p>
                         <div className='cursor-pointer' onClick={() => { setPopupChangePhase(true) }}>
                             {MainPhase === 0 &&
-                                <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Khởi Đầu</p>
+                                <p className='text-white font-bold text-xs my-5 text-center mr-5'>Giai Đoạn Khởi Đầu</p>
                             }
                             {MainPhase === 1 &&
                                 <p className='text-white font-bold text-xs my-5 text-center mx-5'>Giai Đoạn Mở Bài</p>
@@ -1136,6 +1144,41 @@ const PlayGround: React.FC = () => {
                                     Ô Tải {slot + 1}
                                 </button>
                             ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+            {isPopupTurn && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Chuyển Lượt</p>
+                            <IoMdClose
+                                onClick={() => { setPopupTurn(false) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <button
+                                className={`px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded`}
+                                onClick={() => {
+                                    const turn = turnGame + 1;
+                                    setTurnGame(turn);
+                                    setPopupTurn(false);
+                                }}
+                            >
+                                Chuyển Lượt Kế
+                            </button>
+                            <button
+                                className={`px-4 py-2 mt-4 bg-blue-500 text-white hover:bg-blue-600 rounded`}
+                                onClick={() => {
+                                    const turn = turnGame - 1;
+                                    setTurnGame(turn);
+                                    setPopupTurn(false);
+                                }}
+                            >
+                                Chuyển Lượt Trước
+                            </button>
                         </div>
                     </div>
                 </div>
