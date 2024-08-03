@@ -372,7 +372,7 @@ const PlayGround: React.FC = () => {
         setCardUseSpace: React.Dispatch<React.SetStateAction<Card[]>>,
         powerChanges: { [key: number]: number } // Đối tượng ánh xạ id với sức mạnh
     ) => {
-        const cardUse = [...cardUseSpace];
+        const cardUse = JSON.parse(JSON.stringify(cardUseSpace));
 
         Object.entries(powerChanges).forEach(([id, powerChange]) => {
             const cardId = parseInt(id, 10);
@@ -388,7 +388,7 @@ const PlayGround: React.FC = () => {
                     if (cardClassSet.size >= 3) {
                         if (cardUse[position]?.cardEffect.includes("Const")) {
                             cardUse[position].cardPower += powerChange;
-                            cardUse[position].cardEffect = cardUse[position].cardEffect.filter(effect => effect !== "Const");
+                            cardUse[position].cardEffect = cardUse[position].cardEffect.filter((effect: string) => effect !== "Const");
                             setSelectedCard(cardUse[position]);
                         }
                     } else {
@@ -405,10 +405,11 @@ const PlayGround: React.FC = () => {
                 }
             }
         });
+
+        setCardUseSpace(cardUse);
     };
 
     useEffect(() => {
-
         const effect = () => {
             const powerChangesPlayer = {
                 12: 4000,
