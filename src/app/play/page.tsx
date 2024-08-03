@@ -26,6 +26,7 @@ import { GiCardRandom } from "react-icons/gi";
 import { FaTrashRestore } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { GiCardboardBox } from "react-icons/gi";
+import { IoSettings } from "react-icons/io5";
 
 const PlayGround: React.FC = () => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
@@ -34,6 +35,7 @@ const PlayGround: React.FC = () => {
     const [isPopupChangePositionAction, setPopupChangePositionAction] = useState<Card | null>(null);
     const [isEffectAction, setEffectAction] = useState<Card | null>(null);
     const [isTitleAction, setTitleAction] = useState<Card | null>(null);
+    const [isPopupSetting, setPopupSetting] = useState(false);
     const [isTypeAction, setIsTypeAction] = useState(0);
     const [MainPhase, setMainPhase] = useState<number>(0);
     const [isPopupLRIG, setIsPopupLRIG] = useState(false);
@@ -457,6 +459,12 @@ const PlayGround: React.FC = () => {
         <>
             <div className="bg-black py-2 px-2">
                 <div className='h-screen'>
+                    <div className='flex justify-end'>
+                        <IoSettings
+                            className='text-white text-xl cursor-pointer'
+                            onClick={() => { setPopupSetting(true) }}
+                        />
+                    </div>
                     <div className='flex justify-center items-center'>
                         <Image
                             src={'/backside/MAIN.jpg'}
@@ -904,6 +912,45 @@ const PlayGround: React.FC = () => {
                                 onClick={() => { handleTitleCard(4) }}
                             >
                                 【Lancer】
+                            </button>
+                        </div>
+                    </div>
+                </div >
+            )}
+            {isPopupSetting && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Cài Đặt</p>
+                            <IoMdClose
+                                onClick={() => { setPopupSetting(false) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className='flex flex-col'>
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+
+                            >
+                                Đổi Deck
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+
+                            >
+                                Chỉnh Deck
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+
+                            >
+                                Lưu Dữ Liệu
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+
+                            >
+                                Tải Dữ Liệu
                             </button>
                         </div>
                     </div>
