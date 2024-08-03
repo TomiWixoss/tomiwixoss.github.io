@@ -74,8 +74,17 @@ const PlayGround: React.FC = () => {
     const [isTypePopupHand, setIsTypePopupHand] = useState(0);
     const [isPositionSpace, setIsPositionSpace] = useState(0);
     const [isPositionCard, setIsPositionCard] = useState(0);
+    const [cardData0, setCardData0] = useState<Card>();
+    const [cardData1, setCardData1] = useState<Card>();
 
     const reSetSpace = () => {
+
+        const cardCheckData0 = cardList.find(card => card.id === 0);
+        setCardData0(cardCheckData0);
+
+        const cardCheckData1 = cardList.find(card => card.id === -1);
+        setCardData1(cardCheckData1);
+
         let cardUseMAINPlayer = [...cardUseMAINSpacePlayer];
         let cardUseMAINTarget = [...cardUseMAINSpaceTarget];
         if (cardUseMAINPlayer.length === 0) {
@@ -225,14 +234,14 @@ const PlayGround: React.FC = () => {
                         cardPut1.push(cardLRIGSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberLRIGCard(cardPut1);  // Cập nhật trạng thái với mảng mới
                         cardLRIGSpacePlayer[isPositionSpace] = 0;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetSpace();
+                        if (cardData0) cardUseLRIGSpacePlayer[isPositionSpace] = cardData0;
                         break;
                     case 2:
                         const cardPut2 = [...numberLRIGCardBot];  // Sao chép mảng hiện tại
                         cardPut2.push(cardLRIGSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberLRIGCardBot(cardPut2);  // Cập nhật trạng thái với mảng mới
                         cardLRIGSpaceTarget[isPositionSpace] = 0;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetSpace();
+                        if (cardData0) cardUseLRIGSpaceTarget[isPositionSpace] = cardData0;
                         break;
                 }
                 break;
@@ -243,14 +252,14 @@ const PlayGround: React.FC = () => {
                         cardPut1.push(cardMAINSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberHandCard(cardPut1);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpacePlayer[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetSpace();
+                        if (cardData1) cardUseMAINSpacePlayer[isPositionSpace] = cardData1;
                         break;
                     case 4:
                         const cardPut2 = [...numberHandCardBot];  // Sao chép mảng hiện tại
                         cardPut2.push(cardMAINSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberHandCardBot(cardPut2);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpaceTarget[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetSpace();
+                        if (cardData1) cardUseMAINSpaceTarget[isPositionSpace] = cardData1;
                         break;
                 }
                 break;
@@ -261,14 +270,14 @@ const PlayGround: React.FC = () => {
                         cardPut1.push(cardMAINSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberEnerCard(cardPut1);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpacePlayer[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetSpace();
+                        if (cardData1) cardUseMAINSpacePlayer[isPositionSpace] = cardData1;
                         break;
                     case 4:
                         const cardPut2 = [...numberEnerCardBot];  // Sao chép mảng hiện tại
                         cardPut2.push(cardMAINSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberEnerCardBot(cardPut2);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpaceTarget[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetSpace();
+                        if (cardData1) cardUseMAINSpaceTarget[isPositionSpace] = cardData1;
                         break;
                 }
                 break;
@@ -279,14 +288,14 @@ const PlayGround: React.FC = () => {
                         cardPut1.push(cardMAINSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberTrashCard(cardPut1);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpacePlayer[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetSpace();
+                        if (cardData1) cardUseMAINSpacePlayer[isPositionSpace] = cardData1;
                         break;
                     case 4:
                         const cardPut2 = [...numberTrashCardBot];  // Sao chép mảng hiện tại
                         cardPut2.push(cardMAINSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
                         setNumberTrashCardBot(cardPut2);  // Cập nhật trạng thái với mảng mới
                         cardMAINSpaceTarget[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        reSetSpace();
+                        if (cardData1) cardUseMAINSpaceTarget[isPositionSpace] = cardData1;
                         break;
                 }
                 break;
