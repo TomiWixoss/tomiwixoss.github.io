@@ -575,6 +575,31 @@ const cardList: Card[] = [
         isDown: false,
         isFreeze: false,
         statusName: ""
+    },
+    {
+        id: 22,
+        name: "...",
+        imageUrl: "...",
+        cardName: "",
+        cardType: "",
+        cardColor: "",
+        cardText: "",
+        cardLevel: 0,
+        cardCost: 0,
+        cardGrowCost: 0,
+        cardLimit: 0,
+        cardLRIGType: "",
+        cardTeamName: "",
+        cardClass: "",
+        cardPower: 0,
+        cardBurst: "",
+        cardUseTime: "",
+        isLRIGCenter: false,
+        isLRIGSupport: false,
+        cardEffect: [""],
+        isDown: false,
+        isFreeze: false,
+        statusName: ""
     }
 ];
 
