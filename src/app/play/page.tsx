@@ -1077,54 +1077,94 @@ const PlayGround: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDiscardEner]);
 
-    const handleAttackSIGNI = () => {
-        switch (isPositionCard) {
-            case 3:
-                if (cardUseMAINSpaceTarget[isPositionSpace].id !== -1) {
-                    if (cardUseMAINSpaceTarget[isPositionSpace].cardPower <= cardUseMAINSpacePlayer[isPositionSpace].cardPower) {
-                        const cardPut = [...numberEnerCardBot];  // Sao chép mảng hiện tại
-                        cardPut.push(cardMAINSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
-                        setNumberEnerCardBot(cardPut);  // Cập nhật trạng thái với mảng mới
-                        cardMAINSpaceTarget[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
-                        if (cardData1) cardUseMAINSpaceTarget[isPositionSpace] = cardData1;
-                    }
+    const handleAttackSIGNI = (id: number) => {
+        switch (id) {
+            case 1:
+                switch (isPositionCard) {
+                    case 3:
+                        if (cardUseMAINSpaceTarget[isPositionSpace].id !== -1) {
+                            if (cardUseMAINSpaceTarget[isPositionSpace].cardPower <= cardUseMAINSpacePlayer[isPositionSpace].cardPower) {
+                                const cardPut = [...numberEnerCardBot];  // Sao chép mảng hiện tại
+                                cardPut.push(cardMAINSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
+                                setNumberEnerCardBot(cardPut);  // Cập nhật trạng thái với mảng mới
+                                cardMAINSpaceTarget[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
+                                if (cardData1) cardUseMAINSpaceTarget[isPositionSpace] = cardData1;
+                                cardUseMAINSpacePlayer[isPositionSpace] = { ...cardUseMAINSpacePlayer[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
+                            }
+                        }
+                        else {
+                            const cardLife = [...numberLifeCardBot];
+                            const cardEner = [...numberEnerCardBot];
+                            const cardPut = cardLife.splice(0, 1)[0];
+                            cardEner.push(cardPut);
+                            setNumberEnerCardBot(cardEner);
+                            setNumberLifeCardBot(cardLife);
+                            const cardShow = cardList.find(card => card.id === cardPut);
+                            if (cardShow) {
+                                if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
+                            }
+                            cardUseMAINSpacePlayer[isPositionSpace] = { ...cardUseMAINSpacePlayer[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
+                        }
+                        break;
+                    case 4:
+                        if (cardUseMAINSpacePlayer[isPositionSpace].id !== -1) {
+                            if (cardUseMAINSpacePlayer[isPositionSpace].cardPower <= cardUseMAINSpaceTarget[isPositionSpace].cardPower) {
+                                const cardPut = [...numberEnerCard];  // Sao chép mảng hiện tại của Player
+                                cardPut.push(cardMAINSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép của Player
+                                setNumberEnerCard(cardPut);  // Cập nhật trạng thái với mảng mới của Player
+                                cardMAINSpacePlayer[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` của Player về 0
+                                if (cardData1) cardUseMAINSpacePlayer[isPositionSpace] = cardData1;
+                                cardUseMAINSpaceTarget[isPositionSpace] = { ...cardUseMAINSpaceTarget[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
+                            }
+                        } else {
+                            const cardLife = [...numberLifeCard];
+                            const cardEner = [...numberEnerCard];
+                            const cardPut = cardLife.splice(0, 1)[0];
+                            cardEner.push(cardPut);
+                            setNumberEnerCard(cardEner);
+                            setNumberLifeCard(cardLife);
+                            const cardShow = cardList.find(card => card.id === cardPut);
+                            if (cardShow) {
+                                if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
+                            }
+                            cardUseMAINSpaceTarget[isPositionSpace] = { ...cardUseMAINSpaceTarget[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
+                        }
+                        break;
                 }
-                else {
-                    const cardLife = [...numberLifeCardBot];
-                    const cardEner = [...numberEnerCardBot];
-                    const cardPut = cardLife.splice(0, 1)[0];
-                    cardEner.push(cardPut);
-                    setNumberEnerCardBot(cardEner);
-                    setNumberLifeCardBot(cardLife);
-                    const cardShow = cardList.find(card => card.id === cardPut);
-                    if (cardShow) {
-                        if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
-                    }
-                }
-                cardUseMAINSpacePlayer[isPositionSpace] = { ...cardUseMAINSpacePlayer[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                 break;
-            case 4:
-                if (cardUseMAINSpacePlayer[isPositionSpace].id !== -1) {
-                    if (cardUseMAINSpacePlayer[isPositionSpace].cardPower <= cardUseMAINSpaceTarget[isPositionSpace].cardPower) {
-                        const cardPut = [...numberEnerCard];  // Sao chép mảng hiện tại của Player
-                        cardPut.push(cardMAINSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép của Player
-                        setNumberEnerCard(cardPut);  // Cập nhật trạng thái với mảng mới của Player
-                        cardMAINSpacePlayer[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` của Player về 0
-                        if (cardData1) cardUseMAINSpacePlayer[isPositionSpace] = cardData1;
-                    }
-                } else {
-                    const cardLife = [...numberLifeCard];
-                    const cardEner = [...numberEnerCard];
-                    const cardPut = cardLife.splice(0, 1)[0];
-                    cardEner.push(cardPut);
-                    setNumberEnerCard(cardEner);
-                    setNumberLifeCard(cardLife);
-                    const cardShow = cardList.find(card => card.id === cardPut);
-                    if (cardShow) {
-                        if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
-                    }
+            case 2:
+                switch (isPositionCard) {
+                    case 1:
+                        if (cardUseMAINSpaceTarget[isPositionSpace].id === -1) {
+                            const cardLife = [...numberLifeCardBot];
+                            const cardEner = [...numberEnerCardBot];
+                            const cardPut = cardLife.splice(0, 1)[0];
+                            cardEner.push(cardPut);
+                            setNumberEnerCardBot(cardEner);
+                            setNumberLifeCardBot(cardLife);
+                            const cardShow = cardList.find(card => card.id === cardPut);
+                            if (cardShow) {
+                                if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
+                            }
+                            cardUseLRIGSpacePlayer[isPositionSpace] = { ...cardUseLRIGSpacePlayer[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
+                        }
+                        break;
+                    case 2:
+                        if (cardUseMAINSpacePlayer[isPositionSpace].id === -1) {
+                            const cardLife = [...numberLifeCard];
+                            const cardEner = [...numberEnerCard];
+                            const cardPut = cardLife.splice(0, 1)[0];
+                            cardEner.push(cardPut);
+                            setNumberEnerCard(cardEner);
+                            setNumberLifeCard(cardLife);
+                            const cardShow = cardList.find(card => card.id === cardPut);
+                            if (cardShow) {
+                                if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
+                            }
+                            cardUseLRIGSpaceTarget[isPositionSpace] = { ...cardUseLRIGSpaceTarget[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
+                        }
+                        break;
                 }
-                cardUseMAINSpaceTarget[isPositionSpace] = { ...cardUseMAINSpaceTarget[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                 break;
         }
     }
@@ -1366,6 +1406,17 @@ const PlayGround: React.FC = () => {
                                             Đổi Tư Thế
                                         </button>
                                     }
+                                    {isPositionSpace === 1 && !isPopupAction.isDown &&
+                                        <button
+                                            className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                            onClick={() => {
+                                                handleAttackSIGNI(2);
+                                                setPopupAction(null);
+                                            }}
+                                        >
+                                            Tấn Công
+                                        </button>
+                                    }
                                     <button
                                         className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
                                         onClick={() => {
@@ -1416,7 +1467,7 @@ const PlayGround: React.FC = () => {
                                         <button
                                             className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
                                             onClick={() => {
-                                                handleAttackSIGNI();
+                                                handleAttackSIGNI(1);
                                                 setPopupAction(null);
                                             }}
                                         >
