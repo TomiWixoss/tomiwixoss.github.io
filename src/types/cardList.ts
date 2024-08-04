@@ -6,6 +6,10 @@ export default interface Card {
     cardType: string;
     cardColor: string[];
     cardText: string;
+    cardEffectConst: string;
+    cardEffectAuto: string;
+    cardEffectEnter: string;
+    cardEffectAction: string;
     cardLevel: number;
     cardCost: number;
     cardGrowCost: number;

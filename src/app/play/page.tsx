@@ -85,6 +85,10 @@ const PlayGround: React.FC = () => {
     const [cardData1, setCardData1] = useState<Card>();
     const [turnGame, setTurnGame] = useState(0);
     const [isPopupTurn, setPopupTurn] = useState(false);
+
+    const [isDiscardEner, setIsDiscardEner] = useState(false);
+    const [numberDiscardEner, setNumberDiscardEner] = useState(0);
+    const [isPlayerTurn, setIsPlayerTurn] = useState(true);
     // Lấy dữ liệu từ localStorage và chuyển thành mảng boolean
     const getSavedSlots = () => {
         if (typeof window !== "undefined") {
@@ -714,6 +718,337 @@ const PlayGround: React.FC = () => {
         setTitleAction(null);
     }
 
+    const removeCardById = (cardList: number[], idToRemove: number) => {
+        return cardList.map(card => ({ id: card } as { id: number }))
+            .filter(card => card.id !== idToRemove)
+            .map(card => card.id);
+    };
+
+    // Hàm xáo trộn mảng
+    const shuffleArray = (array: number[]) => {
+        let shuffledArray = array.slice(); // Tạo bản sao của mảng
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Hoán đổi các phần tử
+        }
+        return shuffledArray;
+    };
+
+    const handleSetUpSpace = () => {
+        let cardIsChoose: number[] = [...cardLRIGSpaceTarget];
+        let cardIsUseChoose: Card[] = [...cardUseLRIGSpaceTarget];
+        let cardLRIGBot: number[] = [...numberLRIGCardBot];
+        let cardBotHand: number[] = [...numberHandCardBot];
+        let cardBotMAIN: number[] = [...numberMAINCardBot];
+
+        const cardChoose1 = cardList.filter(card => cardLRIGBot.includes(card.id) && card.cardLevel === 0 && card.isLRIGCenter === true);
+        if (cardChoose1.length > 0) {
+            cardIsChoose[1] = cardChoose1[0].id;
+            cardIsUseChoose[1] = cardChoose1[0];
+            setCardLRIGSpaceTarget(cardIsChoose);
+            setCardUseLRIGSpaceTarget(cardIsUseChoose);
+            cardLRIGBot = removeCardById(cardLRIGBot, cardChoose1[0].id);
+            setNumberLRIGCardBot(cardLRIGBot);
+        }
+
+        const cardChoose2 = cardList.filter(card => cardLRIGBot.includes(card.id) && card.cardLevel === 0 && card.isLRIGSupport === true);
+        if (cardChoose2.length > 0) {
+            cardIsChoose[0] = cardChoose2[0].id;
+            cardIsUseChoose[0] = cardChoose2[0];
+            setCardLRIGSpaceTarget(cardIsChoose);
+            setCardUseLRIGSpaceTarget(cardIsUseChoose);
+            cardLRIGBot = removeCardById(cardLRIGBot, cardChoose2[0].id);
+            setNumberLRIGCardBot(cardLRIGBot);
+        }
+
+        const cardChoose3 = cardList.filter(card => cardLRIGBot.includes(card.id) && card.cardLevel === 0 && card.isLRIGSupport === true);
+        if (cardChoose3.length > 0) {
+            cardIsChoose[2] = cardChoose3[0].id;
+            cardIsUseChoose[2] = cardChoose3[0];
+            setCardLRIGSpaceTarget(cardIsChoose);
+            setCardUseLRIGSpaceTarget(cardIsUseChoose);
+            cardLRIGBot = removeCardById(cardLRIGBot, cardChoose3[0].id);
+            setNumberLRIGCardBot(cardLRIGBot);
+        }
+
+        cardBotMAIN = shuffleArray(cardBotMAIN);
+        cardBotHand = cardBotMAIN.splice(0, 5);
+        setNumberHandCardBot(cardBotHand);
+        setNumberMAINCardBot(cardBotMAIN);
+
+        const result: Card[] = [];
+        for (const number of cardBotHand) {
+            const matchingCard = cardList.find(card => card.id === number && card.cardLevel > 1);
+            if (matchingCard) {
+                result.push(matchingCard);
+            }
+        }
+        let handCardUse: number[] = [];
+        let handCard: number[] = [];
+        let handCardBot: Card[] = result;
+        handCardBot.forEach((value, index) => {
+            handCard.push(value.id);
+        });
+
+        handCard.forEach((value, index) => {
+            cardBotMAIN.push(value);
+        });
+
+        handCardUse = cardBotHand.filter(valueCard => !handCard.includes(valueCard));
+
+        cardBotMAIN = shuffleArray(cardBotMAIN);
+        cardBotHand = cardBotMAIN.splice(0, handCard.length);
+
+        cardBotHand.forEach((value, index) => {
+            handCardUse.push(value);
+        });
+
+        setNumberHandCardBot(handCardUse);
+        setNumberMAINCardBot(cardBotMAIN);
+        setNumberLifeCardBot(cardBotMAIN.splice(0, 7));
+
+        let cardIsChoosePlayer: number[] = [...cardLRIGSpacePlayer];
+        let cardIsUseChoosePlayer: Card[] = [...cardUseLRIGSpacePlayer];
+        let cardLRIGPlayer: number[] = [...numberLRIGCard];
+        let cardPlayerHand: number[] = [...numberHandCard];
+        let cardPlayerMAIN: number[] = [...numberMAINCard];
+
+        const cardChoose1Player = cardList.filter(card => cardLRIGPlayer.includes(card.id) && card.cardLevel === 0 && card.isLRIGCenter === true);
+        if (cardChoose1Player.length > 0) {
+            cardIsChoosePlayer[1] = cardChoose1Player[0].id;
+            cardIsUseChoosePlayer[1] = cardChoose1Player[0];
+            setCardLRIGSpacePlayer(cardIsChoosePlayer);
+            setCardUseLRIGSpacePlayer(cardIsUseChoosePlayer);
+            cardLRIGPlayer = removeCardById(cardLRIGPlayer, cardChoose1Player[0].id);
+            setNumberLRIGCard(cardLRIGPlayer);
+        }
+
+        const cardChoose2Player = cardList.filter(card => cardLRIGPlayer.includes(card.id) && card.cardLevel === 0 && card.isLRIGSupport === true);
+        if (cardChoose2Player.length > 0) {
+            cardIsChoosePlayer[0] = cardChoose2Player[0].id;
+            cardIsUseChoosePlayer[0] = cardChoose2Player[0];
+            setCardLRIGSpacePlayer(cardIsChoosePlayer);
+            setCardUseLRIGSpacePlayer(cardIsUseChoosePlayer);
+            cardLRIGPlayer = removeCardById(cardLRIGPlayer, cardChoose2[0].id);
+            setNumberLRIGCard(cardLRIGPlayer);
+        }
+
+        const cardChoose3Player = cardList.filter(card => cardLRIGPlayer.includes(card.id) && card.cardLevel === 0 && card.isLRIGSupport === true);
+        if (cardChoose3Player.length > 0) {
+            cardIsChoosePlayer[2] = cardChoose3Player[0].id;
+            cardIsUseChoosePlayer[2] = cardChoose3Player[0];
+            setCardLRIGSpacePlayer(cardIsChoosePlayer);
+            setCardUseLRIGSpacePlayer(cardIsUseChoosePlayer);
+            cardLRIGPlayer = removeCardById(cardLRIGPlayer, cardChoose3[0].id);
+            setNumberLRIGCard(cardLRIGPlayer);
+        }
+
+        cardPlayerMAIN = shuffleArray(cardPlayerMAIN);
+        cardPlayerHand = cardPlayerMAIN.splice(0, 5);
+        setNumberHandCard(cardPlayerHand);
+        setNumberMAINCard(cardPlayerMAIN);
+
+        const resultPlayer: Card[] = [];
+        for (const number of cardPlayerHand) {
+            const matchingCard = cardList.find(card => card.id === number && card.cardLevel > 1);
+            if (matchingCard) {
+                resultPlayer.push(matchingCard);
+            }
+        }
+        let handCardUsePlayer: number[] = [];
+        let handCardPlayer: number[] = [];
+        let handCardBotPlayer: Card[] = resultPlayer;
+        handCardBotPlayer.forEach((value, index) => {
+            handCardPlayer.push(value.id);
+        });
+
+        handCardPlayer.forEach((value, index) => {
+            cardPlayerMAIN.push(value);
+        });
+
+        handCardUsePlayer = cardPlayerHand.filter(valueCard => !handCardPlayer.includes(valueCard));
+
+        cardPlayerMAIN = shuffleArray(cardPlayerMAIN);
+        cardPlayerHand = cardPlayerMAIN.splice(0, handCardPlayer.length);
+
+        cardPlayerHand.forEach((value, index) => {
+            handCardUsePlayer.push(value);
+        });
+
+        setNumberHandCard(handCardUsePlayer);
+        setNumberMAINCard(cardPlayerMAIN);
+        setNumberLifeCard(cardPlayerMAIN.splice(0, 7));
+
+        setTurnGame(1);
+        setMainPhase(1);
+    }
+
+    const handleLevelUpLRIG = () => {
+        switch (isPositionCard) {
+            case 1:
+                let cardUseLRIGSpace = [...cardUseLRIGSpacePlayer];
+                let cardLRIGSpace = [...cardLRIGSpacePlayer];
+                const cardLRIG = [...numberLRIGCard];
+                const cardRemove = [...numberRemoveCard];
+                const cardLRIGUp: Card[] = [];
+                numberLRIGCard.forEach((value, index) => {
+                    const card = cardList.find(card => card.id === value && card.cardLevel === cardUseLRIGSpace[isPositionSpace].cardLevel + 1 && card.cardLRIGType === cardUseLRIGSpace[isPositionSpace].cardLRIGType);
+                    if (card) cardLRIGUp.push(card);
+                });
+
+                const checkEnerCard = numberEnerCard
+                    .map(value => cardList.find(card => card.id === value))
+                    .filter((card): card is Card => card !== undefined);
+
+                const hasEnoughCards = (cardGrowCost: number, cardColor: string) => {
+                    const matchingCards = checkEnerCard.filter(card => card.cardColor.includes(cardColor));
+                    return matchingCards.length >= cardGrowCost;
+                };
+
+                const hasEnoughCardsWithoutColor = (cardGrowCost: number) => {
+                    return checkEnerCard.length >= cardGrowCost;
+                };
+
+                const LevelUp = (cardGrowCost: number) => {
+                    cardRemove.push(cardUseLRIGSpace[isPositionSpace].id);
+                    setNumberRemoveCard(cardRemove);
+                    setNumberLRIGCard(removeCardById(cardLRIG, cardUseLRIGSpace[isPositionSpace].id));
+
+                    cardLRIGSpace[isPositionSpace] = cardLRIGUp[0].id;
+                    setCardLRIGSpacePlayer(cardLRIGSpace);
+                    cardUseLRIGSpace[isPositionSpace] = cardLRIGUp[0];
+                    setCardUseLRIGSpacePlayer(cardUseLRIGSpace);
+
+                    setNumberLRIGCard(removeCardById(cardLRIG, cardUseLRIGSpace[isPositionSpace].id));
+
+                    if (cardLRIGUp[0].cardEffect.includes("Enter") || cardLRIGUp[0].cardGrowCost > 0) {
+                        setSelectedCard(cardLRIGUp[0]);
+                    }
+
+                    if (cardGrowCost > 0) {
+                        setIsDiscardEner(true);
+                        setNumberDiscardEner(cardGrowCost);
+                        setIsPlayerTurn(true);
+                    }
+                }
+
+                if (cardLRIGUp.length > 0) {
+                    if (cardLRIGUp[0].isLRIGCenter === true) {
+                        if (hasEnoughCards(cardLRIGUp[0].cardGrowCost, cardLRIGUp[0].cardColor[0])) {
+                            LevelUp(cardLRIGUp[0].cardGrowCost);
+                        }
+                    }
+                    else if (cardLRIGUp[0].isLRIGSupport === true) {
+                        if (hasEnoughCardsWithoutColor(cardLRIGUp[0].cardGrowCost)) {
+                            LevelUp(cardLRIGUp[0].cardGrowCost);
+                        }
+                    }
+                }
+                break;
+            case 2:
+                let cardUseLRIGSpaceBot = [...cardUseLRIGSpaceTarget];
+                let cardLRIGSpaceBot = [...cardLRIGSpaceTarget];
+                const cardLRIGBot = [...numberLRIGCardBot];
+                const cardRemoveBot = [...numberRemoveCardBot];
+                const cardLRIGUpBot: Card[] = [];
+                numberLRIGCardBot.forEach((value, index) => {
+                    const card = cardList.find(card => card.id === value && card.cardLevel === cardUseLRIGSpaceBot[isPositionSpace].cardLevel + 1 && card.cardLRIGType === cardUseLRIGSpaceBot[isPositionSpace].cardLRIGType);
+                    if (card) cardLRIGUpBot.push(card);
+                });
+
+                const checkEnerCardBot = numberEnerCardBot
+                    .map(value => cardList.find(card => card.id === value))
+                    .filter((card): card is Card => card !== undefined);
+
+
+                const hasEnoughCardsBot = (cardGrowCost: number, cardColor: string) => {
+                    const matchingCards = checkEnerCardBot.filter(card => card.cardColor.includes(cardColor));
+                    return matchingCards.length >= cardGrowCost;
+                };
+
+                const hasEnoughCardsWithoutColorBot = (cardGrowCost: number) => {
+                    return checkEnerCardBot.length >= cardGrowCost;
+                };
+
+                const LevelUpBot = (cardGrowCost: number) => {
+                    cardRemoveBot.push(cardUseLRIGSpaceBot[isPositionSpace].id);
+                    setNumberRemoveCardBot(cardRemoveBot);
+                    setNumberLRIGCardBot(removeCardById(cardLRIGBot, cardUseLRIGSpaceBot[isPositionSpace].id));
+
+                    cardLRIGSpaceBot[isPositionSpace] = cardLRIGUpBot[0].id;
+                    setCardLRIGSpaceTarget(cardLRIGSpaceBot);
+                    cardUseLRIGSpaceBot[isPositionSpace] = cardLRIGUpBot[0];
+                    setCardUseLRIGSpaceTarget(cardUseLRIGSpaceBot);
+
+                    setNumberLRIGCardBot(removeCardById(cardLRIGBot, cardUseLRIGSpaceBot[isPositionSpace].id));
+
+                    if (cardLRIGUpBot[0].cardEffect.includes("Enter") || cardLRIGUpBot[0].cardGrowCost > 0) {
+                        setSelectedCard(cardLRIGUpBot[0]);
+                    }
+
+                    if (cardGrowCost > 0) {
+                        setIsDiscardEner(true);
+                        setNumberDiscardEner(cardGrowCost);
+                        setIsPlayerTurn(false);
+                    }
+                }
+
+                if (cardLRIGUpBot.length > 0) {
+                    if (cardLRIGUpBot[0].isLRIGCenter === true) {
+                        if (hasEnoughCardsBot(cardLRIGUpBot[0].cardGrowCost, cardLRIGUpBot[0].cardColor[0])) {
+                            LevelUpBot(cardLRIGUpBot[0].cardGrowCost);
+                        }
+                    }
+                    else if (cardLRIGUpBot[0].isLRIGSupport === true) {
+                        if (hasEnoughCardsWithoutColorBot(cardLRIGUpBot[0].cardGrowCost)) {
+                            LevelUpBot(cardLRIGUpBot[0].cardGrowCost);
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    const rafRef = useRef<number | null>(null);
+
+    useEffect(() => {
+        if (isDiscardEner) {
+            const updatePopup = () => {
+                if (isPlayerTurn === true) {
+                    setIsPopupEner(true);
+                }
+                else {
+                    setIsPopupEnerBot(true);
+                }
+                // Request the next animation frame
+                rafRef.current = requestAnimationFrame(updatePopup);
+            };
+
+            // Start the animation loop
+            updatePopup();
+        } else {
+            // Cancel the animation frame if isDiscardEner becomes false
+            if (rafRef.current) {
+                cancelAnimationFrame(rafRef.current);
+                rafRef.current = null;
+            }
+            if (isPlayerTurn === true) {
+                setIsPopupEner(false);
+            }
+            else {
+                setIsPopupEnerBot(false);
+            }
+        }
+
+        // Cleanup function to cancel animation frame when component unmounts
+        return () => {
+            if (rafRef.current) {
+                cancelAnimationFrame(rafRef.current);
+            }
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isDiscardEner]);
+
     return (
         <>
             <div className="bg-black py-2 px-2">
@@ -951,6 +1286,15 @@ const PlayGround: React.FC = () => {
                                             Đổi Tư Thế
                                         </button>
                                     }
+                                    <button
+                                        className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                        onClick={() => {
+                                            handleLevelUpLRIG();
+                                            setPopupAction(null);
+                                        }}
+                                    >
+                                        Phát Triển
+                                    </button>
                                 </div>
                             </>
                         }
@@ -1209,6 +1553,15 @@ const PlayGround: React.FC = () => {
                             >
                                 Tải Dữ Liệu
                             </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    handleSetUpSpace();
+                                    setPopupSetting(false);
+                                }}
+                            >
+                                Thiết Lập Sân
+                            </button>
                         </div>
                     </div>
                 </div >
@@ -1320,6 +1673,10 @@ const PlayGround: React.FC = () => {
                 setNumberHandCard={setNumberHandCard}
                 numberTrashCard={numberTrashCard}
                 setNumberTrashCard={setNumberTrashCard}
+                isDiscardEner={isDiscardEner}
+                setIsDiscardEner={setIsDiscardEner}
+                numberDiscardEner={numberDiscardEner}
+                setNumberDiscardEner={setNumberDiscardEner}
             />
             <HandPopup
                 isOpen={isPopupHand}
@@ -1409,6 +1766,10 @@ const PlayGround: React.FC = () => {
                 setNumberHandCard={setNumberHandCardBot}
                 numberTrashCard={numberTrashCardBot}
                 setNumberTrashCard={setNumberTrashCardBot}
+                isDiscardEner={isDiscardEner}
+                setIsDiscardEner={setIsDiscardEner}
+                numberDiscardEner={numberDiscardEner}
+                setNumberDiscardEner={setNumberDiscardEner}
             />
             <HandPopupBot
                 isOpen={isPopupHandBot}

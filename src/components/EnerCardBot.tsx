@@ -16,9 +16,13 @@ interface EnerPopupProps {
     setNumberHandCard: React.Dispatch<React.SetStateAction<number[]>>;
     numberTrashCard: number[];
     setNumberTrashCard: React.Dispatch<React.SetStateAction<number[]>>;
+    isDiscardEner: boolean;
+    setIsDiscardEner: React.Dispatch<React.SetStateAction<boolean>>;
+    numberDiscardEner: number;
+    setNumberDiscardEner: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setNumberCard, numberMAINCard, setNumberMAINCard, numberHandCard, setNumberHandCard, numberTrashCard, setNumberTrashCard }) => {
+const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setNumberCard, numberMAINCard, setNumberMAINCard, numberHandCard, setNumberHandCard, numberTrashCard, setNumberTrashCard, isDiscardEner, setIsDiscardEner, numberDiscardEner, setNumberDiscardEner }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState<Card | null>(null);
     const [isChangePopupAction, setChangePopupAction] = useState<Card | null>(null);
@@ -136,19 +140,24 @@ const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setN
                             >
                                 Bài Trên Tay
                             </button>
-                            <button
-                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={() => {
-                                    const cardPut = [...numberTrashCard];
-                                    cardPut.push(isChangePopupAction.id);
-                                    setNumberTrashCard(cardPut);
-                                    setNumberCard(removeCardByIndex(numberCard, isPositionCard));
-                                    setChangePopupAction(null);
-                                    setPopupAction(null);
-                                }}
-                            >
-                                Thùng Rác
-                            </button>
+                            {isDiscardEner && numberDiscardEner > 0 &&
+                                <button
+                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    onClick={() => {
+                                        const cardPut = [...numberTrashCard];
+                                        cardPut.push(isChangePopupAction.id);
+                                        setNumberTrashCard(cardPut);
+                                        setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                        const numberDiscard = numberDiscardEner - 1;
+                                        setNumberDiscardEner(numberDiscard);
+                                        if (numberDiscard === 0) setIsDiscardEner(false);
+                                        setChangePopupAction(null);
+                                        setPopupAction(null);
+                                    }}
+                                >
+                                    Thùng Rác
+                                </button>
+                            }
                             <button
                                 className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 onClick={() => {
