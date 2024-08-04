@@ -141,6 +141,21 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, type
                             >
                                 Di Chuyển
                             </button>
+                            {isPopupAction.cardType === "SPELL" &&
+                                <button
+                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    onClick={() => {
+                                        const cardPut = [...numberTrashCard];
+                                        cardPut.push(isPopupAction.id);
+                                        setNumberTrashCard(cardPut);
+                                        setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                        setPopupAction(null);
+                                        setSelectedCard(isPopupAction);
+                                    }}
+                                >
+                                    Sử Dụng
+                                </button>
+                            }
                         </div>
                     </div>
                 </div >

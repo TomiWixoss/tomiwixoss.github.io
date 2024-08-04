@@ -110,6 +110,22 @@ const LRIGPopup: React.FC<LRIGPopupProps> = ({ isOpen, onClose, numberCard, type
                             >
                                 Trục Xuất
                             </button>
+                            {isPopupAction.cardType === "PIECE" &&
+                                <button
+                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    onClick={() => {
+                                        const cardLRIG = [...numberCard];
+                                        const cardRemove = [...numberRemoveCard];
+                                        cardRemove.push(isPopupAction.id);
+                                        setNumberCard(removeCardById(cardLRIG, isPopupAction.id));
+                                        setNumberRemoveCard(cardRemove);
+                                        setPopupAction(null);
+                                        setSelectedCard(isPopupAction);
+                                    }}
+                                >
+                                    Sử Dụng
+                                </button>
+                            }
                         </div>
                     </div>
                 </div >

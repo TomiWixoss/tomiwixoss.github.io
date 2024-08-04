@@ -192,6 +192,13 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, 
 
                                     setNumberTrashCard([]);
                                     setNumberCardMAIN(cardMAIN);
+
+                                    cardTrash = [];
+                                    const cardLife = [...numberLifeCard];
+                                    const cardPut = cardLife.shift();
+                                    if (cardPut) cardTrash.push(cardPut);
+                                    setNumberLifeCard(cardLife);
+                                    setNumberTrashCard(cardTrash);
                                     setPopupRefresh(false);
                                 }}
                             >
