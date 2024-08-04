@@ -1077,6 +1077,58 @@ const PlayGround: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDiscardEner]);
 
+    const handleAttackSIGNI = () => {
+        switch (isPositionCard) {
+            case 3:
+                if (cardUseMAINSpaceTarget[isPositionSpace].id !== -1) {
+                    if (cardUseMAINSpaceTarget[isPositionSpace].cardPower <= cardUseMAINSpacePlayer[isPositionSpace].cardPower) {
+                        const cardPut = [...numberEnerCardBot];  // Sao chép mảng hiện tại
+                        cardPut.push(cardMAINSpaceTarget[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép
+                        setNumberEnerCardBot(cardPut);  // Cập nhật trạng thái với mảng mới
+                        cardMAINSpaceTarget[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
+                        if (cardData1) cardUseMAINSpaceTarget[isPositionSpace] = cardData1;
+                    }
+                }
+                else {
+                    const cardLife = [...numberLifeCardBot];
+                    const cardEner = [...numberEnerCardBot];
+                    const cardPut = cardLife.splice(0, 1)[0];
+                    cardEner.push(cardPut);
+                    setNumberEnerCardBot(cardEner);
+                    setNumberLifeCardBot(cardLife);
+                    const cardShow = cardList.find(card => card.id === cardPut);
+                    if (cardShow) {
+                        if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
+                    }
+                }
+                cardUseMAINSpacePlayer[isPositionSpace] = { ...cardUseMAINSpacePlayer[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
+                break;
+            case 4:
+                if (cardUseMAINSpacePlayer[isPositionSpace].id !== -1) {
+                    if (cardUseMAINSpacePlayer[isPositionSpace].cardPower <= cardUseMAINSpaceTarget[isPositionSpace].cardPower) {
+                        const cardPut = [...numberEnerCard];  // Sao chép mảng hiện tại của Player
+                        cardPut.push(cardMAINSpacePlayer[isPositionSpace]);  // Thêm phần tử mới vào mảng sao chép của Player
+                        setNumberEnerCard(cardPut);  // Cập nhật trạng thái với mảng mới của Player
+                        cardMAINSpacePlayer[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` của Player về 0
+                        if (cardData1) cardUseMAINSpacePlayer[isPositionSpace] = cardData1;
+                    }
+                } else {
+                    const cardLife = [...numberLifeCard];
+                    const cardEner = [...numberEnerCard];
+                    const cardPut = cardLife.splice(0, 1)[0];
+                    cardEner.push(cardPut);
+                    setNumberEnerCard(cardEner);
+                    setNumberLifeCard(cardLife);
+                    const cardShow = cardList.find(card => card.id === cardPut);
+                    if (cardShow) {
+                        if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
+                    }
+                }
+                cardUseMAINSpaceTarget[isPositionSpace] = { ...cardUseMAINSpaceTarget[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
+                break;
+        }
+    }
+
     return (
         <>
             <div className="bg-black py-2 px-2">
@@ -1360,6 +1412,17 @@ const PlayGround: React.FC = () => {
                                     >
                                         Danh Hiệu
                                     </button>
+                                    {!isPopupAction.isDown &&
+                                        <button
+                                            className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                            onClick={() => {
+                                                handleAttackSIGNI();
+                                                setPopupAction(null);
+                                            }}
+                                        >
+                                            Tấn Công
+                                        </button>
+                                    }
                                 </div>
                             </>
                         }
