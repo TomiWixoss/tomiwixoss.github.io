@@ -22,10 +22,9 @@ interface EnerPopupProps {
     setNumberDiscardEner: React.Dispatch<React.SetStateAction<number>>;
     colorDiscardEner: string[];
     setColorDiscardEner: React.Dispatch<React.SetStateAction<string[]>>;
-    turnGame: number;
 }
 
-const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setNumberCard, numberMAINCard, setNumberMAINCard, numberHandCard, setNumberHandCard, numberTrashCard, setNumberTrashCard, isDiscardEner, setIsDiscardEner, numberDiscardEner, setNumberDiscardEner, colorDiscardEner, setColorDiscardEner, turnGame }) => {
+const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setNumberCard, numberMAINCard, setNumberMAINCard, numberHandCard, setNumberHandCard, numberTrashCard, setNumberTrashCard, isDiscardEner, setIsDiscardEner, numberDiscardEner, setNumberDiscardEner, colorDiscardEner, setColorDiscardEner }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState<Card | null>(null);
     const [isChangePopupAction, setChangePopupAction] = useState<Card | null>(null);
@@ -154,33 +153,31 @@ const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setN
                             >
                                 Bài Trên Tay
                             </button>
-                            {(turnGame === 0 || (isDiscardEner && numberDiscardEner > 0)) &&
-                                <button
-                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    onClick={() => {
-                                        const cardPut = [...numberTrashCard];
-                                        cardPut.push(isChangePopupAction.id);
-                                        setNumberTrashCard(cardPut);
-                                        const indexRemove = numberCard.indexOf(isChangePopupAction.id);
-                                        setNumberCard(removeCardByIndex(numberCard, indexRemove));
-                                        if (isDiscardEner) {
-                                            const colorDiscard = [...colorDiscardEner];
-                                            if (colorDiscardEner.length > 0) {
-                                                // Lấy giá trị đầu tiên mà không thay đổi mảng gốc
-                                                const [firstColor] = colorDiscard.slice(0, 1);
-                                                setColorDiscardEner(colorDiscard.slice(1)); // Cập nhật trạng thái với mảng còn lại
-                                            }
-                                            const numberDiscard = numberDiscardEner - 1;
-                                            setNumberDiscardEner(numberDiscard);
-                                            if (numberDiscard === 0) setIsDiscardEner(false);
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    const cardPut = [...numberTrashCard];
+                                    cardPut.push(isChangePopupAction.id);
+                                    setNumberTrashCard(cardPut);
+                                    const indexRemove = numberCard.indexOf(isChangePopupAction.id);
+                                    setNumberCard(removeCardByIndex(numberCard, indexRemove));
+                                    if (isDiscardEner && numberDiscardEner > 0) {
+                                        const colorDiscard = [...colorDiscardEner];
+                                        if (colorDiscardEner.length > 0) {
+                                            // Lấy giá trị đầu tiên mà không thay đổi mảng gốc
+                                            const [firstColor] = colorDiscard.slice(0, 1);
+                                            setColorDiscardEner(colorDiscard.slice(1)); // Cập nhật trạng thái với mảng còn lại
                                         }
-                                        setChangePopupAction(null);
-                                        setPopupAction(null);
-                                    }}
-                                >
-                                    Thùng Rác
-                                </button>
-                            }
+                                        const numberDiscard = numberDiscardEner - 1;
+                                        setNumberDiscardEner(numberDiscard);
+                                        if (numberDiscard === 0) setIsDiscardEner(false);
+                                    }
+                                    setChangePopupAction(null);
+                                    setPopupAction(null);
+                                }}
+                            >
+                                Thùng Rác
+                            </button>
                             <button
                                 className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 onClick={() => {

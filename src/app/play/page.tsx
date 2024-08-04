@@ -90,12 +90,6 @@ const PlayGround: React.FC = () => {
     const [numberDiscardEner, setNumberDiscardEner] = useState(0);
     const [colorDiscardEner, setColorDiscardEner] = useState<string[]>([]);
     const [isPlayerTurn, setIsPlayerTurn] = useState(true);
-    const [isPopupPlayer, setIsPopupPlayer] = useState(true);
-
-    const [isGrowCenter, setIsGrowCenter] = useState(false);
-    const [checkLevelCenterLRIG, setCheckLevelCenterLRIG] = useState(0);
-    const [checkSupportLRIGUp, setCheckSupportLRIGUp] = useState<Card>();
-
     // Lấy dữ liệu từ localStorage và chuyển thành mảng boolean
     const getSavedSlots = () => {
         if (typeof window !== "undefined") {
@@ -209,15 +203,7 @@ const PlayGround: React.FC = () => {
             isPositionCard,
             cardData0,
             cardData1,
-            turnGame,
-            isDiscardEner,
-            numberDiscardEner,
-            colorDiscardEner,
-            isPlayerTurn,
-            isPopupPlayer,
-            isGrowCenter,
-            checkLevelCenterLRIG,
-            checkSupportLRIGUp,
+            turnGame
         };
         if (typeof window !== "undefined") {
             window.localStorage.setItem(`gameDataSlot${slot}`, JSON.stringify(data));
@@ -282,14 +268,6 @@ const PlayGround: React.FC = () => {
                 setCardData0(data.cardData0);
                 setCardData1(data.cardData1);
                 setTurnGame(data.turnGame);
-                setIsDiscardEner(data.isDiscardEner);
-                setNumberDiscardEner(data.numberDiscardEner);
-                setColorDiscardEner(data.colorDiscardEner);
-                setIsPlayerTurn(data.isPlayerTurn);
-                setIsPopupPlayer(data.isPopupPlayer);
-                setIsGrowCenter(data.isGrowCenter);
-                setCheckLevelCenterLRIG(data.checkLevelCenterLRIG);
-                setCheckSupportLRIGUp(data.checkSupportLRIGUp);
             }
         }
     };
@@ -951,7 +929,7 @@ const PlayGround: React.FC = () => {
                     if (cardGrowCost > 0) {
                         setIsDiscardEner(true);
                         setNumberDiscardEner(cardGrowCost);
-                        setIsPopupPlayer(true);
+                        setIsPlayerTurn(true);
                         const colorDiscard = [...colorDiscardEner];
                         if (cardLRIGUp[0].isLRIGCenter === true) {
                             for (let i = 1; i <= cardGrowCost; i++) {
@@ -966,7 +944,6 @@ const PlayGround: React.FC = () => {
                     if (cardLRIGUp[0].isLRIGCenter === true) {
                         if (hasEnoughCards(cardLRIGUp[0].cardGrowCost, cardLRIGUp[0].cardColor[0])) {
                             LevelUp(cardLRIGUp[0].cardGrowCost);
-                            setIsGrowCenter(false);
                         }
                     }
                     else if (cardLRIGUp[0].isLRIGSupport === true) {
@@ -1020,7 +997,7 @@ const PlayGround: React.FC = () => {
                     if (cardGrowCost > 0) {
                         setIsDiscardEner(true);
                         setNumberDiscardEner(cardGrowCost);
-                        setIsPopupPlayer(false);
+                        setIsPlayerTurn(false);
                         const colorDiscard = [...colorDiscardEner];
                         if (cardLRIGUpBot[0].isLRIGCenter === true) {
                             for (let i = 1; i <= cardGrowCost; i++) {
@@ -1035,7 +1012,6 @@ const PlayGround: React.FC = () => {
                     if (cardLRIGUpBot[0].isLRIGCenter === true) {
                         if (hasEnoughCardsBot(cardLRIGUpBot[0].cardGrowCost, cardLRIGUpBot[0].cardColor[0])) {
                             LevelUpBot(cardLRIGUpBot[0].cardGrowCost);
-                            setIsGrowCenter(false);
                         }
                     }
                     else if (cardLRIGUpBot[0].isLRIGSupport === true) {
@@ -1053,7 +1029,7 @@ const PlayGround: React.FC = () => {
     useEffect(() => {
         if (isDiscardEner) {
             const updatePopup = () => {
-                if (isPopupPlayer === true) {
+                if (isPlayerTurn === true) {
                     setIsPopupEner(true);
                 }
                 else {
@@ -1071,7 +1047,7 @@ const PlayGround: React.FC = () => {
                 cancelAnimationFrame(rafRef.current);
                 rafRef.current = null;
             }
-            if (isPopupPlayer === true) {
+            if (isPlayerTurn === true) {
                 setIsPopupEner(false);
             }
             else {
@@ -1087,23 +1063,6 @@ const PlayGround: React.FC = () => {
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isDiscardEner]);
-
-    useEffect(() => {
-        switch (MainPhase) {
-            case 4:
-                setIsGrowCenter(true);
-                break;
-            case 5:
-                if (isPlayerTurn) {
-                    if (cardUseLRIGSpacePlayer[1]) setCheckLevelCenterLRIG(cardUseLRIGSpacePlayer[1].cardLevel);
-                }
-                else {
-                    if (cardUseLRIGSpaceTarget[1]) setCheckLevelCenterLRIG(cardUseLRIGSpaceTarget[1].cardLevel);
-                }
-                break;
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [MainPhase]);
 
     return (
         <>
@@ -1195,14 +1154,10 @@ const PlayGround: React.FC = () => {
                     </div>
                     <div className='flex justify-center items-center'>
                         <p className='text-white font-bold text-xs my-5 text-center cursor-pointer'
-                            onClick={() => {
-                                if (MainPhase === 0) setPopupTurn(true);
-                            }}
+                            onClick={() => { setPopupTurn(true) }}
                         >Lượt {turnGame}</p>
                         <p className='text-white font-bold text-xs my-5 text-center mx-2'> - </p>
-                        <div className='cursor-pointer' onClick={() => {
-                            if (turnGame > 0) setPopupChangePhase(true);
-                        }}>
+                        <div className='cursor-pointer' onClick={() => { setPopupChangePhase(true) }}>
                             {MainPhase === 0 &&
                                 <p className='text-white font-bold text-xs my-5 text-center'>Giai Đoạn Khởi Đầu</p>
                             }
@@ -1346,28 +1301,15 @@ const PlayGround: React.FC = () => {
                                             Đổi Tư Thế
                                         </button>
                                     }
-                                    {(turnGame === 0 || (isPopupAction.isLRIGCenter === true && MainPhase === 4 && isGrowCenter === true)) &&
-                                        <button
-                                            className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                            onClick={() => {
-                                                handleLevelUpLRIG();
-                                                setPopupAction(null);
-                                            }}
-                                        >
-                                            Phát Triển
-                                        </button>
-                                    }
-                                    {isPopupAction.isLRIGSupport === true && MainPhase === 5 && isPopupAction.cardLevel < checkLevelCenterLRIG &&
-                                        <button
-                                            className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                            onClick={() => {
-                                                handleLevelUpLRIG();
-                                                setPopupAction(null);
-                                            }}
-                                        >
-                                            Phát Triển
-                                        </button>
-                                    }
+                                    <button
+                                        className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                        onClick={() => {
+                                            handleLevelUpLRIG();
+                                            setPopupAction(null);
+                                        }}
+                                    >
+                                        Phát Triển
+                                    </button>
                                 </div>
                             </>
                         }
@@ -1467,85 +1409,54 @@ const PlayGround: React.FC = () => {
                             />
                         </div>
                         <div className='flex flex-col'>
-                            {MainPhase === 0 &&
-                                <button
-                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    onClick={() => { setMainPhase(0); setPopupChangePhase(false) }}
-                                >
-                                    Giai Đoạn Khởi Đầu
-                                </button>
-                            }
-                            {MainPhase === 0 &&
-                                <button
-                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    onClick={() => { setMainPhase(1); setPopupChangePhase(false) }}
-                                >
-                                    Giai Đoạn Mở Bài
-                                </button>
-                            }
-                            {MainPhase === 1 &&
-                                <button
-                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    onClick={() => { setMainPhase(2); setPopupChangePhase(false) }}
-                                >
-                                    Giai Đoạn Rút Bài
-                                </button>
-                            }
-                            {MainPhase === 2 &&
-                                <button
-                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    onClick={() => { setMainPhase(3); setPopupChangePhase(false) }}
-                                >
-                                    Giai Đoạn Nhập Bài
-                                </button>
-                            }
-                            {MainPhase === 3 &&
-                                <button
-                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    onClick={() => { setMainPhase(4); setPopupChangePhase(false) }}
-                                >
-                                    Giai Đoạn Phát Triển
-                                </button>
-                            }
-                            {MainPhase === 4 &&
-                                <button
-                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    onClick={() => { setMainPhase(5); setPopupChangePhase(false) }}
-                                >
-                                    Giai Đoạn Chính
-                                </button>
-                            }
-                            {MainPhase === 5 &&
-                                <button
-                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    onClick={() => { setMainPhase(6); setPopupChangePhase(false) }}
-                                >
-                                    Giai Đoạn Tấn Công
-                                </button>
-                            }
-                            {MainPhase === 6 &&
-                                <button
-                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    onClick={() => { setMainPhase(7); setPopupChangePhase(false) }}
-                                >
-                                    Giai Đoạn Kết Thúc
-                                </button>
-                            }
-                            {MainPhase === 7 &&
-                                <button
-                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    onClick={() => {
-                                        const turn = turnGame + 1;
-                                        const player = !isPlayerTurn;
-                                        setIsPlayerTurn(player);
-                                        setTurnGame(turn);
-                                        setMainPhase(1);
-                                        setPopupChangePhase(false);
-                                    }}
-                                >
-                                    Chuyển Lượt
-                                </button>
-                            }
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setMainPhase(0); setPopupChangePhase(false) }}
+                            >
+                                Giai Đoạn Khởi Đầu
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setMainPhase(1); setPopupChangePhase(false) }}
+                            >
+                                Giai Đoạn Mở Bài
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setMainPhase(2); setPopupChangePhase(false) }}
+                            >
+                                Giai Đoạn Rút Bài
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setMainPhase(3); setPopupChangePhase(false) }}
+                            >
+                                Giai Đoạn Nhập Bài
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setMainPhase(4); setPopupChangePhase(false) }}
+                            >
+                                Giai Đoạn Phát Triển
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setMainPhase(5); setPopupChangePhase(false) }}
+                            >
+                                Giai Đoạn Chính
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setMainPhase(6); setPopupChangePhase(false) }}
+                            >
+                                Giai Đoạn Tấn Công
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => { setMainPhase(7); setPopupChangePhase(false) }}
+                            >
+                                Giai Đoạn Kết Thúc
+                            </button>
                         </div>
                     </div>
                 </div >
@@ -1735,7 +1646,7 @@ const PlayGround: React.FC = () => {
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
                         <div className="flex justify-between items-center mb-4">
-                            <p className="font-bold text-xl mr-4">Khởi Đầu</p>
+                            <p className="font-bold text-xl mr-4">Chuyển Lượt</p>
                             <IoMdClose
                                 onClick={() => { setPopupTurn(false) }}
                                 className="font-bold text-2xl cursor-pointer"
@@ -1747,24 +1658,12 @@ const PlayGround: React.FC = () => {
                                 onClick={() => {
                                     const turn = turnGame + 1;
                                     setTurnGame(turn);
-                                    const phase = MainPhase + 1;
-                                    setMainPhase(phase);
-                                    setPopupTurn(false);
-                                }}
-                            >
-                                Bắt Đầu Chơi!
-                            </button>
-                            {/* <button
-                                className={`px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded`}
-                                onClick={() => {
-                                    const turn = turnGame + 1;
-                                    setTurnGame(turn);
                                     setPopupTurn(false);
                                 }}
                             >
                                 Chuyển Lượt Kế
-                            </button> */}
-                            {/* <button
+                            </button>
+                            <button
                                 className={`px-4 py-2 mt-4 bg-blue-500 text-white hover:bg-blue-600 rounded`}
                                 onClick={() => {
                                     const turn = turnGame - 1;
@@ -1773,7 +1672,7 @@ const PlayGround: React.FC = () => {
                                 }}
                             >
                                 Chuyển Lượt Trước
-                            </button> */}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1795,7 +1694,6 @@ const PlayGround: React.FC = () => {
                 setNumberDiscardEner={setNumberDiscardEner}
                 colorDiscardEner={colorDiscardEner}
                 setColorDiscardEner={setColorDiscardEner}
-                turnGame={turnGame}
             />
             <HandPopup
                 isOpen={isPopupHand}
@@ -1891,7 +1789,6 @@ const PlayGround: React.FC = () => {
                 setNumberDiscardEner={setNumberDiscardEner}
                 colorDiscardEner={colorDiscardEner}
                 setColorDiscardEner={setColorDiscardEner}
-                turnGame={turnGame}
             />
             <HandPopupBot
                 isOpen={isPopupHandBot}
