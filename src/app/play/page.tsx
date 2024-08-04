@@ -88,6 +88,7 @@ const PlayGround: React.FC = () => {
 
     const [isDiscardEner, setIsDiscardEner] = useState(false);
     const [numberDiscardEner, setNumberDiscardEner] = useState(0);
+    const [colorDiscardEner, setColorDiscardEner] = useState<string[]>([]);
     const [isPlayerTurn, setIsPlayerTurn] = useState(true);
     // Lấy dữ liệu từ localStorage và chuyển thành mảng boolean
     const getSavedSlots = () => {
@@ -929,6 +930,13 @@ const PlayGround: React.FC = () => {
                         setIsDiscardEner(true);
                         setNumberDiscardEner(cardGrowCost);
                         setIsPlayerTurn(true);
+                        const colorDiscard = [...colorDiscardEner];
+                        if (cardLRIGUp[0].isLRIGCenter === true) {
+                            for (let i = 1; i <= cardGrowCost; i++) {
+                                colorDiscard.push(cardLRIGUp[0].cardColor[0]);
+                            }
+                        }
+                        setColorDiscardEner(colorDiscard);
                     }
                 }
 
@@ -990,6 +998,13 @@ const PlayGround: React.FC = () => {
                         setIsDiscardEner(true);
                         setNumberDiscardEner(cardGrowCost);
                         setIsPlayerTurn(false);
+                        const colorDiscard = [...colorDiscardEner];
+                        if (cardLRIGUpBot[0].isLRIGCenter === true) {
+                            for (let i = 1; i <= cardGrowCost; i++) {
+                                colorDiscard.push(cardLRIGUpBot[0].cardColor[0]);
+                            }
+                        }
+                        setColorDiscardEner(colorDiscard);
                     }
                 }
 
@@ -1677,6 +1692,8 @@ const PlayGround: React.FC = () => {
                 setIsDiscardEner={setIsDiscardEner}
                 numberDiscardEner={numberDiscardEner}
                 setNumberDiscardEner={setNumberDiscardEner}
+                colorDiscardEner={colorDiscardEner}
+                setColorDiscardEner={setColorDiscardEner}
             />
             <HandPopup
                 isOpen={isPopupHand}
@@ -1770,6 +1787,8 @@ const PlayGround: React.FC = () => {
                 setIsDiscardEner={setIsDiscardEner}
                 numberDiscardEner={numberDiscardEner}
                 setNumberDiscardEner={setNumberDiscardEner}
+                colorDiscardEner={colorDiscardEner}
+                setColorDiscardEner={setColorDiscardEner}
             />
             <HandPopupBot
                 isOpen={isPopupHandBot}

@@ -20,9 +20,11 @@ interface EnerPopupProps {
     setIsDiscardEner: React.Dispatch<React.SetStateAction<boolean>>;
     numberDiscardEner: number;
     setNumberDiscardEner: React.Dispatch<React.SetStateAction<number>>;
+    colorDiscardEner: string[];
+    setColorDiscardEner: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setNumberCard, numberMAINCard, setNumberMAINCard, numberHandCard, setNumberHandCard, numberTrashCard, setNumberTrashCard, isDiscardEner, setIsDiscardEner, numberDiscardEner, setNumberDiscardEner }) => {
+const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setNumberCard, numberMAINCard, setNumberMAINCard, numberHandCard, setNumberHandCard, numberTrashCard, setNumberTrashCard, isDiscardEner, setIsDiscardEner, numberDiscardEner, setNumberDiscardEner, colorDiscardEner, setColorDiscardEner }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState<Card | null>(null);
     const [isChangePopupAction, setChangePopupAction] = useState<Card | null>(null);
@@ -56,20 +58,31 @@ const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setN
         return result;
     };
 
+    const filteredCardsColor = colorDiscardEner.length > 0
+        ? filterCardsByNumberCard(cardList, numberCard).filter(card =>
+            card.cardColor.some(color => color === colorDiscardEner[0])
+        )
+        : filterCardsByNumberCard(cardList, numberCard);
+
     return (
         <>
             {isOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative overflow-auto max-h-[80vh]">
                         <div className="flex justify-between items-center mb-4">
-                            <p className="font-bold text-lg">Bài Nguyên Liệu ({numberCard.length})</p>
+                            {numberDiscardEner === 0 &&
+                                <p className="font-bold text-lg">Bài Nguyên Liệu ({numberCard.length})</p>
+                            }
+                            {numberDiscardEner > 0 &&
+                                <p className="font-bold text-lg">Loại Bỏ Nguyên Liệu</p>
+                            }
                             <IoMdClose
                                 onClick={onClose}
                                 className="font-bold text-2xl cursor-pointer"
                             />
                         </div>
                         <div className="mt-4 grid grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
-                            {filterCardsByNumberCard(cardList, numberCard).map((card, index) => (
+                            {filteredCardsColor.map((card, index) => (
                                 <div key={`${card.id}-${index}`} className="flex flex-col items-center cursor-pointer">
                                     <Image
                                         src={card.imageUrl}
@@ -147,7 +160,14 @@ const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setN
                                         const cardPut = [...numberTrashCard];
                                         cardPut.push(isChangePopupAction.id);
                                         setNumberTrashCard(cardPut);
-                                        setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                        const indexRemove = numberCard.indexOf(isChangePopupAction.id);
+                                        setNumberCard(removeCardByIndex(numberCard, indexRemove));
+                                        const colorDiscard = [...colorDiscardEner];
+                                        if (colorDiscardEner.length > 0) {
+                                            // Lấy giá trị đầu tiên mà không thay đổi mảng gốc
+                                            const [firstColor] = colorDiscard.slice(0, 1);
+                                            setColorDiscardEner(colorDiscard.slice(1)); // Cập nhật trạng thái với mảng còn lại
+                                        }
                                         const numberDiscard = numberDiscardEner - 1;
                                         setNumberDiscardEner(numberDiscard);
                                         if (numberDiscard === 0) setIsDiscardEner(false);
