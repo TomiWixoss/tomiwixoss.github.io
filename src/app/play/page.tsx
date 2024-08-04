@@ -382,8 +382,11 @@ const PlayGround: React.FC = () => {
 
         Object.entries(powerChanges).forEach(([id, powerChange]) => {
             const cardId = parseInt(id, 10);
-            if (cardSpace.includes(cardId)) {
-                const position = cardSpace.indexOf(cardId);
+
+            // Lấy tất cả các vị trí của cardId trong cardSpace
+            const positions = cardSpace.map((id, index) => id === cardId ? index : -1).filter(index => index !== -1);
+
+            if (positions.length > 0) {
                 if (numberEnerCard.length >= 3) {
                     const checkEnerCard = numberEnerCard
                         .map(value => cardList.find(card => card.id === value))
@@ -392,25 +395,31 @@ const PlayGround: React.FC = () => {
                     const cardClassSet = new Set(checkEnerCard.map(card => card.cardClass));
 
                     if (cardClassSet.size >= 3) {
-                        if (cardUse[position]?.cardEffect.includes("Const")) {
-                            cardUse[position].cardPower += powerChange;
-                            cardUse[position].cardEffect = cardUse[position].cardEffect.filter((effect: string) => effect !== "Const");
-                            setSelectedCard(cardUse[position]);
-                            hasChanges = true; // Đánh dấu là có thay đổi
-                        }
+                        positions.forEach(position => {
+                            if (cardUse[position]?.cardEffect.includes("Const")) {
+                                cardUse[position].cardPower += powerChange;
+                                cardUse[position].cardEffect = cardUse[position].cardEffect.filter((effect: string) => effect !== "Const");
+                                setSelectedCard(cardUse[position]);
+                                hasChanges = true; // Đánh dấu là có thay đổi
+                            }
+                        });
                     } else {
+                        positions.forEach(position => {
+                            if (!cardUse[position]?.cardEffect.includes("Const")) {
+                                cardUse[position].cardPower -= powerChange;
+                                cardUse[position].cardEffect.push("Const");
+                                hasChanges = true; // Đánh dấu là có thay đổi
+                            }
+                        });
+                    }
+                } else {
+                    positions.forEach(position => {
                         if (!cardUse[position]?.cardEffect.includes("Const")) {
                             cardUse[position].cardPower -= powerChange;
                             cardUse[position].cardEffect.push("Const");
                             hasChanges = true; // Đánh dấu là có thay đổi
                         }
-                    }
-                } else {
-                    if (!cardUse[position]?.cardEffect.includes("Const")) {
-                        cardUse[position].cardPower -= powerChange;
-                        cardUse[position].cardEffect.push("Const");
-                        hasChanges = true; // Đánh dấu là có thay đổi
-                    }
+                    });
                 }
             }
         });
