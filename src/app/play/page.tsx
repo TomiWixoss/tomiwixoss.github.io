@@ -87,6 +87,8 @@ const PlayGround: React.FC = () => {
     const [cardData1, setCardData1] = useState<Card>();
     const [turnGame, setTurnGame] = useState(0);
     const [isPopupTurn, setPopupTurn] = useState(false);
+    const [isPopupChangePower, setPopupChangePower] = useState(false);
+    const [powerAmount, setPowerAmount] = useState(1000);
 
     const [isDiscardEner, setIsDiscardEner] = useState(false);
     const [numberDiscardEner, setNumberDiscardEner] = useState(0);
@@ -593,7 +595,7 @@ const PlayGround: React.FC = () => {
         setPopupChangePositionAction(null);
     }
 
-    const handleEffectCard = (id: number) => {
+    const handleEffectCard = (id: number, power: number) => {
         const updateCardPower = (cards: Card[], position: number, powerChange: number) => {
             return cards.map((card, index) =>
                 index === position ? { ...card, cardPower: card.cardPower + powerChange } : card
@@ -621,20 +623,20 @@ const PlayGround: React.FC = () => {
             case 1:
                 switch (isPositionCard) {
                     case 3:
-                        setCardUseMAINSpacePlayer(updateCardPower(cardUseMAINSpacePlayer, isPositionSpace, 1000));
+                        setCardUseMAINSpacePlayer(updateCardPower(cardUseMAINSpacePlayer, isPositionSpace, power));
                         break;
                     case 4:
-                        setCardUseMAINSpaceTarget(updateCardPower(cardUseMAINSpaceTarget, isPositionSpace, 1000));
+                        setCardUseMAINSpaceTarget(updateCardPower(cardUseMAINSpaceTarget, isPositionSpace, power));
                         break;
                 }
                 break;
             case 2:
                 switch (isPositionCard) {
                     case 3:
-                        setCardUseMAINSpacePlayer(updateCardPower(cardUseMAINSpacePlayer, isPositionSpace, -1000));
+                        setCardUseMAINSpacePlayer(updateCardPower(cardUseMAINSpacePlayer, isPositionSpace, power));
                         break;
                     case 4:
-                        setCardUseMAINSpaceTarget(updateCardPower(cardUseMAINSpaceTarget, isPositionSpace, -1000));
+                        setCardUseMAINSpaceTarget(updateCardPower(cardUseMAINSpaceTarget, isPositionSpace, power));
                         break;
                 }
                 break;
@@ -1465,7 +1467,7 @@ const PlayGround: React.FC = () => {
                                     {isPositionSpace === 1 &&
                                         <button
                                             className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                            onClick={() => { handleEffectCard(-1) }}
+                                            onClick={() => { handleEffectCard(-1, 0) }}
                                         >
                                             Đổi Tư Thế
                                         </button>
@@ -1680,25 +1682,19 @@ const PlayGround: React.FC = () => {
                         <div className='flex flex-col'>
                             <button
                                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={() => { handleEffectCard(1) }}
+                                onClick={() => { setPopupChangePower(true) }}
                             >
-                                Tăng Sức Mạnh
+                                Đổi Sức Mạnh
                             </button>
                             <button
                                 className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={() => { handleEffectCard(2) }}
-                            >
-                                Giảm Sức Mạnh
-                            </button>
-                            <button
-                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={() => { handleEffectCard(3) }}
+                                onClick={() => { handleEffectCard(3, 0) }}
                             >
                                 Đổi Tư Thế
                             </button>
                             <button
                                 className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={() => { handleEffectCard(4) }}
+                                onClick={() => { handleEffectCard(4, 0) }}
                             >
                                 Đóng Băng
                             </button>
@@ -1878,6 +1874,56 @@ const PlayGround: React.FC = () => {
                                 }}
                             >
                                 Chuyển Lượt Trước
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {isPopupChangePower && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-5 mx-5 rounded-lg shadow-lg text-center">
+                        <div className="flex justify-between items-center mb-4">
+                            <p className="font-bold text-xl mr-4">Đổi Sức Mạnh</p>
+                            <IoMdClose
+                                onClick={() => { setPopupChangePower(false) }}
+                                className="font-bold text-2xl cursor-pointer"
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <div className="flex items-center justify-center mb-4">
+                                <button
+                                    className="px-4 py-2 font-bold bg-gray-300 text-black rounded hover:bg-gray-400"
+                                    onClick={() => {
+                                        if (powerAmount > 1000) setPowerAmount(powerAmount - 1000);
+                                    }}
+                                >
+                                    -
+                                </button>
+                                <p className="mx-4 text-xl font-semibold">{powerAmount}</p>
+                                <button
+                                    className="px-4 font-bold py-2 bg-gray-300 text-black rounded hover:bg-gray-400"
+                                    onClick={() => setPowerAmount(powerAmount + 1000)}
+                                >
+                                    +
+                                </button>
+                            </div>
+                            <button
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    handleEffectCard(1, powerAmount);
+                                    setPopupChangePower(false);
+                                }}
+                            >
+                                Tăng Sức Mạnh
+                            </button>
+                            <button
+                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                onClick={() => {
+                                    handleEffectCard(2, -powerAmount);
+                                    setPopupChangePower(false);
+                                }}
+                            >
+                                Giảm Sức Mạnh
                             </button>
                         </div>
                     </div>
