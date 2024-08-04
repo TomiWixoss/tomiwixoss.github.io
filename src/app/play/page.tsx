@@ -28,6 +28,8 @@ import { FaTrash } from "react-icons/fa";
 import { GiCardboardBox } from "react-icons/gi";
 import { IoSettings } from "react-icons/io5";
 import { useRouter } from 'next/navigation';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PlayGround: React.FC = () => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
@@ -1217,6 +1219,20 @@ const PlayGround: React.FC = () => {
 
     return (
         <>
+            <ToastContainer
+                position="top-right"
+                autoClose={1000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover={false}
+                theme="dark"
+                className="toast-container" // Áp dụng lớp CSS tùy chỉnh
+                toastClassName="toast-notification" // Áp dụng lớp CSS cho thông báo
+            />
             <div className="bg-black py-2 px-2">
                 <div className='h-screen'>
                     <div className='flex justify-end'>
@@ -1626,7 +1642,22 @@ const PlayGround: React.FC = () => {
                             </button>
                             <button
                                 className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={() => { setMainPhase(7); setPopupChangePhase(false) }}
+                                onClick={() => {
+                                    setMainPhase(7);
+                                    setPopupChangePhase(false);
+                                    if (numberHandCard.length >= 7 || numberHandCardBot.length >= 7) {
+                                        toast.info('Vui lòng loại bỏ thẻ!', {
+                                            position: "top-right",
+                                            autoClose: 1000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: false,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: "dark"
+                                        });
+                                    }
+                                }}
                             >
                                 Giai Đoạn Kết Thúc
                             </button>

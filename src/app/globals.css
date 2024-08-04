@@ -43,3 +43,14 @@ body {
   display: none;
   /* Safari và Chrome */
 }
+
+/* styles.css */
+.toast-container {
+  width: 60vw !important;
+  margin-left: 40vw !important;
+}
+
+.toast-notification {
+  width: 100% !important;
+  /* Đảm bảo thông báo chiếm toàn bộ chiều rộng của container */
+}
