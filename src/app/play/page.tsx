@@ -1092,6 +1092,7 @@ const PlayGround: React.FC = () => {
                                     setNumberEnerCardBot(cardPut);  // Cập nhật trạng thái với mảng mới
                                     cardMAINSpaceTarget[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` về 0
                                     if (cardData1) cardUseMAINSpaceTarget[isPositionSpace] = cardData1;
+                                    cardUseMAINSpacePlayer[isPositionSpace] = { ...cardUseMAINSpacePlayer[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                                 }
                             }
                             else {
@@ -1105,8 +1106,8 @@ const PlayGround: React.FC = () => {
                                 if (cardShow) {
                                     if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
                                 }
+                                cardUseMAINSpacePlayer[isPositionSpace] = { ...cardUseMAINSpacePlayer[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                             }
-                            cardUseMAINSpacePlayer[isPositionSpace] = { ...cardUseMAINSpacePlayer[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                         }
                         else {
                             setSelectedCard(cardUseMAINSpacePlayer[isPositionSpace]);
@@ -1128,6 +1129,7 @@ const PlayGround: React.FC = () => {
                                     setNumberEnerCard(cardPut);  // Cập nhật trạng thái với mảng mới của Player
                                     cardMAINSpacePlayer[isPositionSpace] = -1;  // Đặt phần tử tại vị trí `isPositionSpace` của Player về 0
                                     if (cardData1) cardUseMAINSpacePlayer[isPositionSpace] = cardData1;
+                                    cardUseMAINSpaceTarget[isPositionSpace] = { ...cardUseMAINSpaceTarget[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                                 }
                             } else {
                                 const cardLife = [...numberLifeCard];
@@ -1140,8 +1142,8 @@ const PlayGround: React.FC = () => {
                                 if (cardShow) {
                                     if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
                                 }
+                                cardUseMAINSpaceTarget[isPositionSpace] = { ...cardUseMAINSpaceTarget[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                             }
-                            cardUseMAINSpaceTarget[isPositionSpace] = { ...cardUseMAINSpaceTarget[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                         }
                         else {
                             setSelectedCard(cardUseMAINSpaceTarget[isPositionSpace]);
@@ -1171,8 +1173,8 @@ const PlayGround: React.FC = () => {
                                 if (cardShow) {
                                     if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
                                 }
+                                cardUseLRIGSpacePlayer[isPositionSpace] = { ...cardUseLRIGSpacePlayer[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                             }
-                            cardUseLRIGSpacePlayer[isPositionSpace] = { ...cardUseLRIGSpacePlayer[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                         }
                         else {
                             setSelectedCard(cardUseLRIGSpacePlayer[isPositionSpace]);
@@ -1198,8 +1200,8 @@ const PlayGround: React.FC = () => {
                                 if (cardShow) {
                                     if (cardShow.cardBurst !== "") setSelectedCard(cardShow);
                                 }
+                                cardUseLRIGSpaceTarget[isPositionSpace] = { ...cardUseLRIGSpaceTarget[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                             }
-                            cardUseLRIGSpaceTarget[isPositionSpace] = { ...cardUseLRIGSpaceTarget[isPositionSpace], isDown: true };  // Sao chép đối tượng và cập nhật trạng thái
                         }
                         else {
                             setSelectedCard(cardUseLRIGSpaceTarget[isPositionSpace]);
