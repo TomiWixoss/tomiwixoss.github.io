@@ -140,19 +140,21 @@ const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setN
                             />
                         </div>
                         <div className='flex flex-col'>
-                            <button
-                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={() => {
-                                    const cardPut = [...numberHandCard];
-                                    cardPut.push(isChangePopupAction.id);
-                                    setNumberHandCard(cardPut);
-                                    setNumberCard(removeCardByIndex(numberCard, isPositionCard));
-                                    setChangePopupAction(null);
-                                    setPopupAction(null);
-                                }}
-                            >
-                                Bài Trên Tay
-                            </button>
+                            {!isDiscardEner &&
+                                <button
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    onClick={() => {
+                                        const cardPut = [...numberHandCard];
+                                        cardPut.push(isChangePopupAction.id);
+                                        setNumberHandCard(cardPut);
+                                        setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                        setChangePopupAction(null);
+                                        setPopupAction(null);
+                                    }}
+                                >
+                                    Bài Trên Tay
+                                </button>
+                            }
                             <button
                                 className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
                                 onClick={() => {
@@ -178,19 +180,21 @@ const EnerPopup: React.FC<EnerPopupProps> = ({ isOpen, onClose, numberCard, setN
                             >
                                 Thùng Rác
                             </button>
-                            <button
-                                className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                onClick={() => {
-                                    const cardPut = [...numberMAINCard];
-                                    cardPut.push(isChangePopupAction.id);
-                                    setNumberMAINCard(cardPut);
-                                    setNumberCard(removeCardByIndex(numberCard, isPositionCard));
-                                    setChangePopupAction(null);
-                                    setPopupAction(null);
-                                }}
-                            >
-                                Bộ Bài Chính
-                            </button>
+                            {!isDiscardEner &&
+                                <button
+                                    className="px-4 py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    onClick={() => {
+                                        const cardPut = [...numberMAINCard];
+                                        cardPut.push(isChangePopupAction.id);
+                                        setNumberMAINCard(cardPut);
+                                        setNumberCard(removeCardByIndex(numberCard, isPositionCard));
+                                        setChangePopupAction(null);
+                                        setPopupAction(null);
+                                    }}
+                                >
+                                    Bộ Bài Chính
+                                </button>
+                            }
                         </div>
                     </div>
                 </div >
