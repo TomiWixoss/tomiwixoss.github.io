@@ -948,7 +948,9 @@ const PlayGround: React.FC = () => {
                     }
                     else if (cardLRIGUp[0].isLRIGSupport === true) {
                         if (hasEnoughCardsWithoutColor(cardLRIGUp[0].cardGrowCost)) {
-                            LevelUp(cardLRIGUp[0].cardGrowCost);
+                            if (cardLRIGUp[0].cardLevel <= cardUseLRIGSpace[1].cardLevel) {
+                                LevelUp(cardLRIGUp[0].cardGrowCost);
+                            }
                         }
                     }
                 }
@@ -1016,7 +1018,9 @@ const PlayGround: React.FC = () => {
                     }
                     else if (cardLRIGUpBot[0].isLRIGSupport === true) {
                         if (hasEnoughCardsWithoutColorBot(cardLRIGUpBot[0].cardGrowCost)) {
-                            LevelUpBot(cardLRIGUpBot[0].cardGrowCost);
+                            if (cardLRIGUpBot[0].cardLevel <= cardUseLRIGSpaceTarget[1].cardLevel) {
+                                LevelUpBot(cardLRIGUpBot[0].cardGrowCost);
+                            }
                         }
                     }
                 }
