@@ -167,7 +167,14 @@ const MAINPopup: React.FC<MAINPopupProps> = ({ isOpen, onClose, numberCardMAIN, 
                                         {isFlipped && (
                                             <button
                                                 className="px-2 py-1 bg-blue-500 text-white text-xs rounded-xl hover:bg-blue-600"
-                                                onClick={() => handleCardClickChoose(i)}
+                                                onClick={() => {
+                                                    if (!isSelected) {
+                                                        const cardShow = (cardList.find(card => card.id === index));
+                                                        if (cardShow) setSelectedCard(cardShow);
+                                                    }
+                                                    handleCardClickChoose(i);
+
+                                                }}
                                             >
                                                 {isSelected ? 'Bỏ Chọn' : 'Chọn'}
                                             </button>
