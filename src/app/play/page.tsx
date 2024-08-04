@@ -1709,6 +1709,7 @@ const PlayGround: React.FC = () => {
                 type={isTypePopupHand}
                 MAINSpace={cardMAINSpacePlayer}
                 MAINUseSpace={cardUseMAINSpacePlayer}
+                LRIGUseSpace={cardUseLRIGSpacePlayer}
                 setNumberCard={setNumberHandCard}
                 position={isPositionSpace}
                 numberMAINCard={numberMAINCard}
@@ -1804,6 +1805,7 @@ const PlayGround: React.FC = () => {
                 type={isTypePopupHand}
                 MAINSpace={cardMAINSpaceTarget}
                 MAINUseSpace={cardUseMAINSpaceTarget}
+                LRIGUseSpace={cardUseLRIGSpaceTarget}
                 setNumberCard={setNumberHandCardBot}
                 position={isPositionSpace}
                 numberMAINCard={numberMAINCardBot}

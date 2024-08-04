@@ -12,6 +12,7 @@ interface HandPopupProps {
     type: number;
     MAINSpace: number[];
     MAINUseSpace: Card[];
+    LRIGUseSpace: Card[];
     setNumberCard: React.Dispatch<React.SetStateAction<number[]>>;
     position: number;
     numberMAINCard: number[];
@@ -22,7 +23,7 @@ interface HandPopupProps {
     setNumberTrashCard: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, type, MAINSpace, MAINUseSpace, setNumberCard, position, numberMAINCard, setNumberMAINCard, numberEnerCard, setNumberEnerCard, numberTrashCard, setNumberTrashCard }) => {
+const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, type, MAINSpace, MAINUseSpace, LRIGUseSpace, setNumberCard, position, numberMAINCard, setNumberMAINCard, numberEnerCard, setNumberEnerCard, numberTrashCard, setNumberTrashCard }) => {
     const [selectedCard, setSelectedCard] = useState<Card | null>(null);
     const [isPopupAction, setPopupAction] = useState<Card | null>(null);
     const [isChangePopupAction, setChangePopupAction] = useState<Card | null>(null);
@@ -52,15 +53,27 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, type
         setSelectedCard(null);
     };
 
-    // Hàm lọc phần tử dựa trên numberCard
-    const filterCardsByNumberCard = (cardList: Card[], numberCard: number[]): Card[] => {
+    // Hàm lọc phần tử dựa trên numberCard và type
+    const filterCardsByNumberCard = (
+        cardList: Card[],
+        numberCard: number[],
+        type: number
+    ): Card[] => {
         const result: Card[] = [];
 
+        // Tính tổng cardLevel của các MAINUseSpace đã có
+        const totalMainUseSpaceLevel = MAINUseSpace.reduce((total, mainUseSpace) => total + mainUseSpace.cardLevel, 0);
+
         for (const number of numberCard) {
-            // Tìm card trong cardList với id khớp với số trong numberCard
             const matchingCard = cardList.find(card => card.id === number);
             if (matchingCard) {
-                result.push(matchingCard); // Thêm card vào mảng kết quả
+                // Nếu type === 1, kiểm tra điều kiện cardLevel
+                if (
+                    (type !== 1 || ((matchingCard.cardType === "SIGNI" || matchingCard.cardType === "Guard") && matchingCard.cardLevel <= LRIGUseSpace[1].cardLevel &&
+                        totalMainUseSpaceLevel + matchingCard.cardLevel <= LRIGUseSpace.reduce((total, lrigUseSpace) => total + lrigUseSpace.cardLimit, 0)))
+                ) {
+                    result.push(matchingCard); // Thêm card vào mảng kết quả
+                }
             }
         }
 
@@ -73,14 +86,19 @@ const HandPopup: React.FC<HandPopupProps> = ({ isOpen, onClose, numberCard, type
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-5 m-5 rounded-lg shadow-lg text-center relative overflow-auto max-h-[80vh]">
                         <div className="flex justify-between items-center mb-4">
-                            <p className="font-bold text-lg">Bài Trên Tay ({numberCard.length})</p>
+                            {type === 0 &&
+                                <p className="font-bold text-lg">Bài Trên Tay ({numberCard.length})</p>
+                            }
+                            {type === 1 &&
+                                <p className="font-bold text-lg mr-2">Chọn Bài Ra Sân</p>
+                            }
                             <IoMdClose
                                 onClick={onClose}
                                 className="font-bold text-2xl cursor-pointer"
                             />
                         </div>
                         <div className="mt-4 grid grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
-                            {filterCardsByNumberCard(cardList, numberCard).map((card, index) => (
+                            {filterCardsByNumberCard(cardList, numberCard, type).map((card, index) => (
                                 <div key={`${card.id}-${index}`} className="flex flex-col items-center cursor-pointer">
                                     <Image
                                         src={card.imageUrl}
